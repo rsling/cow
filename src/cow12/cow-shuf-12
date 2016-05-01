@@ -1,0 +1,41 @@
+#!/bin/bash
+
+infile=$1
+outfile=$2
+tmpdir="/home/lingex/nobackup"
+sentences="tmp000_sent"   # Name of file with extracted sentences.
+deduped="tmp000_dedup"    # Name of file with deduped sentences.
+tmpsplit="tmp000_split"   # prefix for the shuffle split
+tmpshuf="_shuf"           # suffix for shuffled files
+shufsize=68719476736      # size of split for shuf (bytes must fit in RAM)
+sortsize=68719476736      # memory max for sort
+
+echo
+cowinterleave -i $infile -s s | grep '\(<ci_t \/>.\+\)\{5,\}' > $sentences
+
+echo Sorting/deduping...
+sort -T $tmpdir -S $sortsize -u -t">" -k 2 $sentences > $deduped
+\rm $sentences
+
+echo
+echo Splitting for shuf...
+split -a 10 -C $shufsize -d $deduped $tmpsplit
+\rm $deduped
+
+echo
+echo Shuffling...
+for f in `ls -1 $tmpsplit*`
+do
+  echo "  $f"
+  shuf $f > $f$tmpshuf
+  \rm $f
+done
+
+echo
+echo Merging shuffled files and decoding interleave...
+sort -T $tmpdir -m $tmpsplit*$tmpshuf | sed 's/<ci_t \/>/	/g; s/<ci_l \/>/\n/g' | sed '/^$/d' | gzip -c > $outfile
+\rm $tmpsplit*$tmpshuf
+
+echo
+echo Done.
+echo

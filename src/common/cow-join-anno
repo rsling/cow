@@ -1,0 +1,42 @@
+#!/usr/bin/python
+
+# This script zips pure annotations into COW-XML
+
+import gzip
+import re
+import argparse
+import os.path
+import sys
+
+parser = argparse.ArgumentParser()
+parser.add_argument("cow", help="COW-XML file (gzipped).")
+parser.add_argument("anno", help="annotation file")
+parser.add_argument("out", help="Output gzipped annotation file.")
+args = parser.parse_args()
+
+if not os.path.exists(args.cow):
+    sys.exit("COW file does not exist.")
+
+if not os.path.exists(args.anno):
+    sys.exit("Annotation file does not exist.")
+
+if os.path.exists(args.out):
+    sys.exit("Output file exists!")
+
+cow = gzip.open(args.cow)
+anno = gzip.open(args.anno)
+out = gzip.open(args.out, 'wb')
+
+rexml = re.compile(r'^<.+>$')
+
+for l in cow:
+    l = l.decode('utf8').strip()
+    if rexml.match(l):
+        out.write((l + u'\n').encode('utf8'))
+    else:
+        a = anno.next().decode('utf8').strip()
+        out.write((l + u'\t' + a + u'\n').encode('utf8'))
+
+cow.close()
+anno.close()
+out.close()

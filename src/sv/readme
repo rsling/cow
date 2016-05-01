@@ -1,0 +1,19 @@
+1. Use/see cow-tokenize-sv* (requires ucto)
+2. Use/see cow-tag-sv* (requires hunpos and Swedish model)
+3. Clean files using: iconv -t UTF-8 -c
+4. Use/see cow-lemmatize-sv* (requires pale)
+5. Check with isutf8 and xmlwf (requires proper XML header and root element)
+6. For CWB, use something like
+
+$ cwb-encode -xsB -c utf8 -d <DATA> -f <VRT> -R <REG> -P pos -P lemma -S s -S div:0+idx+bpc -S dup:0+of -S title -S keywords -S doc:0+url+id+bdc+nbcprop+nbdprop+date+last-modified+country+region+city -0 meta
+$ cwb-make -V <REG> -M 16000
+
+Notes:
+
+- A simple "parallelization" approach from tagging to lemmatization when invoked from multiple screens (adapt tail/head):
+
+$ for f in `ls -1 tokenized/ | tail -n 181 | head -n 11`; do r=`echo $f | sed s/\.gz$//`; echo "Processing $r"; gunzip -c tokenized/$f | cow-tag-sv > tagged/$r.tag.tmp; iconv -t UTF-8 -c < tagged/$r.tag.tmp > tagged/$r.tag; cow-lemmatize-sv tagged/$r.tag | gzip -c > lemmatized/$r.tag.lem.xml.gz; rm tagged/$r.tag.tmp; gzip tagged/$r.tag; done;
+
+-------------
+
+* Adapt scripts. They contain some hard-coded paths.

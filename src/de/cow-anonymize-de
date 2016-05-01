@@ -1,0 +1,55 @@
+#!/usr/bin/python
+
+import gzip
+import argparse
+import os.path
+import sys
+import re
+import hashlib
+
+# Arg parsing
+parser = argparse.ArgumentParser()
+parser.add_argument("inp", help="COW-XML-DE14 formatted input (gzipped).")
+parser.add_argument("outp", help="Gzipped COW-XML output.")
+parser.add_argument("lemmas", help="Gzipped NE lemma file.")
+parser.add_argument("tokens", help="Gzipped NE token file.")
+args = parser.parse_args()
+
+# File startup
+if not os.path.exists(args.inp):
+    sys.exit("Input file does not exist.")
+
+if os.path.exists(args.outp) or os.path.exists(args.lemmas) or os.path.exists(args.tokens):
+    sys.exit("One of the output files already exists.")
+
+inp=gzip.open(args.inp)
+outp=gzip.open(args.outp, 'wb')
+lemf=gzip.open(args.lemmas, 'wb')
+tokf=gzip.open(args.tokens, 'wb')
+
+# We require that TT thinks it's NE and Stanforf thinks it's I-PER
+r_person = re.compile(r'^[^<].+\tNE\t.+\tI-PER\t')
+
+for x in inp:
+    x=x.strip()
+    if r_person.match(x):
+	# We have a person name. Anonymize and write to output.
+        
+	fields = x.split("\t")
+
+	lem_hash = hashlib.md5(fields[2]).hexdigest()
+        lemf.write(lem_hash + "\t" + fields[2] + "\n")
+
+	tok_hash = hashlib.md5(fields[0]).hexdigest()
+        tokf.write(tok_hash + "\t" + fields[0] + "\n")
+
+        fields[2] = lem_hash
+	fields[0] = tok_hash
+        outp.write("\t".join(fields) +"\n")
+    else:
+        outp.write(x+"\n")
+
+inp.close()
+outp.close()
+lemf.close()
+tokf.close()

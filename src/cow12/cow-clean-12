@@ -1,0 +1,61 @@
+#!/bin/bash
+
+# make URLs XML-safe
+  perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/&quot;/%22/g;$x="doc url=\"$x\"";$x}ge' | \
+  perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/&apos;/%22/g;$x="doc url=\"$x\"";$x}ge' | \
+  perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/&gt;/%3E/g;$x="doc url=\"$x\"";$x}ge' | \
+  perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/&lt;/%3C/g;$x="doc url=\"$x\"";$x}ge' | \
+  perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/&amp;/%26/g;$x="doc url=\"$x\"";$x}ge' | \
+  perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/'"'"'/%27/g;$x="doc url=\"$x\"";$x}ge' | \
+  perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/>/%3E/g;$x="doc url=\"$x\"";$x}ge' | \
+  perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/</%3C/g;$x="doc url=\"$x\"";$x}ge' | \
+  perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/&/%26/g;$x="doc url=\"$x\"";$x}ge' | \
+  perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/\*/%2A/g;$x="doc url=\"$x\"";$x}ge' | \
+  perl -pe 's{doc url="http:([^\"]+)"}{($x=$1)=~s/:/%3A/g;$x="doc url=\"http:$x\"";$x}ge' | \
+# repair html-entities that texrex messed up
+  sed 's/&amp;aacute;/á/g; s/&amp;Aacute;/Á/g; s/&amp;uacute;/ú/g; s/&amp;Uacute;/Ú/g; s/&amp;oacute;/ó/g; s/&amp;Oacute;/Ó/g; s/&amp;iacute;/í/g; s/&amp;Iacute;/Í/g; s/&amp;eacute;/é/g; s/&amp;Ecute;/É/g; s/&amp;agrave;/à/g; s/&amp;Agrave;/À/g; s/&amp;ugrave;/ù/g; s/&amp;Ugrave;/Ù/g; s/&amp;ograve;/ò/g; s/&amp;Ograve;/Ò/g; s/&amp;igrave;/ì/g; s/&amp;Igrave;/Ì/g; s/&amp;egrave;/è/g; s/&amp;Egrave;/È/g; s/&amp;acirc;/â/g; s/&amp;Acirc;/Â/g; s/&amp;ucirc;/û/g; s/&amp;Ucirc;/Û/g; s/&amp;ocirc;/ô/g; s/&amp;Ocirc;/Ô/g; s/&amp;icirc;/î/g; s/&amp;Icirc;/Î/g; s/&amp;ecirc;/ê/g; s/&amp;Ecirc;/Ê/g; s/&amp;auml;/ä/g; s/&amp;Auml;/Ä/g; s/&amp;uuml;/ü/g; s/&amp;Uuml;/Ü/g; s/&amp;ouml;/ö/g; s/&amp;Ouml;/Ö/g; s/&amp;iuml;/ï/g; s/&amp;Iuml;/Ï/g; s/&amp;euml;/ë/g; s/&amp;Euml;/Ë/g; s/&amp;gt;/\&gt;/g; s/&amp;amp;/\&amp;/g; s/&amp;lt;/\&lt;/g; s/&amp;\#32;/ /g; s/&amp;nbsp&amp;/ /g;' |\
+# repair encoding errors
+  sed 's/Ã¥/å/g' | \
+  sed 's/Ã…/Å/g' | \
+  sed 's/ï¿½/ /g' | \
+  sed 's/\xc3\x83\xc2\xa1/á/g; s/\xc3\x83\xc2\xa0/à/g; s/\xc3\x83\xc2\xa2/â/g; s/\xc3\x83\xc2\xa4/ä/g; s/\xc3\x83\xc2\xa9/é/g; s/\xc3\x83\xc2\xa8/è/g; s/\xc3\x83\xc2\xaa/ê/g; s/\xc3\x83\xc2\xab/ë/g; s/\xc3\x83\xc2\xad/í/g; s/\xc3\x83\xc5\x92/í/g; s/\xc3\x83\xc2\xac/ì/g; s/\xc3\x83\xc2\xae/î/g; s/\xc3\x83\xc2\xaf/ï/g; s/\xc3\x83\xc2\xb3/ó/g; s/\xc3\x83\xe2\x80\xba/ó/g; s/\xc3\x83\xc2\xb2/ò/g; s/\xc3\x83\xc2\xb4/ô/g; s/\xc3\x83\xc2\xb6/ö/g; s/\xc3\x83\xc2\xba/ú/g; s/\xc3\x83\xc2\xb9/ù/g; s/\xc3\x83\xc2\xbb/û/g; s/\xc3\x83\xc2\xbc/ü/g; s/\xc3\x83\xc2\xb1/ñ/g; s/\xc3\x83\xc2\xa7/ç/g; s/\xc3\x83\xc2\x81/Á/g; s/\xc3\x83\xc2\x80/À/g; s/\xc3\x83\xc2\x82/Â/g; s/\xc3\x83\xc2\x84/Ä/g; s/\xc3\x83\xc2\x89/É/g; s/\xc3\x83\xe2\x80\xb0/É/g; s/\xc3\x83\xc2\x88/È/g; s/\xc3\x83\xc2\x8a/Ê/g; s/\xc3\x83\xc2\x8b/Ë/g; s/\xc3\x83\xc2\x8d/Í/g; s/\xc3\x83\xc2\x8c/Ì/g; s/\xc3\x83\xc2\x8e/Î/g; s/\xc3\x83\xc2\x8f/Ï/g; s/\xc3\x83\xc2\x93/Ó/g; s/\xc3\x83&quot;/Ó/g; s/\xc3\x83\xc2\x92/Ò/g; s/\xc3\x83\xc2\x94/Ô/g; s/\xc3\x83\xc2\x96/Ö/g; s/\xc3\x83\xc2\x9a/Ú/g; s/\xc3\x83\xc5\xa1/Ú/g; s/\xc3\x83\xc2\x99/Ù/g; s/\xc3\x83\xc2\x9b/Û/g; s/\xc3\x83\xc2\x9c/Ü/g; s/\xc3\x83\xc2\x91/Ñ/g; s/\xc3\x83&apos;/Ñ/g; s/\xc3\x83\xc2\x87/Ç/g; s/\xc3\x82\xc2\xbf/¿/g; s/\xc3\x82\xc2\xa1/¡/g;'   |\
+# replace non-breaking whitespace with plain whitespace (AFTER correcting 'à'):
+  sed 's/\xc2\xa0/\x20/g' |\
+# delete zero-witdh whitespace (u+200b):
+  sed 's/\xe2\x80\x8b//g' |\
+# reduce multiple whitespaces to one:
+  sed 's/ \{2,\}/ /g' |\
+# encode XML-protected chars as entities
+  sed '/^[^	]\+	[^	]\+	[^	]\+$/ s/"/\&quot;/g' | \
+  sed "/^[^	]\+	[^	]\+	[^	]\+$/ s/'/\&apos;/g" | \
+  sed "/^[^	]\+	[^	]\+	[^	]\+$/ s/>/\&gt;/g" | \
+  sed "/^[^	]\+	[^	]\+	[^	]\+$/ s/</\&lt;/g" | \
+# codepoints that Andrew Hardie doesnt like
+  sed 's/\xef\xb7\xa1/\xef\xbf\xbd/g; s/\xef\xbf\xbf/\xef\xbf\xbd/g; s/\xef\xb7\x93/\xef\xbf\xbd/g; s/\xef\xbf\xbe/\xef\xbf\xbd/g; s/\xef\xb7\xaf/\xef\xbf\xbd/g; s/\xef\xb7\x90/\xef\xbf\xbd/;' | \
+# delete empty lines or lines with just blanks
+  sed '/^ *$/d' | \
+# double quot in doc is pathological -- but possibly doesnt even occur in COW12?
+  sed '/^<doc url/ s/"" /" /g' | \
+  sed '/^<doc url/ s/ ""/ "/g' | \
+# remove ascii control characters
+  tr -d '\0-\10' | \
+  tr -d '\13-\14' | \
+  tr -d '\16-\37' | \
+# fix ( Erfolgs-)Story etc.
+  sed '/^(	/ {N; s/^(	.\+\n\([a-zäöüA-Zäöüß]\+-)[^	]*\)	\([^	]\+\)	\([^	]\+\)$/(\1	\2	(\3/}' | \
+# fix phpBB emoticons
+  sed '/^\:[a-zA-ZÄÖÜäöüß0-9:]\+	/ {N; s/^\(\:[^	]\+\)	.\+\n\:	.\+$/\1:	XY	(phpbbemo)/ }' | \
+# fix normal smileys
+  sed '/^[;:=]\(o\|-\|\)	/ { N; s/^\([^	]\+\)	.\+\n\([)(]\)	.\+$/\1\2	XY	(smiley)/ }' | \
+# second- and third-pass ))) smiley-fix
+  sed '/^.\+)	.\+(smiley)/ { N; s/^\([^	]\+\)	.\+\n)	.\+$/\1)	XY	(smiley)/ }' | \
+  sed '/^.\+)	.\+(smiley)/ { N; s/^\([^	]\+\)	.\+\n)	.\+$/\1)	XY	(smiley)/ }' | \
+# fix "kurzformen" and "emergente pronomina"
+  sed 's/^\(`\|´\|\&apos;\|\)\(n\|nen\|nem\|ne\|ner\)	.\+$/\1\2	ART	n/' | \
+  sed 's/^\(son\|sonen\|sonem\|sone\|soner\)	.\+$/\1	PIAT	son/' | \
+# remove extremely long tokens
+  sed '/^[^	]\{32,\}	/ { /^\([A-Za-zÄÖÜäöüß]\+-\)\{2,\}/! { /^\*[^*]\+\*	/! s/^.\+$/noiseblank	XY	(noiseblank)/} }' | \
+  sed 's/^[^	]\{128,\}	.\+$/noiseblank	XY	(noiseblank)/' | \
+# un-sentence ultra-short and long sentences
+  sed '/<s>/ { :a; N; /<\/s>/!ba; s/^<s>\(\n\([^	]\+	[^	]\+	[^	]\+\n\)\{,3\}\)<\/s>$/\1/ }' | \
+  sed '/<s>/ { :a; N; /<\/s>/!ba; s/^<s>\(\n\([^	]\+	[^	]\+	[^	]\+\n\)\{150,\}\)<\/s>$/\1/ }'

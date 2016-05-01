@@ -1,0 +1,66 @@
+#!/bin/bash
+
+# Careful! This script also removes documents from aps.org
+# (as requested by UB of FU Berlin),
+
+searchpath="tag/*"
+tmpprf="_tmp"
+perslice=1000000000
+outprf="encow14a"
+outsuf=".xml"
+
+# ------------------------------
+
+tmplst=$tmpprf".lst"
+tmpsplt=$tmpprf".part."
+
+echo
+echo #######################
+echo  Mergin COW data files
+echo #######################
+echo
+
+
+echo -n "Counting files: "
+ls -1 $searchpath | shuf > $tmplst
+filecount=`wc -l $tmplst | tr -cd [0-9]`
+echo "$filecount"
+
+eta=`echo "$filecount*17/60" | bc`
+echo -n "Counting total tokens [est. time $eta minutes]: "
+total=`gunzip -c $searchpath | grep -v '^<' | wc -l`
+#total=16822531889
+echo "$total"
+
+echo -n "Files per one slice of $perslice tokens: "
+filesperone=`echo "$total/$perslice + 1" | bc`
+echo "$filesperone"
+
+echo -n "Number of splits: "
+splits=`echo "$filecount/$filesperone + 1" | bc`
+echo $splits
+
+echo
+
+split -a 2 -d -e -nl/$splits $tmplst $tmpprf
+infiles=`ls -1 $tmpprf??`
+
+for f in ${infiles[@]}
+do
+	sliceno=`echo $f | tr -cd [0-9]`
+	sliceno=`echo "$sliceno + 1" | bc`
+	sliceno=`printf %02d $sliceno`
+	slice=$outprf$sliceno$outsuf
+	echo "Catting slice $slice:"
+	echo "" > $slice
+	catfs=`cat $f`
+	for c in ${catfs[@]}
+	do
+		echo "   $c"
+		# Here, document filters can be added (like aps.org).
+		gunzip -c $c | sed '/^<doc.\+[^a-z]aps\.org/,/^<\/doc>/d' >> $slice
+	done
+	echo "Zippin: $slice"
+	gzip $slice
+	echo
+done

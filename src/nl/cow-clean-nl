@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Clean NLCOW which was annotated before we discovered some problems
+# and decided to insist on xmlwf.
+
+perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/&apos;/%22/g;$x="doc url=\"$x\"";$x}ge' | \
+perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/&gt;/%3E/g;$x="doc url=\"$x\"";$x}ge' | \
+perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/&lt;/%3C/g;$x="doc url=\"$x\"";$x}ge' | \
+perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/&amp;/%26/g;$x="doc url=\"$x\"";$x}ge' | \
+perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/'"'"'/%27/g;$x="doc url=\"$x\"";$x}ge' | \
+perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/>/%3E/g;$x="doc url=\"$x\"";$x}ge' | \
+perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/</%3C/g;$x="doc url=\"$x\"";$x}ge' | \
+perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/&/%26/g;$x="doc url=\"$x\"";$x}ge' | \
+perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/\*/%2A/g;$x="doc url=\"$x\"";$x}ge' | \
+perl -pe 's{doc url="http:([^\"]+)"}{($x=$1)=~s/:/%3A/g;$x="doc url=\"http:$x\"";$x}ge' | \
+tr -d '\0-\10' | \
+tr -d '\13-\37' | \
+sed 's/<unknown>/(unknown)/'
+

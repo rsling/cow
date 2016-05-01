@@ -1,0 +1,51 @@
+#!/bin/bash
+
+MALTJAR="/home/rsling/usr/local/maltparser-1.8/maltparser-1.8.jar"
+MALTDIR="/home/rsling/usr/local/texrex/scripts/annotate/en/"
+MALTMOD="engmalt.linear-1.7.mco"
+
+inf=$1
+outf=$2
+tmpinf=`echo $inf | sed 's/[^a-zA-Z0-9]//g'`
+tmpf1="___"$tmpinf"___"
+tmpf2="____"$tmpinf"____"
+
+echo
+echo "Preprocessing $inf to $tmpf1..."
+
+gunzip -c $1 | \
+  sed '/^<s/ {s/ /_~_/g; s/^.\+$/\n!&	NN	NN\n/}' | \
+  sed '/^</d' | \
+  sed '/^!<s /! s/\&apos;/'"'"'/g; s/\&quot;/"/g; s/\&amp;/\&/g;' | \
+  sed 's/^\([^	]\+\)	\([^	]\+\)	\([^	]\+\)$/_	\1	\3	\2	\2	_	_	_	_	_/' > $tmpf1
+
+echo
+echo "Parsing $tmpf1 to $tmpf2..."
+
+java -Xmx32g -jar $MALTJAR -w $MALTDIR -c $MALTMOD -i $tmpf1 -o $tmpf2 -m parse
+
+echo
+echo "Deleting $tmpf1..."
+\rm $tmpf1
+
+echo
+echo "Post-processing $tmpf2 to $outf..."
+
+cat $tmpf2 | \
+    sed '1 s/^.*$/&\n/' | \
+    sed '/^1	!<s_~_/ { s/_~_/ /g; s/^1	!\(<[^>]\+>\).\+$/\1/ }' | \
+    sed '/^</! { s/\&/\&amp;/g; s/"/\&quot;/g; s/'"'"'/\&apos;/g; }' | \
+    cut -f 1,2,3,4,7,8 | \
+    sed '/^</! { s/\([^	]\+\)	\([^	]\+\)	\([^	]\+\)	\([^	]\+\)	\([^	]\+\)	\([^	]\+\)/\2	\4	\3	\1	\5	\6/}' | \
+    sed '1! s/^<s/<\/s>\n&/' | \
+    sed '/^\s*$/d' | \
+    sed -e "\$a<\/s>" | \
+    gzip -c > $outf 
+
+echo
+echo "Deleting $tmpf2..."
+\rm $tmpf2
+
+echo
+echo "Done?"
+echo

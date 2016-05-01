@@ -1,0 +1,48 @@
+#!/bin/bash
+
+set -e
+
+infile=$1
+outfile=$2
+
+infi=$(basename $outfile .xml.gz)
+sentences="sent_${infi}"   # Name of file with extracted sentences.
+deduped="dedup_${infi}"    # Name of file with deduped sentences.
+tmpsplit="split_${infi}"   # prefix for the shuffle split
+tmpshuf="_shuf"            # suffix for shuffled files
+shufsize=34359738368       # size of split for shuf (bytes must fit in RAM)
+sortsize=34359738368       # memory max for sort
+
+# Evaluation:
+#cowinterleave -i $infile -s s > $sentences
+#
+# Production:
+cowinterleave -i $infile -s s | grep '\(<ci_t \/>.\+\)\{5,\}' | grep 'bdc="[a-j]"' | grep 'bpc="[a-f]"' | sed 's/ \(idx\|sourcecharset\|sourcedoctype\|region\)="[^"]\+"//g' > $sentences
+
+echo
+echo Sorting/deduping...
+sort -T /scratch/rsling/tmp -S $sortsize -u -t">" -k 2 $sentences > $deduped
+\rm $sentences
+
+echo
+echo Splitting for shuf...
+split -a 10 -C $shufsize -d $deduped $tmpsplit
+\rm $deduped
+
+echo
+echo Shuffling...
+for f in `ls -1 $tmpsplit*`
+do
+  echo "  $f"
+  shuf $f > $f$tmpshuf
+  \rm $f
+done
+
+echo
+echo Merging shuffled files and decoding interleave...
+sort -m $tmpsplit*$tmpshuf | sed 's/<ci_t \/>/	/g; s/<ci_l \/>/\n/g' | sed '/^$/d' | gzip -c > $outfile
+\rm $tmpsplit*$tmpshuf
+
+echo
+echo Done.
+echo

@@ -1,0 +1,102 @@
+#!/bin/bash
+
+# The COW script for tokenizing Swedish COW XML with ucto.
+
+sed 's/^ *//g' | \
+  sed 's/ *$//g' | \
+  perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/&quot;/%22/g;$x="doc url=\"$x\"";$x}ge' | \
+  perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/&apos;/%22/g;$x="doc url=\"$x\"";$x}ge' | \
+perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/&gt;/%3E/g;$x="doc url=\"$x\"";$x}ge' | \
+  perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/&lt;/%3C/g;$x="doc url=\"$x\"";$x}ge' | \
+  perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/&amp;/%26/g;$x="doc url=\"$x\"";$x}ge' | \
+  perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/'"'"'/%27/g;$x="doc url=\"$x\"";$x}ge' | \
+  perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/>/%3E/g;$x="doc url=\"$x\"";$x}ge' | \
+perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/</%3C/g;$x="doc url=\"$x\"";$x}ge' | \
+  perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/&/%26/g;$x="doc url=\"$x\"";$x}ge' | \
+  perl -pe 's{doc url="([^\"]+)"}{($x=$1)=~s/\*/%2A/g;$x="doc url=\"$x\"";$x}ge' | \
+  perl -pe 's{doc url="http:([^\"]+)"}{($x=$1)=~s/:/%3A/g;$x="doc url=\"http:$x\"";$x}ge' | \
+  sed 's/<keywords>/<keywords>\n/' | \
+sed 's/<\/keywords>/\n<\/keywords>/' | \
+  sed 's/<title>/<title>\n/' | \
+  sed 's/<\/title>/\n<\/title>/' | \
+  sed 's/>dupblank</>\ndupblank\n</' | \
+  sed '/^</ s/ \+/_~_/g' | \
+sed 's/\(\W\)\1\{3,\}/\1\1\1/g' | \
+  sed 's/Ã¥/å/g' | \
+  sed 's/Ã…/Å/g' | \
+  sed 's/ï¿½/ /g' | \
+  sed 's/ *\&amp; */ \&amp; /g' | \
+sed 's/\&apos;\&apos;/"/g' | \
+  sed "s/\\\&apos;/'/g"|  \
+  sed "s/\&apos;/'/g" | \
+  sed 's/&quot;/"/g' | \
+  sed 's/ *\&gt; */ \&gt; /g' | \
+sed 's/ *\&lt; */ \&lt; /g' | \
+  ucto -n -P -c /home/rsling/workingcopies/texrex/scripts/annotate/sv/tokconfig-sv-cow | \
+  sed -e '/^[^<>]\+$/ s/^\(.\+\)$/<s> \1 <\/s>/' | \
+  sed 's/> \([^<>]\+\)$/>\n<s> \1 <\/s>/' | \
+  sed '/^<s>.\+ [.?!] [[:lower:]].\+<\/s>$/ s/ \([.?!]\) \([[:lower:]]\)/ \1 <\/s>\n<s>\n\2/g ' | \
+sed '/^<s>/ {/ ( [^)]*$/ {N; /\n[^(]*)/ s/<\/s>\n<s>/ / } }' | \
+  sed '/^<s>.\{400,\}<\/s>$/ s/^<s>\(.\+\)<\/s>$/\1/' | \
+  sed '/^<s>.\{,12\}<\/s>$/ s/^<s>\(.\+\)<\/s>$/\1/' | \
+  sed 's/ \+</\n</g; s/> \+/>\n/g' | \
+  sed '/^[^<]/ s/"/\&quot;/g' | \
+sed "/^[^<]/ s/'/\&apos;/g" | \
+  sed '/^[^<]/ s/ /\n/g' | \
+  sed '/^</ s/_~_/ /g' | \
+  sed 's/\xef\xb7\xa1/\xef\xbf\xbd/g' | \
+  sed 's/\xef\xbf\xbf/\xef\xbf\xbd/g' | \
+sed 's/\xef\xb7\x93/\xef\xbf\xbd/g' | \
+  sed 's/\xef\xbf\xbe/\xef\xbf\xbd/g' | \
+  sed 's/\xef\xb7\xaf/\xef\xbf\xbd/g' | \
+  sed 's/\xef\xb7\x90/\xef\xbf\xbd/' | \
+  sed '/^ *$/d' | \
+sed '/^<doc url/ s/"" /" /g' | \
+  sed '/^<doc url/ s/ ""/ "/g' | \
+  tr -d '\0-\11' | \
+  tr -d '\13-\14' | \
+  tr -d '\16-\37' | \
+sed '/^< doc _ ~ _/ { s/ //g; s/_~_/ /g; }'
+
+# Call:
+#
+#   cat INPUT | cow-tokenize-sv > OUTPUT
+#
+# "Parallelization" call:
+#
+#   for f in `ls -1 01`; do { fb=`echo $f | sed 's/\.gz//'`; nohup gunzip -c 01/$f | cow-tokenize-sv | gzip -c > $fb.tok.gz & } done
+#
+# Check XML afterwards:
+#
+#   echo '<?xml version="1.0" encoding="utf-8"?>' > tmp.000
+#   echo '<corpus>' >> tmp.000
+#   cat OUTPUT >> tmp.000
+#   echo '</corpus>' >> tmp.000
+#   xmlwf tmp.000
+#
+# Explanation (lines 1..5..10..15.. are not indented)
+#
+#       1 sed  remove leading spaces
+#       2 sed  remove trailing spaces
+#   3..13 perl replace entities and characters in URLs which confuse ucto
+#  14..18 sed  put title tags, keywords tags, and dupblanks in single lines
+#      19 sed  in tag lines (<) replace spaces by _~_ for ucto
+#      20 sed  any non-word character that is repeated more often than thrice, reduce to three
+#  21..23 sed  fix some Swedish letter spaghetti
+#  24..30 sed  make entities ucto-compatible: 24,29,30: insert blanks around, 25..28: make literal ' and "
+#      31 ucto tokenize
+#      32 sed  any line without ANY < or > is a sentence, insert <s></s> (still in ONE LINE!)
+#      33 sed  non-XML-tag material AFTER a tag in a line which does not end in a tag is a sent, insert <s>
+#      34 sed  lines which contain [.!?] in the middle followed by lowercase are mostly non-detected sentence boundaries, split
+#      35 sed  sentences with opening ( followed by sentences with closing ) are merged (see sed N command!)
+#      36 sed  sentences longer than 400 chars are un-sentenced (remove <s></s>)
+#      37 sed  sentences shorter than 12 chars are un-sentences
+#      38 sed  make sure that tags are in single lines (<s></s> is now no longer in single line with actual sentences)
+#  39..40 sed  restore quotes (revert lines 25..28)
+#      41 sed  in non-XML-tag lines, make one token per line format
+#      42 sed  in XML tags, turn _~_ into spaces (revert line 19)
+#  43..48 sed  convert non-character UTF-8 sequences to replacement char for CWB
+#      49 sed  delete empty lines
+#  50..51 sed  remove double " from <doc> tags (occured with some Last-Modified)
+#  52..54 sed  remove ASCII control characters (deletion)
+#      55 sed  fix more lines fucked up by ucto

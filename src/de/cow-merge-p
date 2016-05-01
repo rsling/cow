@@ -1,0 +1,39 @@
+#!/usr/bin/python
+
+# This script makes the strong assumtion that there are no blank
+# lines in either file.
+
+import gzip
+import argparse
+import os.path
+import sys
+
+parser = argparse.ArgumentParser()
+parser.add_argument("xml", help="XML file to which to add token annotations.")
+parser.add_argument("vrt", help="VRT file which contains annotations to be added.")
+parser.add_argument("out", help="Output gzipped XML file.")
+args = parser.parse_args()
+
+if not os.path.exists(args.xml) or not os.path.exists(args.vrt):
+    sys.exit("One or more input files do not exist.")
+
+if os.path.exists(args.out):
+    sys.exit("Output file exists!")
+
+if args.out == args.xml or args.out == args.vrt:
+    sys.exit("Inputs and output cannot be the same file.")
+
+xml_file=gzip.open(args.xml)
+vrt_file=gzip.open(args.vrt)
+out_file=gzip.open(args.out, 'wb')
+
+for x in xml_file:
+    if x[0] == "<" :
+        out_file.write(x.strip() + "\n")
+    else:
+        v = vrt_file.readline()
+        out_file.write(x.strip() + "\t" + v.strip() + "\n")
+
+xml_file.close()
+vrt_file.close()
+out_file.close()

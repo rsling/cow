@@ -1,0 +1,61 @@
+#!/bin/bash
+
+# CWB with Perl package are assumed to be installed and in PATH.
+
+reg=$CORPUS_REGISTRY
+data=$CORPUS_DATA
+
+# ==========================
+# DONT ADAPT PAST THIS LINE!
+# ==========================
+
+set -e
+input=$1
+
+if [ ! -e $input ]
+then
+  exit
+fi
+
+pattr="-P pos -P lemma"
+sattr="-S s:0+url+id+ip+docid+bdc+crawldate+lastmod+country+city+bpc"
+
+unput=$(basename $input ".gz")
+pref=$(basename $unput ".xml")
+thisdata=$data"/"$pref
+thisreg=$reg"/"$pref
+corpus=`echo $pref | tr [:lower:] [:upper:]`
+
+echo
+echo =================================
+echo === Summary of COW encode job ===
+echo =================================
+echo
+echo "Input:          $input"
+echo "Unpacked input: $unput"
+echo "Corpus:         $corpus"
+echo "Registry:       $thisreg"
+echo "Data:           $thisdata"
+echo
+
+# DEBUG
+#exit
+
+if [[ -e $thisdata ]]
+then
+  \rm -rf $thisdata
+fi
+
+if [[ -e $thisreg ]]
+then
+  \rm $thisreg
+fi
+
+gunzip -c $input > $unput
+mkdir -p $thisdata
+
+cwb-encode -xsB -c utf8 -d $thisdata -f $unput -R $thisreg $pattr $sattr
+
+\rm $unput
+
+cwb-make $corpus -M 8000

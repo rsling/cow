@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# pipe filter to decode all XML entities
+# < and > are decoded to non-XML-sensitive variants
+
+sed 's/&amp;/\&/g; s/&quot;/"/g; s/&apos;/'"'"'/g; s/&lt;/⟨/g; s/&gt;/⟩/g'

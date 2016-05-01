@@ -1,0 +1,53 @@
+#!/bin/bash
+
+set -e
+set -u
+
+echo
+echo =======================================================================
+echo This script generates token annotations to be later merged with the 
+echo original files/annotations. Do not delete the inputs!
+echo =======================================================================
+echo
+
+ANNAJAR="/home/rsling/usr/local/mate/anna-3.61.jar"
+ANNADIR="/home/rsling/usr/local/texrex/scripts/annotate/de/"
+MMOR="morphology-ger-3.6.model"
+
+inf=$1
+outf=$(basename $inf .xml.gz)".vrt.gz"
+tmpinf=$(basename $inf .xml.gz)
+tmpfpre=$tmpinf".prepared"
+tmpfmor=$tmpinf".analyzed"
+logf=$tmpinf".log"
+
+echo "======= SUMMARY ======="
+echo "Input:        $inf"
+echo "TMP infix:    $tmpinf"
+echo "Preprocessed: $tmpfpre"
+echo "Analyzed:     $tmpfmor"
+echo "Output:       $outf"
+echo "Log:          $logf"
+echo "======================="
+
+echo
+echo "Preprocessing $inf to $tmpfpre..."
+
+gunzip -c $inf | \
+  sed '/^<s>\|<\/s>/ s/^.*$//' | \
+  sed '/^</d' | \
+  sed 's/\&apos;/'"'"'/g; s/\&quot;/"/g; s/\&amp;/\&/g;' | \
+  sed 's/^\([^	]\+\)	\([^	]\+\)	\([^	]\+\)	\([^	]\+\)$/_	\1	_	\3	_	\2	_	_	_	_	_	_	_/' > $tmpfpre
+
+echo
+echo "Analyzing to $tmpfmor"
+java -Xmx4g -cp $ANNAJAR is2.mtag.Tagger -uc -model $ANNADIR$MMOR -test $tmpfpre -out $tmpfmor &> $logf
+\rm $tmpfpre
+
+echo
+echo "Stripping annotations to $outf"
+grep -v '^ *$' $tmpfmor | cut -f 8 | sed 's/^\|$/|/g; s/^|_|$/|/' | gzip -c > $outf
+\rm $tmpfmor
+
+echo
+echo Done.

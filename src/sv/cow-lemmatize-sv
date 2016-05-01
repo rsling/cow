@@ -1,0 +1,27 @@
+#/!bin/bash
+
+pale -i $1 -m /home/rsling/workingcopies/texrex/scripts/annotate/sv/dsso.lemmas -s /home/rsling/workingcopies/texrex/scripts/annotate/sv/stopfile -h true -u false -r /home/rsling/workingcopies/texrex/scripts/annotate/sv/rules | \
+  sed '/^</! { /	\(SPS\|V@IPAS\|RG0S\|FE\|NCUSN@IS\|CCS\|V@N0AS\|FI\|PF@USS@S\|V@IIAS\|NP00N@0S\|NCUSN@DS\|NCUPN@IS\|PF@NS0@S\|NCNSN@IS\|RGPS\|CSS\|AQPUSNIS\|DI@US@S\|QS\|MC00N0S\|CIS\|V@IUAS\|AQP0PN0S\|NCNSN@DS\|FP\|PH@000@S\|RH0S\|AQPNSNIS\|NCNPN@IS\|PF@UPS@S\|PF@USO@S\|AQP0SNDS\|DI@NS@S\|V@IPSS\|XF\|NCUPN@DS\|PI@USS@S\|PS@US0@S\|DF@US@S\|AQP00N0S\|I\|AF0USNIS\|PI@NS0@S\|RGCS\|AQC00N0S\|PF@00O@S\|DF@0P@S\|DF@NS@S\|PH@NS0@S\|PF@US0@S\|PF@0PS@S\|AP000N0S\|AQS00NDS\|PS@0P0@S\|NP00G@0S\|V@M0AS\|NCUSG@DS\|V@N0SS\|AF00PN0S\|PS@NS0@S\|D0@0P@S\|V@IISS\|RGSS\|NCNPN@DS\|AF0NSNIS\|PI@0P0@S\|PS@000@S\|PF@UPO@S\|NC000@0A\|MO00N0S\|RG0A\|DI@0P@S\|PF@0P0@S\|PI@US0@S\|PF@0PO@S\|AQP0PNIS\|NCUSG@IS\|V@IUSS\|CCA\|DI@0S@S\|DI@00@S\|NCNSG@DS\|AF00SNDS\|AQS00NIS\|PH@US0@S\|NCU00@0S\|DH@US@S\|NCUPG@IS\|NCUPG@DS\|AQPMSNDS\|AQPUSN0S\|NC000@0S\|D0@US@S\|NCNSG@IS\|D0@NS@S\|AQS0PNDS\|MCUSNIS\|V@SIAS\|DH@0P@S\|NCNPG@IS\|DH@NS@S\|AQPNSN0S\|MCNSNIS\|PH@0P0@S\|NCNPG@DS\|V@SPAS\|PE@000@S\|AQ00000A\|AQSMSNDS\|SPA\|AQP00NIS\|PF@MS0@S\|AQS0PNIS\|DF@MS@S\|AQP0PG0S\|AF0MSNDS\|NCU00@0C\|MOMSN0S\|V@M0SS\|V@000A\|AQPMSGDS\|UNKNOWN\|AP000G0S\|DF@0S@S\|D0@00@A\|DI@MS@S\|AF00PG0S\|MC00G0S\|AQC00G0S\|AQP0SGDS\|MO00G0S\|AF00SGDS\|MC0000C\|NCN00@0C\|AQPUSGIS\|AF00000A\|NCN00@0S\|V@SISS\|PS@000@A\|MOMSG0S\|AF0MSGDS\|AQSMSGDS\|AF0USGIS\|MO0000C\|AQPNSGIS\)	/! s/^\(.\+\)	\(.\+\)	.\+$/\1	NOTAG	(unknown)/ }' | \
+  sed '/^</! s/^\([A-ZÄÖÅa-zäöåé]\)	\(.\+\)	UNKNOWN$/\1	\2	(letter)/' | \
+  sed '/^</! s/^\(19\|20\)\([0-9]\{2\}-[0-9]\{1,2\}-[0-9]\{1,2\}\)	\(.\+\)	UNKNOWN$/\1\2	\3	(date)/' | \
+  sed '/^</! s/^\([0-3][0-9]\.[01][0-9]\.[12][0-9]\{3\}\)	\(.\+\)	UNKNOWN$/\1	\2	(date)/' | \
+  sed '/^</! s/^\(1[1-9]\|20\)\([0-9]\{2\}\)	\(.\+\)	UNKNOWN$/\1\2	\3	(year)/' | \
+  sed '/^</! s/^\([0-9]\|[01][0-9]\|2[0-4]\)\:\([0-5][0-9]\)	\(.\+\)	UNKNOWN$/\1\:\2	\3	(time)/' | \
+  sed '/^</! s/^\([01][0-9]\|2[0-4]\)\.\([0-5][0-9]\)	\(.\+\)	UNKNOWN$/\1.\2	\3	(time)/' | \
+  sed '/^</! s/^\(\W\{0,2\}[:;|=8][-o]\{0,1\}[][)(|}{OoKSsDPp]\)	\(.\+\)	.\+$/\1	\2	(emo)/' | \
+  sed '/^</! s/^\(\&lt;\/\{0,1\}3\)	\(.\+\)	UNKNOWN$/\1	\2	(emo)/' | \
+  sed '/^</! s/^\(\:\w\+\:\)	\(.\+\)	UNKOWN$/\1	\2	(emo)/' | \
+  sed '/^</! s/^\([0-9]\+\)	\(.\+\)	UNKNOWN$/\1	\2	(num)/' | \
+  sed '/^</! s/^\(\&lt;\|&gt;\|\&amp;\|\&apos;\|\&quot;\)	\(.\+\)	\(.\+\)$/\1	FP	(punct)/' | \
+  sed '/^</! s/^\(\W\+\)	\(F[EIP]\)	.\+$/\1	\2	(punct)/' | \
+  sed '/^</! s/^\(\W\+\)	\(.\+\)	UNKNOWN$/\1	\2	(nonword)/' | \
+  sed '/^</! s/^\(.\+\)\&apos;s	\(.\+\)	UNKNOWN$/\1\&apos;	\2	\1/' | \
+  sed '/^</! s/^\(emailblank\|uriblank\|hashtagblank\)	\(.\+\)	.\+$/\1	\2	(internal)/' | \
+  sed '/^</! s/^dupblank.\+$/dupblank	NOTAG	(internal)/' | \
+  sed '/^</! s/^\(.\+\)	XF	.\+$/\1	XF	(foreign)/' | \
+  sed '/^</! s/^\([.[:upper:]]\+\.\)	\(.\+\)	UNKNOWN$/\1	\2	(abbr)/' | \
+  sed '/^</! s/^\(.\+\.\)\(se\|com\|net\|edu\|gov\|org\|fi\|uk\|fr\|de\|da\|no\)	\(.\+\)	UNKNOWN$/\1\2	\3	(url)/' | \
+  sed '/^</! s/^\([-+*\/.:,%#0-9x]\+\)	\(.\+\)	UNKNOWN$/\1	\2	(math)/' | \
+  sed '/^</! s/UNKNOWN$/(unknown)/' | \
+  awk 'length <= 8192'
+
