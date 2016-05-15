@@ -45,22 +45,22 @@
 
 This section describes the original design goals of our tool chain.%
 \footnote{The tools have been freely available since 2014.
-  They are distributed under a permissive 2-clasue BSD license on GitHub (\url{https://github.com/rsling/cow}).}
+  They are distributed under a permissive 2-clause BSD license on GitHub (\url{https://github.com/rsling/cow}).}
 Since we participtated with a production system only minimally adapted for the EmpiriST 2015 shared task, it is important to keep in mind the intended use and users of the system when evaluating the performance of and the errors made by the system.
 
 The system with which we participated is the production system implemented for the construction of the COW and CommonCOW corpora that are described in \newcite{SchaeferBildhauer2012a}, \newcite{Schaefer2015b}, \newcite{Schaefer2016a}, but also (in comparison to other initiatives) in \newcite{BiemannEa2013} and (implicitly) in textbook form in \newcite{SchaeferBildhauer2013}.%
 \footnote{\url{http://corporafromtheweb.org}}
 Instead of developing custom tools for linguistic annotation---as we did for the non-linguistic preprocessing in the form of the \textit{texrex} web page processor \cite{SchaeferBildhauer2012a,Schaefer2015b,Schaefer2016c}---we wrapped available tools and models (tokenizers, POS taggers and lemmatizers, morphological analyzers, named-entity recognizers, and dependency parsers).
 
-Since the COW tool chain is a production system, we consider it vital to understand who our primary customers are, and what the resulting design goals were.
+Since the COW tool chain is a production system, we consider it vital to understand who our primary users are, and what the resulting design goals were.
 We have a background in theoretical linguistics, especially morpho-syntax and semantics.
-For empirical work in these fields, corpora have become a major source of data.
-Since the focus in theoretical linguistics has shifted to rare phenomena, large web corpora containing a fair share of non-standard language are sometimes the only available source of data.
+For empirical work in these fields, corpora have become a major source of data, and when it comes to rare phenomena, large web corpora containing a fair share of non-standard language are sometimes even the only available source of data.
 However, our intended primary users (including ourselves) are not interested in the specifics of computer-mediated communication but rather in a broad view of variation and alternations occurring in present-day language.
 This means that linguistic annotations like POS tags can only be utilized by this type of user if they are near-perfect, and corpus queries consequently have a near-perfect recall.
 This is reflected in the behavior of our users.
 
-From log analyses of the queries made by our users at \url{https://webcorpora.org}, we know that (as of 15 May 2016) POS tag specifications are used in only 14.8\% (DECOW-only 13.7\%), lemma information in 13.39\% (DECOW-only 14.13\%), and simple token specifications in 89.2\% (DECOW-only 89.2\%) of all queries.
+%From log analyses of the queries made by our users at \url{https://webcorpora.org}, we know that (as of 15 May 2016) POS tag specifications are used in only 14.8\% (DECOW-only 13.7\%), lemma information in 13.39\% (DECOW-only 14.13\%), and simple token specifications in 89.2\% (DECOW-only 89.2\%) of all queries.
+From log analyses of the queries made by our users at \url{https://webcorpora.org}, we know that (as of 15 May 2016) POS tag specifications are used in only 13.7\%, lemma information in 14.13\%, and simple token specifications in 89.2\% of all queries to our DECOW-corpus (German; the figures are about the same for COW corpora of other languages).
 In other words, most linguists who use our web corpora do not use POS tagging---let alone other types of annotation---either because they are unaware of what such annotations can do for them, or because they cannot risk publishing corpus studies where material was not taken into account because the tagger made crucial errors, and queries specifying POS annotations did not return all the relevant targets.
 While low precision for corpus queries just means that corpus linguists have to filter their concordances by hand more thoroughly, below 100\% recall runs the danger of invalidating corpus studies.
 
@@ -68,7 +68,9 @@ As an example, the named entity annotation in DECOW14 was added because some pro
 After the real-life accuracy of the Stanford Named Entity Recognizer with the models from \newcite{FaruquiPado2010} was evaluated as unacceptable \cite{Helmers2013}, carefully designed heuristics and lists of names created by hand were used instead of the automatically generated annotation \cite{Ackermann2016}.
 The entire automatic annotation was essentially useless, at least for the intended use.
 
-That said, improving POS tagging has never been our primary focus, simply because we are aware that near-perfect results cannot be achieved anyway.
+%That said, improving POS tagging has never been our primary focus, simply because we are aware that near-perfect results cannot be achieved anyway.
+That said, improving POS tagging has never been our primary focus, simply because we doubt that near-perfect results can be achieved for the mixture
+of text types typically found in crawled web corpora.
 Since corpus query engines always use tokens as their basic unit for indexing, near-perfect tokenization is a de facto-requirement, however.
 This is why we invested considerable effort into tokenization but not into POS tagging.
 We describe the COW14 tool chain for German in Section~\ref{sec:implementation}, report the results on the EmpiriST 2015 data sets in Section~\ref{sec:results} before summarizing the paper in Section~\ref{sec:summaryoutlook}.
@@ -76,8 +78,8 @@ We describe the COW14 tool chain for German in Section~\ref{sec:implementation},
 \section{Implementation}
 \label{sec:implementation}
 
-Before we go into the technical details of the COW14 tool chain, we would like to mention our main woe (as corpus creators) is that, even in 2016, most NLP tools generally do not come with the ability to process text contained in XML files, which---in the simplest and totally sufficient case---means skipping over anything in $<>$ and treating the five canonical XML entities as their literal counterparts.
-The problem exists across the board with Ucto and TreeTagger discussed below, but also with all other tools we use, such as FreeLing \cite{CarrerasEa2004}, the Stanford Named Entity Recognizer \cite{FaruquiPado2010}, mate-tools \cite{BohnetNivre2012}, and Marmot \cite{MuellerEa2013}.
+Before we go into the technical details of the COW14 tool chain, we would like to mention our main woe (as corpus creators), namely the fact that, even in 2016, most NLP tools generally do not come with the ability to process text contained in XML files, which---in the simplest and totally sufficient case---means skipping over anything in $<>$ and treating the five canonical XML entities as their literal counterparts.
+The problem exists across the board with Ucto and TreeTagger discussed below, but also with all other tools we use, such as FreeLing \cite{PadroStanislavsky2012}, the Stanford Named Entity Recognizer \cite{FaruquiPado2010}, mate-tools \cite{BohnetNivre2012}, and Marmot \cite{MuellerEa2013}.
 Such problems are not usually tackled in shared tasks where accuracy is, of course, the only metric of interest and usability in large production systems is less relevant.
 That said, we now proceed to the technical details.
 
@@ -99,6 +101,8 @@ As a consequence, we are currently designing our own rule-based tokenizer and ar
 Pre-processing includes:
 
 \begin{itemize}\Lf
+  \item heuristically separating run-together sentences (using a custom tool included in the \textit{texrex} suite)
+  \item replacing any whitespace withing XML-tags (e.\,g., between attribute-value pairs) because Ucto cannot deal with XML tags. 
   \item converting XML entities to literals because Ucto cannot deal with XML entities
   \item marking certain kinds of strings in a way that they are not broken up by Ucto, for example double names written as \textit{Kay-M.}, file names, DOIs, ISBNs, content-type declarations, dates and numbers with periods (otherwise often detected as sentence ends)
   \item pre-processing quotes to make sure they are always treated as separate tokens
@@ -125,16 +129,16 @@ However, we did not even attempt to achieve full compatibility with the EmpiriST
 \subsection{POS Tagger}
 \label{sec:postagger}
 
-For POS tagging, we use the TreeTagger \cite{Schmid1994b} with the standard models.
+For POS tagging, we use the TreeTagger \cite{Schmid1994b,Schmid1995} with the standard models.
 The Bash wrapper's main function is to set up a correct piping between different TreeTagger instances for tagging and chunking with other scripts in between.
-The only improvements we implemented in the wrapper concern regular expression-based recognition of smileys and other emoticons as well as some \textit{blank}-tokens inserted by our web page processing system \textit{texrex}.
+The only improvements we implemented in the wrapper concern regular expression-based recognition of smileys and other emoticons as well as some special tokens inserted by our web page processing system \textit{texrex}.
 This applies after TreeTagger.
 It cannot be implemented by pre-tagging, simply because introducing new POS tags for smileys would require an extended tag set and consequently a re-trained tagger model.
 
 Other than that we only improved lemmatization and POS tagging by amending the tagger lexicon.
 We sorted the frequency list of tokens lemmatized as \textit{unknown} in a large subset of DECOW14A and manually created a 3,800 entries long lexicon addition for TreeTagger with POS and lemmas in order to take care of the most frequent unknown words.%
 \footnote{We stopped at the point where the list contained less than one fixable \textit{unknown} token in a window of thirty tokens.
-The remaning unknowns are productively formed compounds and noise.}
+The remaning\textit{unknowns} are productively formed compounds and noise.}
 While this necessarily also improves the quality of the POS tagging in our full corpus, it most likely did not improve the results in the EmpiriST 2015 shared task, simply because the sample is so small that the added words do not occur in it with high enough frequencies.
 
 \section{Results}
@@ -157,7 +161,7 @@ While this necessarily also improves the quality of the POS tagging in our full 
 Table~\ref{tab:resultstok} summarizes the COW14 results on the EmpiriST 2015 web and CMC tokenization gold standard data sets according to the official evaluation script.
 The near-perfect performance on web data is not surprising because this is the type of data for which we optimized our tool chain.
 The remaining errors are analyzed in Table~\ref{tab:analyzeweb}.
-Except for the serious error labeled \textit{concatenation} and the split-up emoticon, all the other errors are irrlevant for our primary target users, as explained in Section~\ref{sec:originaldesigngoals}.%
+Except for the serious error labeled \textit{concatenation} and the split-up emoticon, all the other errors are irrelevant for our primary target users, as explained in Section~\ref{sec:originaldesigngoals}.%
 \footnote{We were surprised to see the emoticon being incorrectly tokenized because there \textit{is} a rule in our Ucto rule set which should detect emoticons like :)
 We suspect that this is yet another Ucto side-effect, maybe introduced by the tweaks we made in order to conform to the EmpiriST format.}
 In other words, for our purposes, tokenization is a solved problem.
@@ -202,8 +206,8 @@ In other words, for our purposes, tokenization is a solved problem.
 \end{table}
 
 We do not discuss the tokenization errors for the CMC data set in detail because we did not optimize out tokenizer for such data.
-There are some errors like the \textit{concatenation} error from Table~\ref{tab:analyzeweb}, many emoticon which were broken up, and incorrect handling of run-together sentences.
-Since we normally fix run-together sentences before tokenization using a tool included in the \textit{texrex} suite, the error rate can be expected to be lower on data that has run through our complete pipeline.
+There are some errors like the \textit{concatenation} error from Table~\ref{tab:analyzeweb}, many emoticons which were broken up, and incorrect handling of run-together sentences.
+Since we normally fix run-together sentences before tokenization, the error rate can be expected to be lower on data that has run through our complete pipeline.
 
 For completeness, we provide the tagging results are given in Table~\ref{tab:resultstag}.
 We do not discuss the errors in detail because our contribution was non-competitive.
