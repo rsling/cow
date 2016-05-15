@@ -60,7 +60,7 @@ This means that linguistic annotations like POS tags can only be utilized by thi
 This is reflected in the behavior of our users.
 
 %From log analyses of the queries made by our users at \url{https://webcorpora.org}, we know that (as of 15 May 2016) POS tag specifications are used in only 14.8\% (DECOW-only 13.7\%), lemma information in 13.39\% (DECOW-only 14.13\%), and simple token specifications in 89.2\% (DECOW-only 89.2\%) of all queries.
-From log analyses of the queries made by our users at \url{https://webcorpora.org}, we know that (as of 15 May 2016) POS tag specifications are used in only 13.7\%, lemma information in 14.13\%, and simple token specifications in 89.2\% of all queries to our DECOW-corpus (German; the figures are about the same for COW corpora of other languages).
+From log analyses of the queries made by our users at \url{https://webcorpora.org}, we know that (as of 15 May 2016) POS tag specifications are used in only 13.7\%, lemma information in 14.13\%, and simple token specifications in 89.2\% of all queries to our DECOW-corpus (German; figures are about the same for other COW corpora).
 In other words, most linguists who use our web corpora do not use POS tagging---let alone other types of annotation---either because they are unaware of what such annotations can do for them, or because they cannot risk publishing corpus studies where material was not taken into account because the tagger made crucial errors, and queries specifying POS annotations did not return all the relevant targets.
 While low precision for corpus queries just means that corpus linguists have to filter their concordances by hand more thoroughly, below 100\% recall runs the danger of invalidating corpus studies.
 
@@ -138,7 +138,7 @@ It cannot be implemented by pre-tagging, simply because introducing new POS tags
 Other than that we only improved lemmatization and POS tagging by amending the tagger lexicon.
 We sorted the frequency list of tokens lemmatized as \textit{unknown} in a large subset of DECOW14A and manually created a 3,800 entries long lexicon addition for TreeTagger with POS and lemmas in order to take care of the most frequent unknown words.%
 \footnote{We stopped at the point where the list contained less than one fixable \textit{unknown} token in a window of thirty tokens.
-The remaning\textit{unknowns} are productively formed compounds and noise.}
+The remaning \textit{unknowns} are productively formed compounds and noise.}
 While this necessarily also improves the quality of the POS tagging in our full corpus, it most likely did not improve the results in the EmpiriST 2015 shared task, simply because the sample is so small that the added words do not occur in it with high enough frequencies.
 
 \section{Results}
