@@ -10,11 +10,8 @@ TOKCONFIG="/Users/felix/NLP/cow/src/de/tokconfig-de-cow"
   sed 's/ *$//g' | \
 # in tag lines (<) replace spaces by _~_ for ucto
   sed '/^</ s/ \+/_~_/g' | \
-
 # any non-word character that is repeated more often than thrice, reduce to three
-#  TODO Re-enable after EmpiriST!
-#  sed '/^[^<]/ s/\(\W\)\1\{3,\}/\1\1\1/g' | \
-
+  sed '/^[^<]/ s/\(\W\)\1\{3,\}/\1\1\1/g' | \
 # make entities ucto-compatible: insert blanks around, make literal ' and "
   sed 's/ *\&amp; */ \&amp; /g' | \
   sed 's/\&apos;\&apos;/"/g' | \
@@ -23,103 +20,16 @@ TOKCONFIG="/Users/felix/NLP/cow/src/de/tokconfig-de-cow"
   sed 's/&quot;/"/g' | \
   sed 's/ *\&gt; */ \&gt; /g' | \
   sed 's/ *\&lt; */ \&lt; /g' | \
-
-# safe obfuscated email addresses
-  sed '/^[^<]/ s/\([a-zA-Z0-9.-]\+\) *\[at\] *\([a-zA-Z0-9.-]\+\) *\[dot\]\ *\([a-zA-Z0-9.-]\+\)/\1ÜCTÖÄT\2ÜCTÖDÖT\3/g' | \
-
-# Ucto eats - in Kay-M. and similar names
-  sed '/^[^<]/ s/\([A-ZÄÖÜ][a-zäöüß]\+\)-\([A-ZÄÖÜ]\)\./\1ÜCTÖNÄÄÄ\2ÜCTÖNÖÖÖ/g' | \
-
-# safe filename regions
-  sed '/^[^<]/ s/\([^ ]\+\.\)\(wav\|mp3\|ogg\|flac\|aif\|aiff\|wma\|mpa\|flv\|avi\|mpg\|mpeg\|mp4\|3g2\|3gp\|m4v\|mov\|png\|jpg\|jpeg\|gif\|bmp\|tif\|tiff\|css\|js\|doc\|docx\|xls\|xlsx\|pps\|ppt\|pptx\|pages\|rtf\|odt\|ods\|odp\|pdf\|ps\|eps\|tex\|txt\|zip\|gzip\|tar\|7z\|rar\|iso\|bin\|cue\|dmg\|rpm\|deb\|pkg\)/ ÜCTÖFÜNÄb\1\2ÜCTÖFÜNÄe /g' | \
-
-# Safe DOI regions
-  sed 's/\(DOI\|doi\)\( :\|: \| : \)\(10\.[0-9.\/a-z_-]\+\)/ \1 \2 ÜCTÖDÖIb\3ÜCTÖDÖIe /g' | \
-  sed 's/\(DOI\|doi\):\(10\.[0-9.\/a-z_-]\+\)/ ÜCTÖDÖIb\1:\2ÜCTÖDÖIe /g' | \
-
-# Safe ISBN regions
-  sed '/^[^<]/ s/\(ISBN *[-0-9]\+[0-9xX]\)/ ÜCTÖISBNb\1ÜCTÖISBNe /' | \
-
-# protect content-type
-  sed '/^[^<]/ s/\(text\|multipart\|message\|image\|audio\|application\)\/\([a-z0-9]\+\)/ÜCTÖCÖTÜb\1\/\2ÜCTÖCÖTÜe/g'  | \
-
-# Make sure dates are properly processed and not S-tokenized
-  sed '/^[^<]/ s/\([0-9]\{2,4\}\)-\([0-9]\{1,2\}\)-\([0-9]\{1,2\}\)/ \1ÜCTÖHÜ \2ÜCTÖHÜ \3 /g' | \
-  sed '/^[^<]/ s/\([0-9]\{1,2\}\)\.\([0-9]\{1,2\}\)\.\([0-9]\{4\}\)/ \1ÜCTÖPÜ \2ÜCTÖPÜ \3 /g' | \
-  sed '/^[^<]/ s/\([0-9]\{1,2\}\)\.\([0-9]\{1,2\}\)\.\([0-9]\{2\}\)/ \1ÜCTÖPÜ \2ÜCTÖPÜ \3 /g' | \
-
-# Make sure quotes are separated 
-  sed '/^[^<]/ s/\(["“”‟″˝„‚]\)/ \1 /g' | \
-      
 # insert blanks to make Ucto tokenize x-to-y hyphen constructs correctly
   sed '/^[^<]/ s/\(^\|[^a-zäöüßA-ZÄÖÜ]\)\([0-9.]\+\)\(\s*\)-\(\s*\)\([0-9.]\+\)\([^a-zäöüßA-ZÄÖÜ]\|$\)/\1\2 - \5\6/g' | \
-  sed '/^[^<]/ s/\(^\|[^a-zäöüßA-ZÄÖÜ]\)\([0-9.]\+\)\.\(\s*\)-\(\s*\)\([0-9.]\+\)\([^a-zäöüßA-ZÄÖÜ]\|$\)/\1\2ÜCTÖNÖSÖ - \5\6/g' | \
-# keep the %$&§*-iest tokenizer in the world from not s-splitting numbers and dates
-  sed '/^[^<]/ s/\([0-9]\)\.\s*\([^A-ZÄÖÜ0-9]\)/\1 ÜCTÖNÖSÖ \2/g' | \
-# a certain %&/§$" tokenizer eats brackets before abbreviations
-  sed '/^[^<]/ s/(/( /g' | \
-# This is similar: (Haus-)frieden
-  sed '/^[^<]/ s/\([a-zA-ZäöüÄÖÜß]-\))/\1 )/g' | \
+  sed '/^[^<]/ s/\(^\|[^a-zäöüßA-ZÄÖÜ]\)\([0-9.]\+\)\.\(\s*\)-\(\s*\)\([0-9.]\+\)\([^a-zäöüßA-ZÄÖÜ]\|$\)/\1\2FÜCKÜCTÖ - \5\6/g' | \
+# kep the %$&§*-iest tokenizer in the world from not s-splitting numbers and dates
+  sed '/^[^<]/ s/\([0-9]\)\.\s*\([^A-ZÄÖÜ0-9]\)/\1FÜCKÜCTÖ \2/g' | \
+  sed '/^[^<]/ s/\([1-9]\|[0-2][0-9]\|3[01]\)\.\s*\(Januar\|Jänner\|Jan\|Februar\|Feber\|Feb\|März\|Mär\|Mar\|April\|Apr\|Mai\|Juni\|Jun\|Juli\|Jul\|August\|Aug\|September\|Sep\|Sept\|Oktober\|Okt\|November\|Nov\|Dezember\|Dez\)\(\s\)/\1FÜCKÜCTÖ\2\3/g' | \
+# ucto tokenize
   ucto -n -P -c $TOKCONFIG | \
-
-# fix obf. email addresses
-  sed 's/ÜCTÖÄT/[at]/g; s/ÜCTÖDÖT/[dot]/g;' | \
-
-# fix file names
-  sed 's/\(ÜCTÖFÜNÄb[^Ä]\+\)ÜCTÖNÖSÖ\([^Ä]\+ÜCTÖFÜNÄe\)/\1.\2/g' | \
-  sed 's/\(ÜCTÖFÜNÄb[^Ä]\+\)ÜCTÖNÖSÖ\([^Ä]\+ÜCTÖFÜNÄe\)/\1.\2/g' | \
-  sed 's/\(ÜCTÖFÜNÄb[^Ä]\+\)ÜCTÖNÖSÖ\([^Ä]\+ÜCTÖFÜNÄe\)/\1.\2/g' | \
-  sed 's/\(ÜCTÖFÜNÄb[^Ä]\+\)ÜCTÖNÖSÖ\([^Ä]\+ÜCTÖFÜNÄe\)/\1.\2/g' | \
-  sed 's/\(ÜCTÖFÜNÄb[^Ä]\+\)ÜCTÖNÖSÖ\([^Ä]\+ÜCTÖFÜNÄe\)/\1.\2/g' | \
-  sed 's/\(ÜCTÖFÜNÄb[^Ä]\+\)ÜCTÖNÖSÖ\([^Ä]\+ÜCTÖFÜNÄe\)/\1.\2/g' | \
-  sed 's/\(ÜCTÖFÜNÄb[^Ä]\+\)ÜCTÖNÖSÖ\([^Ä]\+ÜCTÖFÜNÄe\)/\1.\2/g' | \
-  sed 's/\(ÜCTÖFÜNÄb[^Ä]\+\)ÜCTÖNÖSÖ\([^Ä]\+ÜCTÖFÜNÄe\)/\1.\2/g' | \
-  sed 's/\(ÜCTÖFÜNÄb[^Ä]\+\)ÜCTÖNÖSÖ\([^Ä]\+ÜCTÖFÜNÄe\)/\1.\2/g' | \
-  sed 's/\(ÜCTÖFÜNÄb[^Ä]\+\)ÜCTÖNÖSÖ\([^Ä]\+ÜCTÖFÜNÄe\)/\1.\2/g' | \
-  sed 's/\(ÜCTÖFÜNÄb[^Ü]\+\) \([^Ü]\+ÜCTÖFÜNÄe\)/\1\2/g' | \
-  sed 's/\(ÜCTÖFÜNÄb[^Ü]\+\) \([^Ü]\+ÜCTÖFÜNÄe\)/\1\2/g' | \
-  sed 's/\(ÜCTÖFÜNÄb[^Ü]\+\) \([^Ü]\+ÜCTÖFÜNÄe\)/\1\2/g' | \
-  sed 's/\(ÜCTÖFÜNÄb[^Ü]\+\) \([^Ü]\+ÜCTÖFÜNÄe\)/\1\2/g' | \
-  sed 's/\(ÜCTÖFÜNÄb[^Ü]\+\) \([^Ü]\+ÜCTÖFÜNÄe\)/\1\2/g' | \
-  sed 's/\(ÜCTÖFÜNÄb[^Ü]\+\) \([^Ü]\+ÜCTÖFÜNÄe\)/\1\2/g' | \
-  sed 's/\(ÜCTÖFÜNÄb[^Ü]\+\) \([^Ü]\+ÜCTÖFÜNÄe\)/\1\2/g' | \
-  sed 's/\(ÜCTÖFÜNÄb[^Ü]\+\) \([^Ü]\+ÜCTÖFÜNÄe\)/\1\2/g' | \
-  sed 's/\(ÜCTÖFÜNÄb[^Ü]\+\) \([^Ü]\+ÜCTÖFÜNÄe\)/\1\2/g' | \
-  sed 's/\(ÜCTÖFÜNÄb[^Ü]\+\) \([^Ü]\+ÜCTÖFÜNÄe\)/\1\2/g' | \
-  sed 's/ÜCTÖFÜNÄb\([^Ü]\+\)ÜCTÖFÜNÄe/\1/g' | \
-
 # undo do-not-s-tokenize-dates hack
-  sed 's/ ÜCTÖNÖSÖ/. /g' | \
-
-# restore names like Kay-M.
-  sed 's/\([^ ]\+\)ÜCTÖNÄÄÄ\([^ ]\+\)ÜCTÖNÖÖÖ/\1-\2./g' | \
-
-# restore dates with hyphens and periods
-  sed 's/ÜCTÖHÜ/-/g' | \
-  sed 's/ÜCTÖPÜ/./g' | \
-
-# restore content types
-  sed 's/ÜCTÖCÖTÜb\([^Ü]\+\)ÜCTÖCÖTÜe/ \1 /g' | \
-
-
-# fix ISBNs
-  sed 's/\(ÜCTÖISBNb.\+\) \(.\+ÜCTÖISBNe\)/\1\2/g' | \
-  sed 's/\(ÜCTÖISBNb.\+\) \(.\+ÜCTÖISBNe\)/\1\2/g' | \
-  sed 's/\(ÜCTÖISBNb.\+\) \(.\+ÜCTÖISBNe\)/\1\2/g' | \
-  sed 's/\(ÜCTÖISBNb.\+\) \(.\+ÜCTÖISBNe\)/\1\2/g' | \
-  sed 's/\(ÜCTÖISBNb.\+\) \(.\+ÜCTÖISBNe\)/\1\2/g' | \
-  sed 's/\(ÜCTÖISBNb.\+\) \(.\+ÜCTÖISBNe\)/\1\2/g' | \
-  sed 's/ÜCTÖISBNbISBN\([^Ü]\+\)ÜCTÖISBNe/ISBN \1/g' | \
-
-# fix DOIs
-  sed 's/ÜCTÖDÖIb\([^Ü]\+\)ÜCTÖDÖIe/\1/g' | \
-
-# hack cleanup, just to make sure
-  sed 's/ÜCTÖ[A-ZÜÖÄ]\+\(b\|e\|\)//g' | \
-
-# make *bla* compatible with EmpiriST
-  sed 's/\*\([^ *]\+\)\*/* \1 */g' | \
-
+  sed 's/ FÜCKÜCTÖ/. /g' | \
 # sentences with opening ( followed by sentences with closing ) are merged (see sed N command!)
   sed '/^[^<]/ { /^.*( \([^)]\+\|\)$/ {N; /\n[^(]* )/ s/\n/ /; } }' | \
 # any line without ANY < or > is a sentence, insert <s></s> (still in ONE LINE!)
@@ -161,7 +71,4 @@ TOKCONFIG="/Users/felix/NLP/cow/src/de/tokconfig-de-cow"
   sed '/^<doc url/ s/ ""/ "/g' | \
 #  fix even more lines fucked up by ucto
   sed '/^< doc _ ~ _/ { s/ //g; s/_~_/ /g; }' | \
-
-# TODO Re-enable after EmpiriST 
-#  sed '/^</! {/^.\{35,\}/ { /^\([^-0-9]\{2,\}-\)\{2,\}/! {s/^.*$/noiseblank/} } }'
-cat
+  sed '/^</! {/^.\{35,\}/ { /^\([^-0-9]\{2,\}-\)\{2,\}/! {s/^.*$/noiseblank/} } }'
