@@ -75,7 +75,7 @@ class CORexReader:
             else:
                 outl = list()
                 outl.append('<token>')
-                for i in range(0, len(lline)-1, 1):
+                for i in range(0, len(lline), 1):
                     outl.append('<' + self.annos[i] + '>')
                     outl.append(lline[i])
                     outl.append('</' + self.annos[i] + '>')

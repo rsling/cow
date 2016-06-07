@@ -52,7 +52,8 @@ def main():
 
     # This is just an example output.
     for doc in corpus_in:
-        print doc.find('.//*word').text
+        for t in doc.findall('.//*word'):
+            print t.text
 
 if __name__ == "__main__":
     main()
