@@ -2,7 +2,7 @@
 
 export LC_ALL="de_DE.utf8"
 
-TOKCONFIG="/home/rsling/usr/local/texrex/scripts/annotate/de/tokconfig-de-cow"
+TOKCONFIG="/Users/felix/NLP/cow/src/de/tokconfig-de-cow"
 
 # remove leading spaces
   sed 's/^ *//g' | \
