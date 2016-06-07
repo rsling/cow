@@ -3,7 +3,35 @@
 # COW + IDS topic modeling helpers based on gensim.
 
 import re
-import xml.etree.ElementTree as ET
+from lxml import etree as ET
+
+def enitify(s):
+    s = s.replace('&', '&amp;')
+    s = s.replace('"', '&quot;')
+    s = s.replace("'", '&apos;')
+    s = s.replace('<', '&lt;;')
+    s = s.replace('>', '&gt;')
+    return s
+
+
+def flatten_tokens(dom):
+    """Flattens <token> nodes in DOM"""
+
+    # Modify the DOM, flattening <token>s
+    for node in dom.findall('.//*token'):
+
+        # Flatten the children of <token> with \t
+        flat = "\t".join(node.itertext())
+
+        # Clean the children
+        for child in list(node):
+            node.remove(child)
+
+        node.text = flat +  '\n'
+
+    # Flatten DOM and return:
+    return dom
+
 
 class CORexReader:
     """A class that reads COW-XML document by document and represents it as DOM"""
@@ -53,7 +81,8 @@ class CORexReader:
             # There was a document. Increase counter.
             self.count = self.count+1
 
-            b = ' '.join(b).encode('utf-8')
+            b = ' '.join(b)
+
             b = ET.fromstring(b)
             return b
 
