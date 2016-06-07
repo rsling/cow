@@ -10,27 +10,9 @@
 import argparse
 import os.path
 import sys
-from corexreader import flatten_tokens, CORexReader as CX
+from corexreader import outify, CORexReader as CX
 from lxml import etree as ET
 
-
-def entify(s):
-    s = s.replace('"', '&quot;')
-    s = s.replace("'", '&apos;')
-    return s
-
-def outify(doc):
-    """prepares a doc DOM for export to a COW XML file"""
-
-    flat = ET.tostring(flatten_tokens(doc), encoding='utf-8').replace('>','>\n')
-    # clean up whitespace at beginning/end of line
-    listed = flat.split('\n')
-    # remove blank lines and '<token>' markings
-    listed = [y for y in [x.strip() for x in listed] if y and not y=='<token>' and not y=='</token>']
-    # make " and ' conform
-    listed = [entify(x) if not x.startswith('<') else x for x in listed]
-    flat = ('\n').join(listed)
-    return flat
 
 def main():
     parser = argparse.ArgumentParser()
