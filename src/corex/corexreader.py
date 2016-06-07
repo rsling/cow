@@ -9,12 +9,11 @@ class CORexReader:
     """A class that reads COW-XML document by document and represents it as DOM"""
 
 
-    def __init__(self, filename):
+    def __init__(self, filename, annos = list()):
         self.infilename = filename
         self.infile = open(self.infilename)
-
+        self.annos = annos
         self.count = 0
-
         self.docstart = re.compile(r'^<doc .+> *$')
         self.docend = re.compile(r'^</doc> *$')
 
@@ -34,7 +33,7 @@ class CORexReader:
                 l = self.sread()
                 if l:
                     if self.docstart.match(l):
-                        b.append(l)
+                        self.sappend(l, b)
                         break
                 else:
                     raise StopIteration
@@ -44,7 +43,7 @@ class CORexReader:
                 l = self.sread()
                 
                 if l:
-                    b.append(l)
+                    self.sappend(l, b)
                     if self.docend.match(l):
                         break
                 else:
@@ -63,4 +62,26 @@ class CORexReader:
     # Read a line and make ready to use.
     def sread(self):
         return self.infile.readline().decode('utf-8').strip()
+
+    # Instead of messing with ET later, we XMLify the token stream
+    # while reading.
+    def sappend(self, line, lisst):
+        if line[0] == '<':
+            lisst.append(line)
+        else:
+            lline = line.split('\t')
+            if not len(lline) == len(self.annos):
+                print "Line with incorrect no. of fileds: " + line + "\n"
+            else:
+                outl = list()
+                outl.append('<token>')
+                for i in range(0, len(lline)-1, 1):
+                    outl.append('<' + self.annos[i] + '>')
+                    outl.append(lline[i])
+                    outl.append('</' + self.annos[i] + '>')
+                outl.append('</token>')
+                lisst.append("".join(outl))
+
+
+
 
