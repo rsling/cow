@@ -1,0 +1,82 @@
+#!/bin/bash
+
+# This takes a corpus in COW-XML format as input, does some preprocessing,
+# runs the Berkeleparser with the topological model, converts the result to XML,
+# and merges the topilogical annotation with the COW-XML form teh input file.
+# Important: Merging will only work if there are no XML-tags embedded within
+# <s> ... </s> regions in the COW-XML file.
+
+# Adapt this:
+RESOURCES="/Users/felix/Documents/Konferenzen/2016/gac2016/topo"
+PARSERHOME='/Users/felix/NLP/berkelyparser/topoparser/'
+
+#################################################################
+
+cowxmlfile=$1
+prefix=$(basename $1 .xml)
+outfilename=$prefix-tf.xml
+
+# Delete any Tree-Tagger-Chunker tags from the COW-XML file:
+echo "Cleaning input file..." 1>&2
+sed '/<\/\?[vnp]c>$/d' $cowxmlfile > $prefix-nochunks.tmp &&\
+# Make one-sentence-per line format required for Berkeleyparser
+# (both sentence regions and non-sentence material):
+echo "Making one sentence per line..." 1>&2
+$RESOURCES/cow-mk-ospl.py $prefix-nochunks.tmp|\
+# reduce any sequence of whitespace chars to a single one (Berkeleyparser doesn't like it):
+sed 's/  \+/ /g' |\
+# remove any empty lines:
+sed '/^$/d' |\
+# substitute xml-entities:
+sed 's/\&quot;/"/g'|\
+sed "s/\&apos;/'/g"|\
+sed 's/\&amp;/&/g'|\
+#sed 's/\&lt;/</g'|\
+#sed 's/\&gt;/>/g' |\
+# convert parentheses to square brackets (Berkeleyparser doesn't seem to deal with them properly):
+sed 's/(/[/g' |\
+sed 's/)/]/g' > $prefix-ospl.tmp &&\
+# run the topological field parser:
+echo "Running the Berkeley parser..." 1>&2
+java -jar $PARSERHOME/berkeleyParser.jar -gr $PARSERHOME/tuebadz_topf_no_edge.gr < $prefix-ospl.tmp > $prefix-topo-raw.tmp && \
+#$RESOURCES/berkeleywrapper.sh $prefix-ospl.tmp > $prefix-topo-raw.tmp && \
+# make xml form parser output:
+echo "XMLify parser output..." 1>&2
+$RESOURCES/berkeley2sattr.py $prefix-topo-raw.tmp $prefix-ospl.tmp |\
+# # grab the first column (tokens and xml):
+cut -f 1 |\
+# do some postprocessing:
+# delete empty tags:
+sed '/<\/\?>/d' |\
+# delete <pseudo> and </pseudo> tags:
+sed '/<\/\?pseudo>/d' |\
+# delete 'chunks':
+#sed '/<\/\?[^>]\+x[^>]*>/d' |\
+# revert substitutions:
+sed 's/^"$/\&quot;/g' |\
+sed "s/'/\&apos;/g"|
+sed 's/^\&$/\&amp;/g'|\
+sed 's/^<$/\&lt;/g' |\
+sed 's/^>$/\&gt;/g' |\
+sed 's/\[/(/g' |\
+sed 's/\]/)/g' > $prefix-topo-xml.tmp && \
+# merge xml files:
+echo "Merging structural attributes..." 1>&2
+$RESOURCES/join-cowxml-topoxml.py $prefix-nochunks.tmp $prefix-topo-xml.tmp >  $outfilename && \
+# remove temporary files:
+#\rm $prefix-ospl.tmp && \
+\rm $prefix-topo-raw.tmp && \
+\rm $prefix-topo-xml.tmp && \
+\rm $prefix-nochunks.tmp && \
+\rm $prefix-ospl.tmp && \
+echo "Output is in $outfilename" 1>&2 && \
+# run xmlwf on outfilename
+echo "Checking XML..." 1>&2 && \
+xmlwf $outfilename && \
+echo "Done." 1>&2
+
+#
+#
+#
+#
+#
