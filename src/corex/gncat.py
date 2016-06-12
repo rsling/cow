@@ -47,12 +47,29 @@ class GNCategorizer:
             return None
 
     def annotate(self, dom, xpath = './/*token', lemma = './lemma', pos = './pos'):
-        for t in dom.findall(xpath):
+        # Empty dict to store the cat => count mapping.
+        sem_anno = dict()
+
+        tokens = dom.findall(xpath)
+        for t in tokens:
             p = t.find(pos).text.lower()
             
+            # There are only annotations for V, A, N, so skip everything else.
             if p[0] in ['a', 'n', 'v']:
-                p=p[0]
-                l = t.find(lemma).text.lower()
+                sems = self.query(t.find(lemma).text.lower(), p[0])
 
-                #print(self.query(l, p))
+                if sems:
+                    sem_count = len(sems)
+                    for sem in sems:
+                        sem_pos = p.upper()[0] + '_' + sem
+                        if sem_pos in sem_anno:
+                            sem_anno[sem_pos] += 1/float(sem_count)
+                        else:
+                            sem_anno[sem_pos] = 1/float(sem_count)
 
+        # Finally, convert all figures to per-thousand.
+        token_count = len(tokens)
+        for s in sem_anno:
+            sem_anno[s] = sem_anno[s]/float(token_count)*1000
+
+        dom.attrib['crx_sem'] = ','.join([':'.join([k,str(sem_anno[k])]) for k in sem_anno])
