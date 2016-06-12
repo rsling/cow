@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Class for reading GermaNet categories and annotating
-# words with them.
+# words/doms with them.
 
 import os.path
 import sys
@@ -38,11 +38,21 @@ class GNCategorizer:
                 else:
                     self.gn_mapping[ident] = set()
                     self.gn_mapping[ident].add(classs)
-
+        
     def query(self, lemma, pos):
         query = lemma.lower() + '_' + pos.lower()
         if query in self.gn_mapping:
             return self.gn_mapping[query]
         else:
             return None
+
+    def annotate(self, dom, xpath = './/*token', lemma = './lemma', pos = './pos'):
+        for t in dom.findall(xpath):
+            p = t.find(pos).text.lower()
+            
+            if p[0] in ['a', 'n', 'v']:
+                p=p[0]
+                l = t.find(lemma).text.lower()
+
+                #print(self.query(l, p))
 

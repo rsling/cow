@@ -10,9 +10,11 @@
 import argparse
 import os.path
 import sys
-from corexreader import outify, CORexReader as CX
 from lxml import etree as ET
 
+from corexreader import outify, CORexReader as CX
+from gncat import GNCategorizer as GN
+from corex_basic import annotate_basic
 
 def main():
     parser = argparse.ArgumentParser()
@@ -20,7 +22,8 @@ def main():
     parser.add_argument('outfile', help='output file name')
     parser.add_argument("--erase", action='store_true', help="erase outout files if present")
     parser.add_argument('--annotations', type=str, help='comma-separated names for token annotations')
-    #parser.add_argument("--minlength", type=int, default=-1, help="minimal token length of documents")
+    parser.add_argument("--minlength", type=int, default=-1, help="minimal token length of documents")
+    parser.add_argument("--germanet", type=str, help="directory path to GermaNet XML files")
     args = parser.parse_args()
 
     fn_out = args.outfile
@@ -44,21 +47,37 @@ def main():
             else:
                 sys.exit("Output file already exists: " + fn)
 
-    # Split annos
+    # Split annos passed on CL.
     annos = list()
     if args.annotations:
         annos = args.annotations.split(',')
 
-    # open out file
+    # Open out file.
     outf = open(fn_out, 'w')
 
     # Create corpus iterator. 
     corpus_in = CX(fn_in, annos=annos)
 
+    # Create the annotator classes.
+    if args.germanet:
+        Gn = GN(args.germanet)
+
+    # Annotate the documents.
     for doc in corpus_in:
-        # Here, do what you want with this DOM...
-        print type(doc)
-        # Save the (potentially modified) DOM:
+        print doc
+
+        # Minimal length filter.
+        if len(doc.findall('.//*token')) < args.minlength:
+            continue
+        
+        # All simple counts and more.
+        annotate_basic(doc)
+
+        # Do the GermaNet semantic classes annotation.
+        if args.germanet:
+            Gn.annotate(doc)
+
+        # Save the (potentially modified) DOM.
         flat = outify(doc)
         outf.write(flat + '\n' )
 

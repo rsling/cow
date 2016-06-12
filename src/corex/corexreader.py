@@ -7,9 +7,7 @@ from lxml import etree as ET
 
 
 def entify(s):
-    s = s.replace('"', '&quot;')
-    s = s.replace("'", '&apos;')
-    return s
+    return s.replace('"', '&quot;').replace("'", '&apos;')
 
 def outify(doc):
     """prepares a doc DOM for export to a COW XML file"""
