@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# This is like cow-topo-de, but it takes as input a file
+# in one-sentence-per-line format, and the output of the
+# Berkeley parser. Use this to resume when merging the xml-files
+# did not succeed.
+
+# Adapt this:
+RESOURCES="/Users/felix/NLP/cow/src/corex"
+PARSERHOME="/Users/felix/NLP/berkelyparser/topoparser"
+
+#################################################################
+
+
+prefix=$(basename $1 -ospl.tmp)
+outfilename=$prefix-tf.xml
+
+echo "
+Repairing parser output..." 1>&2
+$RESOURCES/save_unparsables.py $1 $2 > $prefix-topo-clean.tmp && \
+# make xml form parser output:
+echo "XMLify parser output..." 1>&2
+$RESOURCES/berkeley2sattr.py $prefix-topo-clean.tmp |\
+# # grab the first column (tokens and xml):
+cut -f 1 |\
+# do some postprocessing:
+# delete empty tags:
+sed '/<\/\?>/d' |\
+# delete <pseudo> and </pseudo> tags:
+sed '/<\/\?pseudo>/d' |\
+# delete 'chunks':
+#sed '/<\/\?[^>]\+x[^>]*>/d' |\
+# revert substitutions:
+sed 's/^"$/\&quot;/g' |\
+sed "s/'/\&apos;/g"|
+sed 's/^\&$/\&amp;/g'|\
+sed 's/^<$/\&lt;/g' |\
+sed 's/^>$/\&gt;/g' |\
+sed 's/\[/(/g' |\
+sed 's/\]/)/g' > $prefix-topo-xml.tmp && \
+# merge xml files:
+echo "Merging structural attributes..." 1>&2
+$RESOURCES/join-cowxml-topoxml.py $prefix-nochunks.tmp $prefix-topo-xml.tmp >  $outfilename && \
+# remove temporary files:
+#\rm $prefix-topo-raw.tmp && \
+#\rm $prefix-topo-xml.tmp && \
+#\rm $prefix-nochunks.tmp && \
+#\rm $prefix-ospl.tmp && \
+echo "Output is in $outfilename" 1>&2 && \
+# run xmlwf on outfilename
+echo "Checking XML..." 1>&2 && \
+xmlwf $outfilename 1>&2 && \
+echo "Done.
+" 1>&2
