@@ -7,8 +7,8 @@
 # <s> ... </s> regions in the COW-XML file.
 
 # Adapt this:
-RESOURCES="/Users/felix/Documents/Konferenzen/2016/gac2016/topo"
-PARSERHOME='/Users/felix/NLP/berkelyparser/topoparser/'
+RESOURCES="/Users/felix/NLP/cow/src/corex"
+PARSERHOME="/Users/felix/NLP/berkelyparser/topoparser"
 
 #################################################################
 
@@ -17,7 +17,8 @@ prefix=$(basename $1 .xml)
 outfilename=$prefix-tf.xml
 
 # Delete any Tree-Tagger-Chunker tags from the COW-XML file:
-echo "Cleaning input file..." 1>&2
+echo "
+Cleaning input file..." 1>&2
 sed '/<\/\?[vnp]c>$/d' $cowxmlfile > $prefix-nochunks.tmp &&\
 # Make one-sentence-per line format required for Berkeleyparser
 # (both sentence regions and non-sentence material):
@@ -40,9 +41,11 @@ sed 's/)/]/g' > $prefix-ospl.tmp &&\
 echo "Running the Berkeley parser..." 1>&2
 java -jar $PARSERHOME/berkeleyParser.jar -gr $PARSERHOME/tuebadz_topf_no_edge.gr < $prefix-ospl.tmp > $prefix-topo-raw.tmp && \
 #$RESOURCES/berkeleywrapper.sh $prefix-ospl.tmp > $prefix-topo-raw.tmp && \
+echo "Repairing parser output..." 1>&2
+/Users/felix/Documents/Konferenzen/2016/gac2016/topo/save_unparsables.py $prefix-ospl.tmp $prefix-topo-raw.tmp > $prefix-topo-clean.tmp && \
 # make xml form parser output:
 echo "XMLify parser output..." 1>&2
-$RESOURCES/berkeley2sattr.py $prefix-topo-raw.tmp $prefix-ospl.tmp |\
+$RESOURCES/berkeley2sattr.py $prefix-topo-clean.tmp |\
 # # grab the first column (tokens and xml):
 cut -f 1 |\
 # do some postprocessing:
@@ -64,16 +67,16 @@ sed 's/\]/)/g' > $prefix-topo-xml.tmp && \
 echo "Merging structural attributes..." 1>&2
 $RESOURCES/join-cowxml-topoxml.py $prefix-nochunks.tmp $prefix-topo-xml.tmp >  $outfilename && \
 # remove temporary files:
+#\rm $prefix-topo-raw.tmp && \
+#\rm $prefix-topo-xml.tmp && \
+#\rm $prefix-nochunks.tmp && \
 #\rm $prefix-ospl.tmp && \
-\rm $prefix-topo-raw.tmp && \
-\rm $prefix-topo-xml.tmp && \
-\rm $prefix-nochunks.tmp && \
-\rm $prefix-ospl.tmp && \
 echo "Output is in $outfilename" 1>&2 && \
 # run xmlwf on outfilename
 echo "Checking XML..." 1>&2 && \
-xmlwf $outfilename && \
-echo "Done." 1>&2
+xmlwf $outfilename 1>&2 && \
+echo "Done.
+" 1>&2
 
 #
 #

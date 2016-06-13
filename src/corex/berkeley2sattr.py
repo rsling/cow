@@ -12,9 +12,6 @@ noparse = re.compile('^[()]+$')
 
 
 readfrom = codecs.open(sys.argv[1])
-original = codecs.open(sys.argv[2])
-	
-
 
 def sattrify(line):
 	stack = []
@@ -33,8 +30,9 @@ def sattrify(line):
 				raise Exception('Pop from empty stack.')
 		else:
 			tokenposlist = process_tokens(e)
-			for e in tokenposlist: 
+			for e in tokenposlist:
 				print(e)
+
 	if len(stack) > 0:
 		print("Stack: "),
 		print(stack)
@@ -55,19 +53,21 @@ def process_tokens(somestring):
 		
 	
 for line in readfrom:
-	input_sentence = original.readline()
       	line = line.strip()
- 	# Sometimes, the Berkeley parser does not yield a parse, only '(())' or similar.
-	# In theses cases, retrieve the original line from the input file:
-	if noparse.match(line):
-		input_words = input_sentence.strip().split(" ")
-		for word in input_words:
+ 	# Sometimes, the Berkeley parser does not yield a parse, only '(())' or similar. 
+        # The script save_unparsed.py (to be run before this script) will fix this issue
+        # (and other cases of unparsable material omitted from the parser output) by inserting
+        # the original sentence. The cases are recognizable because the first character is not a '('.
+	# Simply write these unparsed sentences to the output, one token per line:
+	#if noparse.match(line):
+	if not line.startswith('('):
+		words = line.strip().split(" ")
+		for word in words:
 			print(word)
-		print("~~#~END~#~~")
+#		print("~~#~END~#~~") # This is for debugging.
 
 	else:   
-		# revert < > to &lt; and &gt;
-        	# must be done before xml-attributes are inserted:
+		# reverting < > to &lt; and &gt; must be done before inserting xml-attributes:
 		line = line.replace('<', '&lt;')
 		line = line.replace('>', '&gt;')
 		line = re.sub(pos_and_token, '~#~\g<1>~#~', line)
