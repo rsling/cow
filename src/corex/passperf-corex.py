@@ -20,7 +20,7 @@ def words_to_string(parent):
 	b = []
 	for word in parent.findall('.//*word'):
 		b.append(word.text)
-		line = " ".join(b) + "\n"
+	line = " ".join(b) + "\n"
 	return(line)
 
 
@@ -83,6 +83,7 @@ def main():
 	    	wwords = [w.text for w in words]
 	    	ppos = [p.text for p in pos]
   	    	llemmas = [l.text for l in lemmas]
+#		print(ppos)
 		# most general case: verbal complex contains a participle (could be perfekt or passive)
         	if 'VVPP' in ppos:
 		# check if verbal complex ends in a passive auxiliary:
@@ -125,7 +126,7 @@ def main():
 			
 	    line = words_to_string(s).strip()
 	    line = line + "\t" + str(sent_passcounter) + "\t" + str(sent_perfcounter)	
-	    print(line.strip())	
+	    print(line.strip().encode('utf-8'))	
 	    passcounter = passcounter + sent_passcounter
 	    perfcounter = perfcounter + sent_perfcounter	
 	doc.set('passives', str(passcounter))
