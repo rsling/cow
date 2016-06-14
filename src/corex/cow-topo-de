@@ -45,8 +45,8 @@ type $RESOURCES/join-cowxml-topoxml.py >/dev/null 2>&1 || { echo >&2 "join-cowxm
 
 cowxmlfile=$1
 prefix=$(basename $1 .xml)
-outfilename=$prefix-tf.xml
-
+outfilename=$prefix""tf.xml
+echo $outfilename
 # Delete any Tree-Tagger-Chunker tags from the COW-XML file:
 echo "Cleaning input file ..." 1>&2
 sed '/<\/\?[vnp]c>$/d' $cowxmlfile > $prefix-nochunks.tmp &&\
@@ -97,10 +97,10 @@ sed 's/\]/)/g' > $prefix-topo-xml.tmp && \
 echo "Merging structural attributes ..." 1>&2
 $RESOURCES/join-cowxml-topoxml.py $prefix-nochunks.tmp $prefix-topo-xml.tmp >  $outfilename && \
 # remove temporary files:
-#\rm $prefix-topo-raw.tmp && \
-#\rm $prefix-topo-xml.tmp && \
-#\rm $prefix-nochunks.tmp && \
-#\rm $prefix-ospl.tmp && \
+\rm $prefix-topo-raw.tmp && \
+\rm $prefix-topo-xml.tmp && \
+\rm $prefix-nochunks.tmp && \
+\rm $prefix-ospl.tmp && \
 echo "Output is in $outfilename" 1>&2 && \
 # run xmlwf on outfilename
 #echo "Checking XML..." 1>&2 && \

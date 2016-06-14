@@ -86,18 +86,22 @@ def main():
 #		print(ppos)
 		# most general case: verbal complex contains a participle (could be perfekt or passive)
         	if 'VVPP' in ppos:
+			has_passive = False
 		# check if verbal complex ends in a passive auxiliary:
 		    	if llemmas[-1] == "werden" and ppos[-1].startswith('VA'):
+				# we have to keep track of this: if there is another form of 'werden' in
+				# lk, thenthis must be future-werden, not the passive auxiliary 
+				has_passive = True 
 				sent_passcounter += 1
-                        	line = words_to_string(s)
-				outfile.write("1 pass:\t")
-				outfile.write(line)                                                                            			
+#                       	line = words_to_string(s)
+#				outfile.write("1 pass:\t")
+#				outfile.write(line)                                                                            			
 		# check if verbal complex ends in a 'haben' or 'sein' auxiliary:
 	    		if llemmas[-1] in ["haben", "sein"] and ppos[-1].startswith('VA'):
 				sent_perfcounter += 1
-				line = words_to_string(s)
-				outfile.write("2 perf:\t")
-				outfile.write(line)				
+#				line = words_to_string(s)
+#				outfile.write("2 perf:\t")
+#				outfile.write(line)				
      		# check the left bracket of the immediately dominating <simplex>-element:
 			else:
 				for lk in simpx.findall('lk'):
@@ -111,30 +115,32 @@ def main():
 						combined = zip(wwords,ppos,llemmas)
 		# check for passive axuiliary:
 						if llemmas[0] == 'werden' and ppos[0].startswith('VA'):
-							sent_passcounter += 1
-							line = words_to_string(s)
-							outfile.write("3 pass:\t")
-							outfile.write(line)
+							if has_passive == False:
+								sent_passcounter += 1
+#								line = words_to_string(s)
+#								outfile.write("3 pass:\t")
+#								outfile.write(line)
 					
 							#for word in simpx.findall('.//*word'):                                                                                    				print(word.text),
 		# check for perfect auxiliaries:
 						if llemmas[0] in ['haben', 'sein'] and ppos[0].startswith('VA'):
 							sent_perfcounter += 1
-							line = words_to_string(s)
-							outfile.write("4 perf:\t")
-							outfile.write(line)
+#							line = words_to_string(s)
+#							outfile.write("4 perf:\t")
+#							outfile.write(line)
 			
 	    line = words_to_string(s).strip()
 	    line = line + "\t" + str(sent_passcounter) + "\t" + str(sent_perfcounter)	
-	    print(line.strip().encode('utf-8'))	
+#	    print(line.strip().encode('utf-8'))	
+	    outfile.write(line + "\n")
 	    passcounter = passcounter + sent_passcounter
 	    perfcounter = perfcounter + sent_perfcounter	
-	doc.set('passives', str(passcounter))
+	doc.set('passive', str(passcounter))
 	doc.set('perfect', str(perfcounter))
 	sys.stderr.write(str(passcounter) + "\t")
 	sys.stderr.write(str(perfcounter) + "\n")
-	tree = ET.ElementTree(doc)
-	tree.write("thedoc.xml")
+#	tree = ET.ElementTree(doc)
+#	tree.write("thedoc.xml")
 				
 
 
