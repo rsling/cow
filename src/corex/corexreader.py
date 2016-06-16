@@ -3,7 +3,9 @@
 # COW + IDS topic modeling helpers based on gensim.
 
 import re
-import xml.etree.ElementTree as ET
+#import xml.etree.ElementTree as ET
+import lxml.etree as ET
+
 
 class CORexReader:
     """A class that reads COW-XML document by document and represents it as DOM"""

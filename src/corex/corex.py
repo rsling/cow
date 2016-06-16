@@ -11,7 +11,10 @@ import argparse
 import os.path
 import sys
 from corexreader import CORexReader as CX
-import xml.etree.ElementTree as ET
+#import xml.etree.ElementTree as ET
+import lxml.etree as ET
+
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -19,6 +22,8 @@ def main():
     parser.add_argument('outfile', help='output file name')
     parser.add_argument('--annotations', type=str, help='comma-separated names for token annotations')
     #parser.add_argument("--minlength", type=int, default=-1, help="minimal token length of documents")
+    parser.add_argument('--erase', action='store_true', help='erase existing output files')
+
     args = parser.parse_args()
 
     fn_out = args.outfile
