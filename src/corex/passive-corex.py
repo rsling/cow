@@ -12,6 +12,7 @@ import argparse
 import os.path
 import sys
 from corexreader import CORexReader as CX
+#import lxml.etree as ET
 import codecs
 
 
@@ -63,52 +64,9 @@ def verbose(verbosearg,sentencelist):
 			sys.stderr.write(s) 
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('infile', help='COW-XML input file')
-    parser.add_argument('outfile', help='output file name')
-    parser.add_argument('--annotations', type=str, help='comma-separated names for token annotations')
-    parser.add_argument('--erase', action='store_true', help='erase existing output files')
-    parser.add_argument('--verbose', action='store_true', help='print debugging output')
 
-    args = parser.parse_args()
-    
-    v = args.verbose
- 
-    fn_out = args.outfile
-    fn_in = args.infile
-
-    # Check input files.
-    infiles = [fn_in]
-    for fn in infiles:
-        if not os.path.exists(fn):
-            sys.exit("Input file does not exist: " + fn)
-
-    # Check (potentially erase) output files.
-    outfiles = [fn_out]
-    for fn in outfiles:
-        if fn is not None and os.path.exists(fn):
-            if args.erase:
-                try:
-                    os.remove(fn)
-                except:
-                    sys.exit("Cannot delete pre-existing output file: " + fn)
-            else:
-                sys.exit("Output file already exists: " + fn)
-
-    # Split annos
-    annos = list()
-    if args.annotations:
-        annos = args.annotations.split(',')
-
-    # Create corpus iterator. 
-    corpus_in = CX(fn_in, annos=annos)
-
-    # open output file:
-    outfile = codecs.open(fn_out, 'w', 'utf-8')
- 
-   
-    for doc in corpus_in:
+def count_passives(doc):
+	v = True
     	passcounter = 0
 	perfcounter = 0
 	for s in doc.iter('s'):
@@ -162,12 +120,63 @@ def main():
 			verbose(v, ["\n\t\tfound no past participle in verbal complex","\n\t\t\t=====> NO PASSIVE\n"])
 
 	
-	    line = words_to_string(s).strip()
-	    line = line + "\t" + str(sent_passcounter)	
-	    outfile.write(line + "\n")
+	 #   line = words_to_string(s).strip()
+	 #   line = line + "\t" + str(sent_passcounter)	
+	 #  outfile.write(line + "\n")
 	    passcounter = passcounter + sent_passcounter	
 	doc.set('crx_pass', str(passcounter))
-	sys.stderr.write("\nPassives in doc: " + str(passcounter) + "\n")	
+	#sys.stderr.write("\nPassives in doc: " + str(passcounter) + "\n")	
+
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('infile', help='COW-XML input file')
+    parser.add_argument('outfile', help='output file name')
+    parser.add_argument('--annotations', type=str, help='comma-separated names for token annotations')
+    parser.add_argument('--erase', action='store_true', help='erase existing output files')
+    parser.add_argument('--verbose', action='store_true', help='print debugging output')
+
+    args = parser.parse_args()
+    
+    v = args.verbose
+ 
+    fn_out = args.outfile
+    fn_in = args.infile
+
+    # Check input files.
+    infiles = [fn_in]
+    for fn in infiles:
+        if not os.path.exists(fn):
+            sys.exit("Input file does not exist: " + fn)
+
+    # Check (potentially erase) output files.
+    outfiles = [fn_out]
+    for fn in outfiles:
+        if fn is not None and os.path.exists(fn):
+            if args.erase:
+                try:
+                    os.remove(fn)
+                except:
+                    sys.exit("Cannot delete pre-existing output file: " + fn)
+            else:
+                sys.exit("Output file already exists: " + fn)
+
+    # Split annos
+    annos = list()
+    if args.annotations:
+        annos = args.annotations.split(',')
+
+    # Create corpus iterator. 
+    corpus_in = CX(fn_in, annos=annos)
+
+    # open output file:
+    outfile = codecs.open(fn_out, 'w', 'utf-8')
+ 
+   
+    for doc in corpus_in:
+	count_passives(doc)
+
 	   
 if __name__ == "__main__":
     main()
