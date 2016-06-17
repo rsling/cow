@@ -63,6 +63,67 @@ def verbose(verbosearg,sentencelist):
 			sys.stderr.write(s) 
 
 
+def passives(doc):
+	v = False
+    	passcounter = 0
+	perfcounter = 0
+	for s in doc.iter('s'):
+	    verbose(v,["\n=========\n", words_to_string(s)])
+	    sent_passcounter = 0
+	    sent_perfcounter = 0
+            for vc in s.findall('.//vc'): # vc is not always a direct child of simpx (e.g. in coordination)
+		verbose(v,["\n\tVC: ", "'", words_to_string(vc),"'"])
+		(wwords,ppos,llemmas) = get_wpl(vc)
+		# most general case: verbal complex contains a participle (could be perfekt or passive)
+		participles = [word for word in ppos if word == 'VVPP']
+        	if len(participles) > 0:
+			has_passive = False
+			verbose(v,['\n\t\tpast participle found'])
+		# check if verbal complex ends in a passive auxiliary: doesn't have to be the last word in the complex
+                # ("dass die Eizelle befructet werden kann")
+			for participle in participles:
+				if "werden" in llemmas:
+					for i in range(0,len(llemmas)):
+						if llemmas[i] == "werden" and ppos[i].startswith('VA'):
+							has_passive = True 
+							sent_passcounter += 1
+							verbose(v,['\n\t\tpassive aux found in verbal complex','\n\t\t\t=====> PASSIVE'])
+							break
+				break
+     		# get the left bracket of the immediately dominating <simplex>-element:
+			if has_passive == False:
+					verbose(v,['\n\t\tno passive aux found in verbal complex'])
+					for participle in participles:
+						vcparent = get_dominating_simpx(vc)
+						lks = get_dominating_lk(v,vcparent)
+                                                if lks == []:
+							verbose(v,['\n\t\t\tno left bracket filled with a verb in this clause',' \n\t\t\t=====> NO PASSIVE'])
+						else:
+							for lk in lks:
+								(wwords,ppos,llemmas) = get_wpl(lk)
+								verbose(v,['\n\t\t\tleft bracket: ', "'" , " ".join(wwords) , "'"])
+	
+		# check for passive axuiliary:
+								if llemmas[0] == 'werden' and ppos[0].startswith('VA'):
+									verbose(v,["\n\t\t\tfound finite form: '", wwords[0] , "'", "\n\t\t\t\t=====> PASSIVE"])
+									sent_passcounter += 1	
+																		
+								else:
+									verbose(v, ["\n\t\t\tfound no finite form of 'werden'", "\n\t\t\t\t=====> NO PASSIVE"])
+			
+		else:
+			verbose(v, ["\n\t\tfound no past participle in verbal complex","\n\t\t\t=====> NO PASSIVE\n"])
+
+	
+#	    line = words_to_string(s).strip()
+#	    line = line + "\t" + str(sent_passcounter)	
+#	    outfile.write(line + "\n")
+	    passcounter = passcounter + sent_passcounter	
+	doc.set('crx_pass', str(passcounter))
+#	sys.stderr.write("\nPassives in doc: " + str(passcounter) + "\n")	
+
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('infile', help='COW-XML input file')
@@ -109,65 +170,9 @@ def main():
  
    
     for doc in corpus_in:
-    	passcounter = 0
-	perfcounter = 0
-	for s in doc.iter('s'):
-	    verbose(v,["\n=========\n", words_to_string(s)])
-	    sent_passcounter = 0
-	    sent_perfcounter = 0
-            for vc in s.findall('.//vc'): # vc is not always a direct child of simpx (e.g. in coordination)
-		verbose(v,["\n\tVC: ", "'", words_to_string(vc),"'"])
-		(wwords,ppos,llemmas) = get_wpl(vc)
-		# most general case: verbal complex contains a participle (could be perfekt or passive)
-		participles = [word for word in ppos if word == 'VVPP']
-        	if len(participles) > 0:
-		#	print(participles)
-			has_passive = False
-			verbose(v,['\n\t\tpast participle found'])
-		# check if verbal complex ends in a passive auxiliary:
-#		    	if llemmas[-1] == "werden" and ppos[-1].startswith('VA'):
-				# werden doesn't have to be the last word in the complex
-                                # ("dass die Eizelle befructet werden kann")
-			for participle in participles:
-				if "werden" in llemmas:
-					for i in range(0,len(llemmas)):
-						if llemmas[i] == "werden" and ppos[i].startswith('VA'):
-							has_passive = True 
-							sent_passcounter += 1
-							verbose(v,['\n\t\tpassive aux found in verbal complex','\n\t\t\t=====> PASSIVE'])
-							break
-				break
-     		# get the left bracket of the immediately dominating <simplex>-element:
-			if has_passive == False:
-					verbose(v,['\n\t\tno passive aux found in verbal complex'])
-					for participle in participles:
-						vcparent = get_dominating_simpx(vc)
-						lks = get_dominating_lk(v,vcparent)
-                                                if lks == []:
-							verbose(v,['\n\t\t\tno left bracket filled with a verb in this clause',' \n\t\t\t=====> NO PASSIVE'])
-						else:
-							for lk in lks:
-								(wwords,ppos,llemmas) = get_wpl(lk)
-								verbose(v,['\n\t\t\tleft bracket: ', "'" , " ".join(wwords) , "'"])
-	
-		# check for passive axuiliary:
-								if llemmas[0] == 'werden' and ppos[0].startswith('VA'):
-									verbose(v,["\n\t\t\tfound finite form: '", wwords[0] , "'", "\n\t\t\t\t=====> PASSIVE"])
-									sent_passcounter += 1	
-																		
-								else:
-									verbose(v, ["\n\t\t\tfound no finite form of 'werden'", "\n\t\t\t\t=====> NO PASSIVE"])
-			
-		else:
-			verbose(v, ["\n\t\tfound no past participle in verbal complex","\n\t\t\t=====> NO PASSIVE\n"])
+	passives(doc)
 
-	
-	    line = words_to_string(s).strip()
-	    line = line + "\t" + str(sent_passcounter)	
-	    outfile.write(line + "\n")
-	    passcounter = passcounter + sent_passcounter	
-	doc.set('crx_pass', str(passcounter))
-	sys.stderr.write("\nPassives in doc: " + str(passcounter) + "\n")	
-	   
+
+
 if __name__ == "__main__":
     main()
