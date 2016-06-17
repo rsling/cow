@@ -16,6 +16,7 @@ from lxml import etree as ET
 from corexreader import outify, CORexReader as CX
 from gncat import GNCategorizer as GN
 from corex_basic import annotate_basic
+from passive_corex import passives	
 
 def main():
     parser = argparse.ArgumentParser()
@@ -23,11 +24,10 @@ def main():
     parser.add_argument('outfile', help='output file name')
     parser.add_argument("--erase", action='store_true', help="erase outout files if present")
     parser.add_argument('--annotations', type=str, help='comma-separated names for token annotations')
-    parser.add_argument('--erase', action='store_true', help='erase existing output files')
     parser.add_argument("--minlength", type=int, default=-1, help="minimal token length of documents")
     parser.add_argument("--germanet", type=str, help="directory path to GermaNet XML files")
 
-args = parser.parse_args()
+    args = parser.parse_args()
 
     fn_out = args.outfile
     fn_in = args.infile
@@ -79,6 +79,9 @@ args = parser.parse_args()
         # Do the GermaNet semantic classes annotation.
         if args.germanet:
             Gn.annotate(doc)
+
+        # count passives:
+	passives(doc)
 
         # Save the (potentially modified) DOM.
         flat = outify(doc)
