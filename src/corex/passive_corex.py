@@ -25,13 +25,20 @@ def words_to_string(parent):
 def get_dominating_simpx(element):
 	while True:
 		parent = element.getparent()
-		if parent.tag in ['simpx', 'rsimpx']:
-			break
-		elif parent.tag == '<s>':
-			break
+		if len(parent) > 1:
+	#		print(parent)
+			if parent.tag in ['simpx', 'rsimpx']:
+				return(parent)
+				break
+			elif parent.tag == '<s>':
+				return(parent)
+				break
+			else:
+				element = parent
 		else:
-			element = parent
-	return(parent)
+			return(False)
+			break
+	
 
 def get_dominating_lk(v,vcparent):
 	verbose(v,['\n\t\tclause: ', "'", words_to_string(vcparent), "'"])
@@ -65,6 +72,7 @@ def verbose(verbosearg,sentencelist):
 
 def passives(doc):
 	v = False
+	ntokens = float(len(doc.findall('.//*token')))
     	passcounter = 0
 	perfcounter = 0
 	for s in doc.iter('s'):
@@ -95,21 +103,23 @@ def passives(doc):
 					verbose(v,['\n\t\tno passive aux found in verbal complex'])
 					for participle in participles:
 						vcparent = get_dominating_simpx(vc)
-						lks = get_dominating_lk(v,vcparent)
-                                                if lks == []:
-							verbose(v,['\n\t\t\tno left bracket filled with a verb in this clause',' \n\t\t\t=====> NO PASSIVE'])
-						else:
-							for lk in lks:
-								(wwords,ppos,llemmas) = get_wpl(lk)
-								verbose(v,['\n\t\t\tleft bracket: ', "'" , " ".join(wwords) , "'"])
+					#	print(vcparent)
+						if not vcparent == False:
+							lks = get_dominating_lk(v,vcparent)
+                                                	if lks == []:
+								verbose(v,['\n\t\t\tno left bracket filled with a verb in this clause',' \n\t\t\t=====> NO PASSIVE'])
+							else:
+								for lk in lks:
+									(wwords,ppos,llemmas) = get_wpl(lk)
+									verbose(v,['\n\t\t\tleft bracket: ', "'" , " ".join(wwords) , "'"])
 	
 		# check for passive axuiliary:
-								if llemmas[0] == 'werden' and ppos[0].startswith('VA'):
-									verbose(v,["\n\t\t\tfound finite form: '", wwords[0] , "'", "\n\t\t\t\t=====> PASSIVE"])
-									sent_passcounter += 1	
+									if llemmas[0] == 'werden' and ppos[0].startswith('VA'):
+										verbose(v,["\n\t\t\tfound finite form: '", wwords[0] , "'", "\n\t\t\t\t=====> PASSIVE"])
+										sent_passcounter += 1	
 																		
-								else:
-									verbose(v, ["\n\t\t\tfound no finite form of 'werden'", "\n\t\t\t\t=====> NO PASSIVE"])
+									else:
+										verbose(v, ["\n\t\t\tfound no finite form of 'werden'", "\n\t\t\t\t=====> NO PASSIVE"])
 			
 		else:
 			verbose(v, ["\n\t\tfound no past participle in verbal complex","\n\t\t\t=====> NO PASSIVE\n"])
@@ -118,8 +128,9 @@ def passives(doc):
 #	    line = words_to_string(s).strip()
 #	    line = line + "\t" + str(sent_passcounter)	
 #	    outfile.write(line + "\n")
-	    passcounter = passcounter + sent_passcounter	
-	doc.set('crx_pass', str(passcounter))
+	    passcounter = passcounter + sent_passcounter
+	passive_per_thousand_tokens = (passcounter/ntokens)*1000	
+	doc.set('crx_pass', str(passive_per_thousand_tokens))
 #	sys.stderr.write("\nPassives in doc: " + str(passcounter) + "\n")	
 
 

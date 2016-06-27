@@ -67,7 +67,7 @@ def main():
 
     # Annotate the documents.
     for doc in corpus_in:
-        print doc
+  #      print doc
 
         # Minimal length filter.
         if len(doc.findall('.//*token')) < args.minlength:
