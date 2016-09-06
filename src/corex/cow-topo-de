@@ -1,0 +1,115 @@
+#!/bin/bash
+
+# This takes a corpus in COW-XML format as input, does some preprocessing,
+# runs the Berkeleparser with the topological model, converts the result to XML,
+# and merges the topological annotation with the COW-XML from the input file.
+# Important: Merging will only work if there are no XML-tags embedded within
+# <s> ... </s> regions in the COW-XML file.
+
+#
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Try to read PATHS from '' in the same directory this script resides in:
+if [ -f $DIR/cow-topo-de.cfg ];
+	then
+		source $DIR/cow-topo-de.cfg
+    echo "
+Reading configuration from $DIR/cow-topo-de.cfg ..."
+	else
+		# if $DIR/resources-paths does not exist, use these:
+		echo "No config file found, using defaults..."
+		RESOURCES="/Users/felix/NLP/cow/src/corex"
+		PARSERHOME="/Users/felix/NLP/berkelyparser/topoparser"
+fi
+
+
+type $RESOURCES/cow-mk-ospl.py >/dev/null 2>&1 || { echo >&2 "cow-mk-ospl.py not found in $RESOURCES"; exit 1; }
+
+if [ ! -f  $PARSERHOME/berkeleyParser.jar ]; then
+    echo "berkeleyParser.jar not found in $PARSERHOME"
+		exit 1
+fi
+
+if [ ! -f  $PARSERHOME/tuebadz_topf_no_edge.gr ]; then
+    echo "tuebadz_topf_no_edge.gr not found in $PARSERHOME"
+		exit 1
+fi
+
+type $RESOURCES/save_unparsables.py >/dev/null 2>&1 || { echo >&2 "save_unparsables.py not found in $RESOURCES"; exit 1; }
+type $RESOURCES/berkeley2sattr.py >/dev/null 2>&1 || { echo >&2 "berkeley2sattr.py not found in $RESOURCES"; exit 1; }
+type $RESOURCES/join-cowxml-topoxml.py >/dev/null 2>&1 || { echo >&2 "join-cowxml-topoxml.py not found in $RESOURCES"; exit 1; }
+
+
+#################################################################
+
+cowxmlfile=$1
+prefix=$(basename $1 .xml)
+outfilename=$prefix""tf.xml
+echo $outfilename
+# Delete any Tree-Tagger-Chunker tags from the COW-XML file:
+echo "Cleaning input file ..." 1>&2
+sed '/<\/\?[vnp]c>$/d' $cowxmlfile > $prefix-nochunks.tmp &&\
+# Make one-sentence-per line format required for Berkeleyparser
+# (both sentence regions and non-sentence material):
+echo "Making one sentence per line ..." 1>&2
+$RESOURCES/cow-mk-ospl.py $prefix-nochunks.tmp|\
+# reduce any sequence of whitespace chars to a single one (Berkeleyparser doesn't like it):
+sed 's/  \+/ /g' |\
+# remove any empty lines:
+sed '/^$/d' |\
+# substitute xml-entities:
+sed 's/\&quot;/"/g'|\
+sed "s/\&apos;/'/g"|\
+sed 's/\&amp;/&/g'|\
+#sed 's/\&lt;/</g'|\
+#sed 's/\&gt;/>/g' |\
+# convert parentheses to square brackets (Berkeleyparser doesn't seem to deal with them properly):
+sed 's/(/[/g' |\
+sed 's/)/]/g' > $prefix-ospl.tmp &&\
+# run the topological field parser:
+echo "Running the Berkeley parser ..." 1>&2
+java -jar $PARSERHOME/berkeleyParser.jar -gr $PARSERHOME/tuebadz_topf_no_edge.gr < $prefix-ospl.tmp > $prefix-topo-raw.tmp && \
+#$RESOURCES/berkeleywrapper.sh $prefix-ospl.tmp > $prefix-topo-raw.tmp && \
+echo "Repairing parser output ..." 1>&2
+$RESOURCES/save_unparsables.py $prefix-ospl.tmp $prefix-topo-raw.tmp > $prefix-topo-clean.tmp && \
+# make xml form parser output:
+echo "XMLify parser output ..." 1>&2
+$RESOURCES/berkeley2sattr.py $prefix-topo-clean.tmp |\
+# # grab the first column (tokens and xml):
+cut -f 1 |\
+# do some postprocessing:
+# delete empty tags:
+sed '/<\/\?>/d' |\
+# delete <pseudo> and </pseudo> tags:
+sed '/<\/\?pseudo>/d' |\
+# delete 'chunks':
+#sed '/<\/\?[^>]\+x[^>]*>/d' |\
+# revert substitutions:
+sed 's/^"$/\&quot;/g' |\
+sed "s/'/\&apos;/g"|
+sed 's/^\&$/\&amp;/g'|\
+sed 's/^<$/\&lt;/g' |\
+sed 's/^>$/\&gt;/g' |\
+sed 's/\[/(/g' |\
+sed 's/\]/)/g' > $prefix-topo-xml.tmp && \
+# merge xml files:
+echo "Merging structural attributes ..." 1>&2
+$RESOURCES/join-cowxml-topoxml.py $prefix-nochunks.tmp $prefix-topo-xml.tmp >  $outfilename && \
+# remove temporary files:
+\rm $prefix-topo-raw.tmp && \
+\rm $prefix-topo-xml.tmp && \
+\rm $prefix-nochunks.tmp && \
+\rm $prefix-ospl.tmp && \
+echo "Output is in $outfilename" 1>&2 && \
+# run xmlwf on outfilename
+#echo "Checking XML..." 1>&2 && \
+#xmlwf $outfilename 1>&2 && \
+echo "Done.
+" 1>&2
+
+#
+#
+#
+#
+#

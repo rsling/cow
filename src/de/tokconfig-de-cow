@@ -71,7 +71,7 @@ C&A
 (?:[0-9]+)(?:['-–`´])(?:t|te|ter|tes|ten|tem)
 (?:[1-9][0-9]|[12][0-9]{3})(?:['-–`´]|)jährig(?:e|er|es|en|em|)
 # Hausaufgaben und -tätigkeiten / Vor- und Zuname
-(?:-[\p{Alphabetic}]+)
+(?:^-[\p{Alphabetic}]+) # modified: allow only at beginning of a token, i.e., don't destroy Bild-Zeitung etc.; FB
 (?:[\p{Alphabetic}]+-)
 # Stuff like programming langs
 C#
@@ -89,7 +89,7 @@ S\/W
 &gt;
 &lt;
 &amp;
-# time 
+# time
 (?:[0-9]+:[0-9]+)
 # multiplication
 (?:[0-9]+) *(?:x|\*) *[0-9]+

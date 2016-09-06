@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/local/bin/bash
 
-export LC_ALL="de_DE.utf8"
+#export LC_ALL="de_DE.utf8"
 
 TOKCONFIG="/Users/felix/NLP/cow/src/de/tokconfig-de-cow"
 
@@ -30,20 +30,27 @@ TOKCONFIG="/Users/felix/NLP/cow/src/de/tokconfig-de-cow"
   ucto -n -P -c $TOKCONFIG | \
 # undo do-not-s-tokenize-dates hack
   sed 's/ FÜCKÜCTÖ/. /g' | \
+# put tags on separate lines (do this here, or else sentences starting or ending with a-<div> tag will not be enclosed <s>-tags); FB
+  sed 's/</\n</g; s/>/>\n/g' | \
+# remove leading and trailing whitespace:
+  sed 's/^ \+//; s/ \+$//' |\
 # sentences with opening ( followed by sentences with closing ) are merged (see sed N command!)
+# changed /^.*( \([^)]\+\|\)$/ to /^.*( \([^)]\+\)$/ (F.B.)
   sed '/^[^<]/ { /^.*( \([^)]\+\|\)$/ {N; /\n[^(]* )/ s/\n/ /; } }' | \
-# any line without ANY < or > is a sentence, insert <s></s> (still in ONE LINE!)
-  sed -e '/^[^<>]\+$/ s/^\(.\+\)$/<s> \1 <\/s>/' | \
+# after sentences ending in [?!], if the next sentence starts with '" .': correct sentence boundary (F.B.)
+  sed '/^[^<]/ { /[!?]$/ {N; s/\n" \. */ " .\n/; } }' |\
+# any line without ANY < or > is a sentence, insert <s></s> (still in ONE LINE!) # somehow doesn't work if the sentence contains a umlaut
+  sed '/^[^<>]\+$/ s/^\(.\+\)$/<s> \1 <\/s>/'| \
 # non-XML-tag material AFTER a tag in a line which does not end in a tag is a sent, insert <s>
   sed 's/> \([^<>]\+\)$/>\n<s> \1 <\/s>/' | \
-# sed  lines which contain [.!?] in the middle followed by lowercase are mostly non-detected sentence boundaries, split
-  sed '/^<s>.\+ [.?!] [[:lower:]].\+<\/s>$/ s/ \([.?!]\) \([[:lower:]]\)/ \1 <\/s>\n<s>\n\2/g ' | \
+# sed  lines which contain [.!?] in the middle followed by lowercase OR DIGITS are mostly non-detected sentence boundaries, split (F.B.)
+  sed '/^<s>.\+ [.?!] \([[:lower:]]\|[0-9]\).\+<\/s>$/ s/ \([.?!]\) \([[:lower:]]\|[0-9]\)/ \1 <\/s>\n<s> \2/g ' |\
 # "usw." or "etc." followd by upper-case letter is usually an undetected sentence boundary.
   sed '/^<s>/ s/\(usw\.\|usf\.\|pp\.\|etc\.\|a\.a\.O\.\|u\.v\.a\.m\.\|u\.v\.m\.\|[uUoO]\.[Ää]\.\) \([A-ZÄÖÜ]\)/\1<\/s>\n<s>\2/g' | \
 # sentences longer than 400 chars are un-sentenced (remove <s></s>)
   sed '/^<s>.\{400,\}<\/s>$/ s/^<s>\(.\+\)<\/s>$/\1/' | \
 # sentences shorter than 15 chars are un-sentenced
-  sed '/^<s>.\{,15\}<\/s>$/ s/^<s>\(.\+\)<\/s>$/\1/' | \
+  sed '/^<s>.\{,15\}<\/s>$/ s/^<s> *\(.\+\)<\/s> *$/\1/' | \
 # sentences shorter than 3 tokens are un-sentenced
   sed 's/^<s> \([^ ]\+\( [^ ]\+\)\{0,2\}\) <\/s>$/\1/' | \
 # sentences with boilerplate potential are un-sentenced
@@ -70,5 +77,6 @@ TOKCONFIG="/Users/felix/NLP/cow/src/de/tokconfig-de-cow"
   sed '/^<doc url/ s/"" /" /g' | \
   sed '/^<doc url/ s/ ""/ "/g' | \
 #  fix even more lines fucked up by ucto
-  sed '/^< doc _ ~ _/ { s/ //g; s/_~_/ /g; }' | \
-  sed '/^</! {/^.\{35,\}/ { /^\([^-0-9]\{2,\}-\)\{2,\}/! {s/^.*$/noiseblank/} } }'
+  sed '/^< doc _ ~ _/ { s/ //g; s/_~_/ /g; }'
+	# disable noiseblanking (or postpone until after topological parsing; targets are difficult to detect in ospl format
+  # sed '/^</! {/^.\{35,\}/ { /^\([^-0-9]\{2,\}-\)\{2,\}/! {s/^.*$/noiseblank/} } }'
