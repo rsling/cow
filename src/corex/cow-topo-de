@@ -2,7 +2,7 @@
 
 # This takes a corpus in COW-XML format as input, does some preprocessing,
 # runs the Berkeleparser with the topological model, converts the result to XML,
-# and merges the topilogical annotation with the COW-XML form teh input file.
+# and merges the topological annotation with the COW-XML from the input file.
 # Important: Merging will only work if there are no XML-tags embedded within
 # <s> ... </s> regions in the COW-XML file.
 
