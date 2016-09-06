@@ -35,6 +35,7 @@ TOKCONFIG="/Users/felix/NLP/cow/src/de/tokconfig-de-cow"
 # remove leading and trailing whitespace:
   sed 's/^ \+//; s/ \+$//' |\
 # sentences with opening ( followed by sentences with closing ) are merged (see sed N command!)
+# changed /^.*( \([^)]\+\|\)$/ to /^.*( \([^)]\+\)$/ (F.B.)
   sed '/^[^<]/ { /^.*( \([^)]\+\|\)$/ {N; /\n[^(]* )/ s/\n/ /; } }' | \
 # after sentences ending in [?!], if the next sentence starts with '" .': correct sentence boundary (F.B.)
   sed '/^[^<]/ { /[!?]$/ {N; s/\n" \. */ " .\n/; } }' |\
