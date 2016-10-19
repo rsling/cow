@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Define envvars:
+#    TT_MODEL   (TT model abs. path)
+#    TT_LEXICON (additional lexicon abs, path)
+
+OPTS="-token -lemma -cap-heuristics -hyphen-heuristics -quiet -lex $TT_LEXICON"
+
+# Preserve sentence endings.
+sed 's/^$/\nSÄTZÄNDÖ\n/' |
+  tree-tagger $OPTS $TT_MODEL |
+# Restore sentence ending blank lines.
+  sed 's/^SÄTZÄNDÖ.\+$//' |
+# fix dupblank etc. annotation
+  sed 's/^\(dupblank\|uriblank\|emailblank\|hashtagblank\|noiseblank\)	.\+$/\1	XY	(blank)/' |
+# fix annotation of major smileys
+  sed 's/^\([:;8=|\[][-o]\{0,1\}[][(){}OoKSsDPp]\+\)	.\+$/\1	XY	(smiley)/' |
+  sed 's/^\&lt;3	.\+$/\&lt;3	XY	(smiley)/' |
+  sed 's/^\&lt;\/3	.\+$/\&lt;\/3	XY	(smiley)/' |
+  sed 's/^\(:[a-zäöüß]\+:\)	.\+$/\1	XY	(phpbbemo)/' |
+  sed 's/^\(\*[a-zäöüßA-ZÄÖÜ0-9-]\+\*\)	.\+$/\1	XY	(asteriskative)/' |
+# replace XML-unfriendly <unknown>
+  sed 's/<unknown>$/(unknown)/'
