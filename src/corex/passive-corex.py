@@ -26,12 +26,13 @@ def words_to_string(parent):
 def get_dominating_simpx(element):
 	while True:
 		parent = element.getparent()
-		if parent.tag in ['simpx', 'rsimpx']:
+		if parent.tag in ['simpx', 'rsimpx']: # 'fkonj' is experimental
 			break
 		elif parent.tag == '<s>':
 			break
 		else:
 			element = parent
+        sys.stderr.write("\nDominating element: " + parent.tag + "\n") # debug
 	return(parent)
 
 def get_dominating_lk(v,vcparent):
@@ -41,11 +42,38 @@ def get_dominating_lk(v,vcparent):
 	lks =  vcparent.findall('lk')
 	if lks:
 		if lks > 0:
-			lks = lks[0]
+#			lks = lks[0]
+			pass # debug
 	else:
 		lks = []
 		verbose(v,['\n\t\tverb-final clause','\n\t\t\t\t=====> NO PASSIVE'])
+        sys.stderr.write("\nNumber of LK found: " + str(len(lks))) # debug
+
 	return(lks)
+
+
+def get_dominating_lk2(v,vcparent):
+	verbose(v,['\n\t\tclause: ', "'", words_to_string(vcparent), "'"])
+		# check if we have a non-verb-final structure (left bracket in verb-final clauses is "c", not "lk"):
+#	lks =  vcparent.findall('.//lk') #
+	lks = vcparent.findall('lk')
+	if lks == []:
+		fkoords =  vcparent.findall('fkoord')
+	  	if len(fkoords) > 0:
+	   		fkonjs = []
+			for fkoord in fkoords:
+				fkonjs = fkonjs + fkoord.findall('fkonj')
+				if len(fkonjs) > 0:
+					for fkonj in fkonjs:
+						lks = lks + fkonj.findall('lk')
+	if lks == []:
+		verbose(v,['\n\t\tverb-final clause','\n\t\t\t\t=====> NO PASSIVE'])
+        sys.stderr.write("\nNumber of LK found: " + str(len(lks))) # debug
+
+	return(lks)
+
+
+
 
 	
 def get_wpl(enclosing_element):
@@ -61,7 +89,7 @@ def get_wpl(enclosing_element):
 def verbose(verbosearg,sentencelist):
 	if verbosearg == True:
 		for s in sentencelist:
-			sys.stderr.write(s) 
+			sys.stderr.write(s.encode('utf-8')) 
 
 
 
@@ -70,7 +98,7 @@ def count_passives(doc):
     	passcounter = 0
 	perfcounter = 0
 	for s in doc.iter('s'):
-	    verbose(v,["\n=========\n", words_to_string(s)])
+	    verbose(True,["\n=========\n", words_to_string(s)])
 	    sent_passcounter = 0
 	    sent_perfcounter = 0
             for vc in s.findall('.//vc'): # vc is not always a direct child of simpx (e.g. in coordination)
@@ -89,18 +117,18 @@ def count_passives(doc):
 			for participle in participles:
 				if "werden" in llemmas:
 					for i in range(0,len(llemmas)):
-						if llemmas[i] == "werden" and ppos[i].startswith('VA'):
+						if llemmas[i] == "werden" and ppos[i].startswith('VA') and llemmas[i-1] != 'sein': # experimental: "sein" must not occur before werden ("dass der Schaden auch bei rechtzeitiger Leistung eingetreten sein würde")
 							has_passive = True 
 							sent_passcounter += 1
 							verbose(v,['\n\t\tpassive aux found in verbal complex','\n\t\t\t=====> PASSIVE'])
 							break
-				break
+				break # oct: was soll das hier? müsste einen weiter eingerückt sein
      		# get the left bracket of the immediately dominating <simplex>-element:
 			if has_passive == False:
 					verbose(v,['\n\t\tno passive aux found in verbal complex'])
 					for participle in participles:
 						vcparent = get_dominating_simpx(vc)
-						lks = get_dominating_lk(v,vcparent)
+						lks = get_dominating_lk2(v,vcparent)
                                                 if lks == []:
 							verbose(v,['\n\t\t\tno left bracket filled with a verb in this clause',' \n\t\t\t=====> NO PASSIVE'])
 						else:
@@ -123,7 +151,9 @@ def count_passives(doc):
 	 #   line = words_to_string(s).strip()
 	 #   line = line + "\t" + str(sent_passcounter)	
 	 #  outfile.write(line + "\n")
-	    passcounter = passcounter + sent_passcounter	
+	    passcounter = passcounter + sent_passcounter
+            verbose(True,["\t", str(sent_passcounter)])
+	
 	doc.set('crx_pass', str(passcounter))
 	#sys.stderr.write("\nPassives in doc: " + str(passcounter) + "\n")	
 
@@ -140,7 +170,7 @@ def main():
     args = parser.parse_args()
     
     v = args.verbose
- 
+     
     fn_out = args.outfile
     fn_in = args.infile
 
