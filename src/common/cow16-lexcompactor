@@ -1,0 +1,31 @@
+#!/usr/bin/python
+
+import codecs
+import sys
+
+UTF8Reader = codecs.getreader('utf8')
+sys.stdin = UTF8Reader(sys.stdin)
+
+UTF8Writer = codecs.getwriter('utf8')
+sys.stdout = UTF8Writer(sys.stdout)
+
+lastl = ""
+
+for l in sys.stdin:
+  l = l.strip()
+
+  if not l:
+    continue
+
+  if not lastl:
+    lastl = l
+    continue
+
+  l_fields = l.split('\t')
+  lastl_fields = lastl.split('\t')
+
+  if l_fields[0] == lastl_fields[0]:
+    lastl = '\t'.join(lastl_fields + l_fields[1:]) 
+  else:
+    print(lastl)
+    lastl = l

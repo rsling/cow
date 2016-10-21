@@ -16,8 +16,8 @@ def entity_decode(s):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('infile', help='input DECOW XML file')
-    parser.add_argument('outfile', help='output file name')
+    parser.add_argument('infile', help='input DECOW XML file (gzip)')
+    parser.add_argument('outfile', help='output file name (gzip)')
     parser.add_argument("--erase", action='store_true', help="erase outout files if present")
     args = parser.parse_args()
 
