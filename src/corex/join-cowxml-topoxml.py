@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/bin/env python
 
 # Read in corpus 1 in COW-XML format and corpus 2, both one-token-per-line.
 # The tokens in corpus 1 and corpus 2 are identical, corpus 1 doesn't have any
@@ -58,18 +58,23 @@ while True:
 			pass
 		else:
                 # if we have a word token, compare with word token from corpus 1;
-			topo_word = topo_line.strip() 
+			topo_word = topo_line.strip()
 		# if they match, print the entire line from corpus 1 (token plus annotations)
-                        dummy = cowxml_word.replace('[', '(')
-                        dummy = dummy.replace(']', ')')
-                        if topo_word == dummy and topo_word != '~~#~END~#~~':
+              		if topo_word == cowxml_word and topo_word != '~~#~END~#~~':
 				print(cowxml_line.strip().encode("utf-8"))
                 # and return to reading the next line from corpus 1
                                 break
-                # if they don't match, something must have gone wrong; raise an exception
-			else:   
-				sys.stderr.write("\nTokens don't match.\n")
-				sys.stderr.write("Token: '" + cowxml_word + "'\t\t(line " + str(cowxml_counter) + ", file " + sys.argv[1] + ")\n")
-                               	sys.stderr.write("Token: '" + topo_word + "'\t\t(line " + str(topoxml_counter) + ", file " + sys.argv[2] + ")\n")
-                                sys.exit(1)
-				
+			# allow for mismatch between '(' (cow-xml) and '[' (topo-xml):
+			else:
+				if topo_word in ['[',']']:
+					topo_word = topo_word.replace('[','(').replace(']',')')      
+					if topo_word == cowxml_word and topo_word != '~~#~END~#~~':
+						print(cowxml_line.strip().encode("utf-8"))
+						break
+                # if they don't match, something must have gone wrong; print error message and quit:
+				else:   
+					sys.stderr.write("\nTokens don't match.\n")
+					sys.stderr.write("Token: '" + cowxml_word + "'\t\t(line " + str(cowxml_counter) + ", file " + sys.argv[1] + ")\n")
+                               		sys.stderr.write("Token: '" + topo_word + "'\t\t(line " + str(topoxml_counter) + ", file " + sys.argv[2] + ")\n")
+                                	sys.exit(1)
+

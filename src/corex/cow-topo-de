@@ -45,7 +45,7 @@ type $RESOURCES/join-cowxml-topoxml.py >/dev/null 2>&1 || { echo >&2 "join-cowxm
 
 cowxmlfile=$1
 prefix=$(basename $1 .xml)
-outfilename=$prefix""tf.xml
+outfilename=$prefix""_tf.xml
 echo $outfilename
 # Delete any Tree-Tagger-Chunker tags from the COW-XML file:
 echo "Cleaning input file ..." 1>&2
@@ -86,13 +86,17 @@ sed '/<\/\?pseudo>/d' |\
 # delete 'chunks':
 #sed '/<\/\?[^>]\+x[^>]*>/d' |\
 # revert substitutions:
-sed 's/^"$/\&quot;/g' |\
-sed "s/'/\&apos;/g"|
-sed 's/^\&$/\&amp;/g'|\
-sed 's/^<$/\&lt;/g' |\
-sed 's/^>$/\&gt;/g' |\
-sed 's/\[/(/g' |\
-sed 's/\]/)/g' > $prefix-topo-xml.tmp && \
+sed '/^</! s/\&/\&amp;/g'|\
+sed '/^</! s/"/\&quot;/g' |\
+sed "/^</! s/'/\&apos;/g"|
+#sed 's/^<$/\&lt;/g' |\
+#sed 's/^>$/\&gt;/g' |\
+sed '/^<.\+>$/! s/</\&lt;/g' |\
+sed '/^<.\+>$/! s/>/\&gt;/g' > $prefix-topo-xml.tmp && \
+
+#sed 's/\[/(/g' |\ # this is handled (better) in join-cowxml-topoxml.py now
+#sed 's/\]/)/g' # this is handled (better) in join-cowxml-topoxml.py now
+
 # merge xml files:
 echo "Merging structural attributes ..." 1>&2
 $RESOURCES/join-cowxml-topoxml.py $prefix-nochunks.tmp $prefix-topo-xml.tmp >  $outfilename && \
