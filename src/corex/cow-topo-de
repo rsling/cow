@@ -63,7 +63,7 @@ sed 's/\&quot;/"/g'|\
 sed "s/\&apos;/'/g"|\
 sed 's/\&lt;/</g' |\
 sed 's/\&gt;/>/g' |\
-sed 's/\&amp;/&/g'|\
+sed 's/\&amp;/\&/g'|\
 # convert parentheses to square brackets (Berkeleyparser doesn't seem to deal with them properly):
 sed 's/(/[/g' |\
 sed 's/)/]/g' > $prefix-ospl.tmp &&\
