@@ -18,6 +18,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('infile', help='input DECOW XML file (gzip)')
     parser.add_argument('outfile', help='output file name (gzip)')
+    parser.add_argument('fields', help='comma-separated list of VRT fields to extract (0-based!)')
     parser.add_argument("--erase", action='store_true', help="erase outout files if present")
     args = parser.parse_args()
 
@@ -41,6 +42,10 @@ def main():
 
     outfile_sent = gzip.open(args.outfile, 'wb')
 
+    fields = [int(i) for i in args.fields.split(',')]
+    if len(fields) < 1:
+      sys.exit("Not a well-formed VRT index list: " + args.fields)
+
     # State variable: Reading sentence or not.
     insentence = False   
 
@@ -59,11 +64,11 @@ def main():
           insentence = False
           outfile_sent.write('\n')
         elif (not l[0] == '<'):
-          outfile_sent.write(entity_decode(l).encode('utf-8') + '\n')
+          annos = l.split('\t')
+          outfile_sent.write('\t'.join([entity_decode(annos[i]) for i in fields]).encode('utf-8') + '\n')
 
       # NOT in sentence.
       elif (l == '<s>'):
-          #print 'Sentence found.'
           insentence = True
 
     f.close()
@@ -71,9 +76,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
 

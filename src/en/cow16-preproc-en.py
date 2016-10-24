@@ -47,7 +47,7 @@ def main():
     insentence = False   # state variable: Reading sentence or not.
 
     # Read line by line.
-    f = open(args.infile)
+    f = gzip.open(args.infile)
     linecount = 0
     for l in f:
       l = l.decode('utf-8')

@@ -45,7 +45,7 @@ def main():
   insentence = False   
   
   # Read line by line.
-  f = open(args.infile)
+  f = gzip.open(args.infile)
 
   for l in f:
     l = l.decode('utf-8')

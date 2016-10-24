@@ -4,7 +4,8 @@
 
 # Define envvars:
 #    TT_MODEL_DE   (TT model abs. path)
-#    TT_LEXIC_DE (additional lexicon abs, path)
+#    TT_LEXIC_DE   (additional lexicon abs, path)
+#    TT_TMP        (TMP path for ad-hoc lexicon and tmp tagging)
 
 set -e
 set -u
@@ -12,8 +13,9 @@ set -u
 OPTS="-token -lemma -sgml -cap-heuristics -hyphen-heuristics -quiet"
 
 # Generate ad-hoc-NN-lexicon for pretagging.
-lexf=${1}"_nnlexicon"
-tmpf=${2}"_tmp"
+rnd=${RANDOM}
+lexf="${TT_TMP}/$(basename ${1})_${rnd}_nnlexicon"
+tmpf="${TT_TMP}/$(basename ${2})_${rnd}_tmp"
 
 # 1. Generate unknown list for pretagging.
 gunzip -c ${1} | cut -f 1 | tree-tagger $OPTS -lex ${TT_LEXIC_DE} $TT_MODEL_DE | gzip -c > ${tmpf}
