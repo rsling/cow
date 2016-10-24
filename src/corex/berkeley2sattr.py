@@ -67,7 +67,11 @@ for line in readfrom:
 #		print("~~#~END~#~~") # This is for debugging.
 
 	else:   
-		# reverting < > to &lt; and &gt; must be done before inserting xml-attributes:
+		# reverting < > to &lt; and &gt; must be done before inserting xml-attributes;
+		# reverting & to &amp; must come even before that:
+      		line = line.replace('&','&amp;') 
+		line = line.replace('"','&quot;') 
+		line = line.replace("'","&apos;") 
 		line = line.replace('<', '&lt;')
 		line = line.replace('>', '&gt;')
 		line = re.sub(pos_and_token, '~#~\g<1>~#~', line)

@@ -61,9 +61,9 @@ sed '/^$/d' |\
 # substitute xml-entities:
 sed 's/\&quot;/"/g'|\
 sed "s/\&apos;/'/g"|\
+sed 's/\&lt;/</g' |\
+sed 's/\&gt;/>/g' |\
 sed 's/\&amp;/&/g'|\
-#sed 's/\&lt;/</g'|\
-#sed 's/\&gt;/>/g' |\
 # convert parentheses to square brackets (Berkeleyparser doesn't seem to deal with them properly):
 sed 's/(/[/g' |\
 sed 's/)/]/g' > $prefix-ospl.tmp &&\
@@ -82,16 +82,14 @@ cut -f 1 |\
 # delete empty tags:
 sed '/<\/\?>/d' |\
 # delete <pseudo> and </pseudo> tags:
-sed '/<\/\?pseudo>/d' |\
+sed '/<\/\?pseudo>/d' >  $prefix-topo-xml.tmp && \
 # delete 'chunks':
 #sed '/<\/\?[^>]\+x[^>]*>/d' |\
 # revert substitutions:
-sed '/^</! s/\&/\&amp;/g'|\
-sed '/^</! s/"/\&quot;/g' |\
-sed "/^</! s/'/\&apos;/g" > $prefix-topo-xml.tmp && \
+# sed '/^</! s/\&/\&amp;/g'|\ handled by berkeley2sattr.py before inserting xml tags 
+# sed '/^</! s/"/\&quot;/g' |\ handled by berkeley2sattr.py before inserting xml tags 
+# sed "/^</! s/'/\&apos;/g" handled by berkeley2sattr.py before inserting xml tags 
 
-#sed 's/^<$/\&lt;/g' |\
-#sed 's/^>$/\&gt;/g' |\
 #sed '/^<.\+>$/! s/</\&lt;/g' |\  handled by berkeley2sattr.py before inserting xml tags 
 #sed '/^<.\+>$/! s/>/\&gt;/g'     handled by berkeley2sattr.py before inserting xml tags 
 
