@@ -88,11 +88,12 @@ sed '/<\/\?pseudo>/d' |\
 # revert substitutions:
 sed '/^</! s/\&/\&amp;/g'|\
 sed '/^</! s/"/\&quot;/g' |\
-sed "/^</! s/'/\&apos;/g"|
+sed "/^</! s/'/\&apos;/g" > $prefix-topo-xml.tmp && \
+
 #sed 's/^<$/\&lt;/g' |\
 #sed 's/^>$/\&gt;/g' |\
-sed '/^<.\+>$/! s/</\&lt;/g' |\
-sed '/^<.\+>$/! s/>/\&gt;/g' > $prefix-topo-xml.tmp && \
+#sed '/^<.\+>$/! s/</\&lt;/g' |\  handled by berkeley2sattr.py before inserting xml tags 
+#sed '/^<.\+>$/! s/>/\&gt;/g'     handled by berkeley2sattr.py before inserting xml tags 
 
 #sed 's/\[/(/g' |\ # this is handled (better) in join-cowxml-topoxml.py now
 #sed 's/\]/)/g' # this is handled (better) in join-cowxml-topoxml.py now

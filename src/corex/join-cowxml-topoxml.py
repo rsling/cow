@@ -67,8 +67,8 @@ while True:
 			# allow for mismatch between '(' (cow-xml) and '[' (topo-xml):
 			else:
 				if topo_word in ['[',']']:
-					topo_word = topo_word.replace('[','(').replace(']',')')      
-					if topo_word == cowxml_word and topo_word != '~~#~END~#~~':
+					dummy = topo_word.replace('[','(').replace(']',')')      
+					if dummy == cowxml_word and dummy != '~~#~END~#~~':
 						print(cowxml_line.strip().encode("utf-8"))
 						break
                 # if they don't match, something must have gone wrong; print error message and quit:
