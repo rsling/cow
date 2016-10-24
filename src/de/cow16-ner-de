@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# define envvars:
+#  NER_JAR     # Stanford NER jar.
+#  NER_MODEL   # Model for Stanford NER.
+
+# pass: input file, output file
+
+set -e
+set -u
+
+java -cp $JAR -Xmx16g edu.stanford.nlp.ie.crf.CRFClassifier -loadClassifier $MODEL -testFile ${1} | sed 's/^<>	.\+$//' | sed 's/^.\+	\([^	]\+\)$/\1/' | head -n -1 > ${2}
+
+

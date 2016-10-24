@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# pass infile (gzip), outfile (gzip)
+
+# define envvars:
+#  MALTJAR
+#  MALTDIR_EN
+#  MALTMOD_EN
+
+set -e
+set -u
+
+java -Xmx32g -jar ${MALTJAR} -w ${MALTDIR_EN} -c ${MALTMOD_EN} -i <(sed 's/^\([^	]\+\)	\([^	]\+\)	|\([^	]\+\)|$/_	\1	\3	\2	\2	_	_	_	_	_/' <(gunzip -c ${1})) -o ${2} -m parse

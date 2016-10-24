@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# define envvars:
+#  NER_JAR     # Stanford NER jar.
+
+# pass: input file, output file (both gzip), ner model
+
+set -e
+set -u
+
+java -cp $NER_JAR -Xmx1g edu.stanford.nlp.ie.crf.CRFClassifier -tokenizerFactory edu.stanford.nlp.process.WhitespaceTokenizer -tokenizerOptions "tokenizeNLs=true" -loadClassifier ${3} -textFile <(python /home/rsling/usr/local/cow/src/common/cow16-pre-ner.py ${1}) -outputFormat tsv | gzip -c > ${2}
+

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Set $MARMOT_PATH to JAR and models
+# Pass input file (gzip), output file (no gzip), model (no path)
+
+set -e
+set -u
+
+java -cp ${MARMOT_PATH}/marmot.jar marmot.morph.cmd.Annotator --model-file ${MARMOT_PATH}/${3} --test-file form-index=0,<(gunzip -c ${1} | cut -f1) --pred-file ${2}
+
