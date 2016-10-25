@@ -72,15 +72,14 @@ while True:
 			else:
 				if squarebracket.match(topo_word):
 					if topo_word in ['[',']']:
-						sys.stderr.write(cowxml_word + "\t" + topo_word + "\n")  
 						dummy = topo_word.replace('[','(').replace(']',')')
-						sys.stderr.write(cowxml_word + "\t" + dummy + "\n")     
 						if dummy == cowxml_word and dummy:# != '~~#~END~#~~':
 							print(cowxml_line.strip().encode("utf-8"))
 							break
 					else:
 			# tokens of length > 1 containing '[' or ']' are usually tokenization errors. Compare modulo square brackets / parentheses:
 						if re.sub(brackets_parentheses, '', topo_word) ==  re.sub(brackets_parentheses, '', cowxml_word):
+							sys.stderr.write("WARNING: strings matching modulo brackets/parentheses.\n") #debug
 							print(cowxml_line.strip().encode("utf-8"))
 							break
                 # if they don't match, something must have gone wrong; print error message and quit:
