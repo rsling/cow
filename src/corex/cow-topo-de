@@ -46,7 +46,7 @@ type $RESOURCES/join-cowxml-topoxml.py >/dev/null 2>&1 || { echo >&2 "join-cowxm
 cowxmlfile=$1
 prefix=$(basename $1 .xml)
 outfilename=$prefix""_tf.xml
-echo $outfilename
+#echo $outfilename
 # Delete any Tree-Tagger-Chunker tags from the COW-XML file:
 echo "Cleaning input file ..." 1>&2
 sed '/<\/\?[vnp]c>$/d' $cowxmlfile > $prefix-nochunks.tmp &&\

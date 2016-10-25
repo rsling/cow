@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # This is like cow-topo-de, but it takes as input a file
-# in one-sentence-per-line format, and the output of the
-# Berkeley parser. Use this to resume when merging the xml-files
+# in one-sentence-per-line format (.*-ospl), and the output of the
+# Berkeley parser (.*-topo-raw). Use this to resume when merging the xml-files
 # did not succeed.
 
 
@@ -44,7 +44,7 @@ type $RESOURCES/join-cowxml-topoxml.py >/dev/null 2>&1 || { echo >&2 "join-cowxm
 
 
 prefix=$(basename $1 -ospl.tmp)
-outfilename=$prefix-tf.xml
+outfilename=$prefix""_tf.xml
 
 echo "Repairing parser output ..." 1>&2
 $RESOURCES/save_unparsables.py $1 $2 > $prefix-topo-clean.tmp && \

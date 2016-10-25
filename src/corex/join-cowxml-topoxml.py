@@ -16,7 +16,7 @@ cowxml = codecs.open(sys.argv[1], "r", "utf-8")
 topoxml = codecs.open(sys.argv[2], "r", "utf-8")
 
 openingtag = re.compile('<[^/]')
-squarebracket = re.compile('.*[)(].*')
+squarebracket = re.compile('.*[\[\]].*')
 
 stack = []
 
