@@ -101,7 +101,7 @@ echo "Merging structural attributes ..." 1>&2
 $RESOURCES/join-cowxml-topoxml.py $prefix-nochunks.tmp $prefix-topo-xml.tmp >  $outfilename && \
 # remove temporary files:
 \rm $prefix-topo-raw.tmp && \
-\rm $prefix-topo-xml.tmp && \
+#\rm $prefix-topo-xml.tmp && \
 \rm $prefix-nochunks.tmp && \
 \rm $prefix-ospl.tmp && \
 echo "Output is in $outfilename" 1>&2 && \
