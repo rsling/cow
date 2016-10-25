@@ -57,17 +57,17 @@ cut -f 1 |\
 # delete empty tags:
 sed '/<\/\?>/d' |\
 # delete <pseudo> and </pseudo> tags:
-sed '/<\/\?pseudo>/d' |\
+sed '/<\/\?pseudo>/d' > $prefix-topo-xml.tmp && \
 # delete 'chunks':
 #sed '/<\/\?[^>]\+x[^>]*>/d' |\
 # revert substitutions:
-sed 's/^"$/\&quot;/g' |\
-sed "s/'/\&apos;/g"|
-sed 's/^\&$/\&amp;/g'|\
-sed 's/^<$/\&lt;/g' |\
-sed 's/^>$/\&gt;/g' |\
-sed 's/\[/(/g' |\
-sed 's/\]/)/g' > $prefix-topo-xml.tmp && \
+#sed 's/^"$/\&quot;/g' |\
+#sed "s/'/\&apos;/g"|
+#sed 's/^\&$/\&amp;/g'|\
+#sed 's/^<$/\&lt;/g' |\
+#sed 's/^>$/\&gt;/g' |\
+#sed 's/\[/(/g' |\
+#sed 's/\]/)/g' > $prefix-topo-xml.tmp && \
 # merge xml files:
 echo "Merging structural attributes ..." 1>&2
 $RESOURCES/join-cowxml-topoxml.py $prefix-nochunks.tmp $prefix-topo-xml.tmp >  $outfilename && \
