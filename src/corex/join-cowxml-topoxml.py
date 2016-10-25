@@ -16,6 +16,7 @@ cowxml = codecs.open(sys.argv[1], "r", "utf-8")
 topoxml = codecs.open(sys.argv[2], "r", "utf-8")
 
 openingtag = re.compile('<[^/]')
+squarebracket = re.compile('.*[)(].*')
 
 stack = []
 
@@ -66,7 +67,8 @@ while True:
                                 break
 			# allow for mismatch between '(' (cow-xml) and '[' (topo-xml):
 			else:
-				if topo_word in ['[',']']:
+				#if topo_word in ['[',']']:
+				if squarebracket.match(topo_word):
 					dummy = topo_word.replace('[','(').replace(']',')')      
 					if dummy == cowxml_word and dummy != '~~#~END~#~~':
 						print(cowxml_line.strip().encode("utf-8"))
