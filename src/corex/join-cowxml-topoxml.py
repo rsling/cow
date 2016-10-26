@@ -79,7 +79,7 @@ while True:
 					else:
 			# tokens of length > 1 containing '[' or ']' are usually tokenization errors. Compare modulo square brackets / parentheses:
 						if re.sub(brackets_parentheses, '', topo_word) ==  re.sub(brackets_parentheses, '', cowxml_word):
-							sys.stderr.write("WARNING: strings matching modulo brackets/parentheses.\n") #debug
+						#	sys.stderr.write("WARNING: strings matching modulo brackets/parentheses:\t" + cowxml_word + "\t" + topo_word + "\n") #debug
 							print(cowxml_line.strip().encode("utf-8"))
 							break
                 # if they don't match, something must have gone wrong; print error message and quit:
