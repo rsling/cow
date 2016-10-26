@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # This is like cow-topo-de, but it takes as input a file
-# in one-sentence-per-line format, and the output of the
-# Berkeley parser. Use this to resume when merging the xml-files
+# in one-sentence-per-line format (.*-ospl), and the output of the
+# Berkeley parser (.*-topo-raw). Use this to resume when merging the xml-files
 # did not succeed.
 
 
@@ -44,7 +44,7 @@ type $RESOURCES/join-cowxml-topoxml.py >/dev/null 2>&1 || { echo >&2 "join-cowxm
 
 
 prefix=$(basename $1 -ospl.tmp)
-outfilename=$prefix-tf.xml
+outfilename=$prefix""_tf.xml
 
 echo "Repairing parser output ..." 1>&2
 $RESOURCES/save_unparsables.py $1 $2 > $prefix-topo-clean.tmp && \
@@ -57,17 +57,17 @@ cut -f 1 |\
 # delete empty tags:
 sed '/<\/\?>/d' |\
 # delete <pseudo> and </pseudo> tags:
-sed '/<\/\?pseudo>/d' |\
+sed '/<\/\?pseudo>/d' > $prefix-topo-xml.tmp && \
 # delete 'chunks':
 #sed '/<\/\?[^>]\+x[^>]*>/d' |\
 # revert substitutions:
-sed 's/^"$/\&quot;/g' |\
-sed "s/'/\&apos;/g"|
-sed 's/^\&$/\&amp;/g'|\
-sed 's/^<$/\&lt;/g' |\
-sed 's/^>$/\&gt;/g' |\
-sed 's/\[/(/g' |\
-sed 's/\]/)/g' > $prefix-topo-xml.tmp && \
+#sed 's/^"$/\&quot;/g' |\
+#sed "s/'/\&apos;/g"|
+#sed 's/^\&$/\&amp;/g'|\
+#sed 's/^<$/\&lt;/g' |\
+#sed 's/^>$/\&gt;/g' |\
+#sed 's/\[/(/g' |\
+#sed 's/\]/)/g' > $prefix-topo-xml.tmp && \
 # merge xml files:
 echo "Merging structural attributes ..." 1>&2
 $RESOURCES/join-cowxml-topoxml.py $prefix-nochunks.tmp $prefix-topo-xml.tmp >  $outfilename && \

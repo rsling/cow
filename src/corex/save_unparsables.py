@@ -29,6 +29,15 @@ def get_tokens(line):
 	s = ''
     return(s)
 
+def chars2xmlentities(line):
+	line = line.replace('&','&amp;') 
+	line = line.replace('"','&quot;') 
+	line = line.replace("'","&apos;") 
+	line = line.replace('<', '&lt;')
+	line = line.replace('>', '&gt;')
+	return(line)
+
+
 
 
 
@@ -39,12 +48,12 @@ for oline in original:
 	if oline == pline_tokens:
 		print(pline.encode('utf-8'))
 	else:	
-		print(oline.encode('utf-8'))
+		print(chars2xmlentities(oline).encode('utf-8'))
 		if not pline_tokens =="":
 			for ooline in original:
 				ooline = ooline.strip()
 				if not ooline == pline_tokens:
-					print(ooline.encode('utf-8'))
+					print(chars2xmlentities(ooline).encode('utf-8'))
 				else:
 					print(pline.encode('utf-8'))
 					break
