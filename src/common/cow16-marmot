@@ -6,5 +6,5 @@
 set -e
 set -u
 
-java -cp ${MARMOT_PATH}/marmot.jar marmot.morph.cmd.Annotator --model-file ${MARMOT_PATH}/${3} --test-file form-index=0,<(gunzip -c ${1} | cut -f1) --pred-file ${2}
+java -Xmx10g -cp ${MARMOT_PATH}/marmot.jar marmot.morph.cmd.Annotator --model-file ${MARMOT_PATH}/${3} --test-file form-index=0,<(gunzip -c ${1} | cut -f1) --pred-file ${2}
 
