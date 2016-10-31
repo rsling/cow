@@ -8,6 +8,11 @@ import sys
 import gzip
 import re
 
+
+dict_n = set()
+dict_rest = set()
+
+
 def substitute_nulls(s):
   s = re.sub(u'(?:\w|<[^>]+>):#0#', r'', s, re.UNICODE)
   s = re.sub(u'#0#:(\w)', r'\1', s, re.UNICODE)
@@ -15,6 +20,7 @@ def substitute_nulls(s):
   # Some initial :#0# garbage.
   s = re.sub(u'^:#0#', r'', s)
   return s
+
 
 def fix_fes(s):
 
@@ -40,11 +46,24 @@ def fix_fes(s):
   s = re.sub(u'([a-zäöü]):#0#(\t|$)', r'\1\t-\1\2', s, re.UNICODE)
   return s
 
+
 def fix_cap(s):
   if '+KAP+' in s:
     s = re.sub(r'\+KAP\+', r'', s).title()
   elif '-KAP-' in s:
     s = re.sub(r'-KAP-', r'', s).lower()
+  return s
+
+
+# Checks whether a single element is known as NN or other to TT.
+# Under the assumption that TT knows all simplex nouns and quite some compounds.
+def check_lex(s):
+  global dict_n
+  global dict_rest
+  if re.match(u'^[A-ZÄÖÜ]', s) and not s in dict_noun:
+    s = ''
+  elif s not in dict_rest:
+    s = ''
   return s
 
 
@@ -131,7 +150,7 @@ def nounalize(s):
   # Clean remaining to/from-NULL substitutions.
   nouns = [substitute_nulls(x) for x in nouns]
 
-  # Make lexicon checks.
+  # Make lexicon checks and compact list.
   nouns = [x if check_lex(x) else '' for x in nouns]
   nouns = filter(None, nouns)
 
@@ -141,6 +160,8 @@ def main():
   parser = argparse.ArgumentParser()
   parser.add_argument('infile', help='input from SMOR (gzip)')
   parser.add_argument('outfile', help='output file name (gzip)')
+  parser.add_argument('nouns', help='noun dictionary file name (gzip)')
+  parser.add_argument('rest', help='verb, adjective, etc. dictionary file name (gzip)')
   parser.add_argument("--erase", action='store_true', help="erase outout files if present")
   args = parser.parse_args()
 
@@ -161,6 +182,19 @@ def main():
                   sys.exit("Cannot delete pre-existing output file: " + fn)
           else:
               sys.exit("Output file already exists: " + fn)
+
+  # Load the dictionaries.
+  global dict_n
+  global dict_rest
+  fh_dict = gzip.open(args.nouns)
+  for l in fh_dict:
+    dict_n.add(l.decode('utf-8').strip())
+  fh_dict.close()
+  fh_dict = gzip.open(args.rest)
+  for l in fh_dict:
+    dict_rest.add(l.decode('utf-8').strip())
+  fh_dict.close()
+
 
   ofh = gzip.open(args.outfile, 'wb')
   ifh = gzip.open(args.infile, 'r')
