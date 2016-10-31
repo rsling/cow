@@ -13,7 +13,6 @@ import os.path
 import sys
 from corexreader import CORexReader as CX
 from corexreader import outify
-#import lxml.etree as ET
 import codecs
 import re
 
@@ -33,61 +32,11 @@ def words_to_string(parent):
 	line = " ".join(b) #+ "\n"
 	return(line)
 
-def get_dominating_simpx(element):
-	while True:
-		parent = element.getparent()
-		if parent.tag in ['simpx', 'rsimpx']: # 'fkonj' is experimental
-			break
-		elif parent.tag == '<s>':
-			break
-		else:
-			element = parent
-#        sys.stderr.write("\nDominating element: " + parent.tag + "\n") # debug
-	return(parent)
-
-
-def get_dominating_lk(v,vcparent):
-	verbose(v,['\n\t\tclause: ', "'", words_to_string(vcparent), "'"])
-		# check if we have a non-verb-final structure (left bracket in verb-final clauses is "c", not "lk"):
-#	lks =  vcparent.findall('.//lk') # 
-	lks =  vcparent.findall('lk')
-	if lks:
-		if lks > 0:
-#			lks = lks[0]
-			pass # debug
-	else:
-		lks = []
-		verbose(v,['\n\t\tverb-final clause','\n\t\t\t\t=====> NO PERFECT'])
-        sys.stderr.write("\nNumber of LK found: " + str(len(lks))) # debug
-
-	return(lks)
-
-
-def get_dominating_lk2(v,vcparent,logfile):
-	verbose(v,['\n\t\t\t\tclause: ', "'", words_to_string(vcparent), "'"], logfile)
-	# check if we have a non-verb-final structure (left bracket in verb-final clauses is "c", not "lk"):
-#	lks =  vcparent.findall('.//lk') #
-	lks = vcparent.findall('lk')
-	if lks == []:
-		fkoords =  vcparent.findall('fkoord')
-	  	if len(fkoords) > 0:
-	   		fkonjs = []
-			for fkoord in fkoords:
-				fkonjs = fkonjs + fkoord.findall('fkonj')
-				if len(fkonjs) > 0:
-					for fkonj in fkonjs:
-						lks = lks + fkonj.findall('lk')
-#	if lks == []:
-#		verbose(v,['\n\t\tverb-final clause','\n\t\t\t\t=====> NO PERFECT'],  logfile)
-        sys.stderr.write("\nNumber of verb-filled LK found: " + str(len(lks))) # debug
-        logfile.write("\n\t\t\t\tNumber of verb-filled LK found: " + str(len(lks)))
-	return(lks)
-
 
 def get_dominating_X(element):
 	while True:
 		parent = element.getparent()
-		if parent.tag in ['simpx', 'rsimpx', 'fkonj', 'fkoord']: # 'fkonj' is experimental
+		if parent.tag in ['simpx', 'rsimpx', 'fkonj', 'fkoord']:
 			break
 		elif parent.tag == '<s>':
 			break
@@ -98,9 +47,8 @@ def get_dominating_X(element):
 
 
 
-def get_dominating_lk3(v,vc,logfile):
-	# check if we have a non-verb-final structure (left bracket in verb-final clauses is "c", not "lk"):
-#	lks =  vcparent.findall('.//lk') #
+def get_dominating_lk(v,vc,logfile):
+	# check if we have a non-verb-final structure (left bracket in verb-final clauses is "c", not "lk")
 	current = vc
         lks = []
         while True:
@@ -109,7 +57,7 @@ def get_dominating_lk3(v,vc,logfile):
 #              	lks = parent.findall('lk')
 		lks =  parent.findall('.//lk')
 		tags = [i.tag for i in lks]
-		logfile.write("\nLKS: " + ", ".join(tags))
+		verbose(v,["\nLKS: ", ", ".join(tags)], logfile)
 		if len(lks) > 0:
 			verbose(v,['\n\t\t\t\tFound LK in clause: ', "'", words_to_string(parent), "'"], logfile)
 			break
@@ -119,15 +67,6 @@ def get_dominating_lk3(v,vc,logfile):
 			else:
 				current = parent
 	return(lks)
-
-
-
-#	if lks == []:
-#		verbose(v,['\n\t\tverb-final clause','\n\t\t\t\t=====> NO PERFECT'],  logfile)
-#        sys.stderr.write("\nNumber of verb-filled LK found: " + str(len(lks))) # debug
-#        logfile.write("\n\t\t\t\tNumber of verb-filled LK found: " + str(len(lks)))
-#	return(lks)
-
 
 
 	
@@ -150,7 +89,7 @@ def get_wplpm(enclosing_element):
 def verbose(verbosearg,sentencelist,logfile): # debugging; remove logfile later
 	if verbosearg == True:
 		for s in sentencelist:
-			sys.stderr.write(s.encode('utf-8'))
+		#	sys.stderr.write(s.encode('utf-8'))
 			logfile.write(s)
 
 
@@ -180,47 +119,30 @@ def sein_past(candidate):
 		return(False)
 
 
-def participles2tokens(ttttpos, mmpos, wwords):
-# returns tokens tagged as 'V.PP'
-	tokens = []
-	for i in range(0,len(ttttpos)):
-		# sometimes, Marmot gets the pos tag V.PP correct when TreeTagger thinks its V.FIN:
-		if ttttpos[i] in [u'VVPP', u'VAPP'] or  mmpos[i] in [u'VVPP', u'VAPP']: 
-			tokens.append(wwords[i])
-	return(tokens)
-
-def participles2tokens_2(wwords, ttttpos, llemmas, mmpos):
+def participles2tokens(wwords, ttttpos, llemmas, mmpos):
 # returns tokens tagged as 'V.PP'
 	part_dict = {u'VVPP': '', u'VAPP':''} # plus VMPP?
 	words_pos_lemmas_mmpos = zip(wwords, ttttpos, llemmas, mmpos)
+	# sometimes, Marmot gets the pos tag V.PP correct when TreeTagger thinks its V.FIN:
 	participletokens = [word for (word, pos, lemma, mpos) in words_pos_lemmas_mmpos if (pos in part_dict or mpos in part_dict)]
 	return(participletokens)
 
 
 
-
-
-
-
-
-
-def infinitives2tokens(ttttpos, wwords):
-# returns tokens tagged as 'VAFIN'
-	tokens = []
-	for i in range(0,len(ttttpos)):
-		if ttttpos[i] in [u'VVINF', u'VAINF', u'VMINF']:
-			tokens.append(wwords[i])
-	return(tokens)
+def infinitives2tokens(wwords, ttttpos):
+# returns (a list of) tokens tagged as infinitive:
+	words_pos = zip(wwords, ttttpos)
+	infdict =  {u'VVINF': '', u'VAINF': '', u'VMINF': ''}
+	infinitivetokens = [word for (word, pos) in words_pos if pos in infdict]
+	return(infinitivetokens)
 
 
 def ersatzinfinitives_candidates(wwords, ttttpos, llemmas):
-	ersatzcandidates = []
-	for i in range(0,len(ttttpos)):
-		if ttttpos[i] in [u'VVINF', u'VMINF'] and llemmas[i] in ersatzinfinitives_dict:
-			ersatzcandidates.append(wwords[i])
-	return(ersatzcandidates)
-
-
+	# returns (a list of) tokens tagged as 'VVFIN' or 'VMINF' and that can form ersatzinfinitives:
+	words_pos_lemmas = zip(wwords, ttttpos, llemmas)
+	ersatzposlist = [u'VVINF', u'VMINF'] 
+	ersatzcandidatetokens = [word for (word, pos, lemma) in words_pos_lemmas if pos in ersatzposlist and lemma in ersatzinfinitives_dict]
+	return(ersatzcandidatetokens)
 
 
 def count_perfect(doc, outfile, logfile): # outfile and logfile are for debugging and testing; remove later
@@ -228,77 +150,68 @@ def count_perfect(doc, outfile, logfile): # outfile and logfile are for debuggin
 	perfcounter = 0
 	pluperfcounter = 0
 	for s in doc.iter('s'):
-	    verbose(True,["\n=========\n", words_to_string(s)], logfile)
+	    verbose(v,["\n=========\n", words_to_string(s)], logfile)
 	    sent_perfcounter = 0
 	    sent_pluperfcounter = 0
             for vc in s.findall('.//vc'): # vc is not always a direct child of simpx (e.g. in coordination)
 		verbose(v,["\n\tVC: ", "'", words_to_string(vc),"'"], logfile)
 		(wwords,ttttpos,llemmas,mmpos,mmorph) = get_wplpm(vc)
 		# most general case: verbal complex contains a participle
-	#	participles = participles2tokens(ttttpos, mmpos, wwords)
-		participles = participles2tokens_2(wwords, ttttpos, llemmas, mmpos)
-		logfile.write("\n All tokens in this vc: " + ", ".join(wwords))
-		logfile.write("\n All tags in this vc: " + ", ".join(ttttpos))
-		logfile.write("\n All llemmas in this vc: " + ", ".join(llemmas))	
-		logfile.write("\n All participles in this vc: " + ", ".join(participles))
-		infinitives = infinitives2tokens(ttttpos, wwords)
-		logfile.write("\n All infinitives in this vc: " + ", ".join(infinitives))
+		participles = participles2tokens(wwords, ttttpos, llemmas, mmpos)
+		infinitives = infinitives2tokens(wwords, ttttpos)
 		ersatzcandidates = ersatzinfinitives_candidates(wwords, ttttpos, llemmas)
-		logfile.write("\n Potential ersatzinfinitives: " + ", ".join(ersatzcandidates))
-		participles_and_ersatzinfs = participles + ersatzcandidates 	
-#        	if len(participles) > 0:
+		participles_and_ersatzinfs = participles + ersatzcandidates
+
+		verbose(v,["\n\tAll tokens in this VC: ", ", ".join(wwords)], logfile)
+		verbose(v,["\n\tAll tags in this VC: ", ", ".join(ttttpos)], logfile)
+		verbose(v,["\n\tAll lemmas in this VC: ", ", ".join(llemmas)], logfile)
+		verbose(v,["\n\tAll participles in this VC: ", ", ".join(participles)], logfile)
+		verbose(v,["\n\tAll infinitives in this VC: ", ", ".join(infinitives)], logfile)
+		verbose(v,["\n\tAll potential ersatzinfinitives: ", ", ".join(ersatzcandidates)], logfile)
+
 		if len(participles_and_ersatzinfs) > 0:
-		#	print(participles)
-			verbose(v,['\n\t\tpast participle(s) and infinitives found: ', ', '.join(participles)], logfile)
+			verbose(v,['\n\t\tpast participle(s) and infinitives found: ', ', '.join(participles_and_ersatzinfs)], logfile)
                 # check if verbal complex ends with a perfect aux:   
-			logfile.write("\nParticiplelist before processing first participle: " + ", ".join(participles_and_ersatzinfs))
+			verbose(v,["\nParticiplelist before processing first participle: ", ", ".join(participles_and_ersatzinfs)], logfile)
 			donelist = []
 			for participle in participles_and_ersatzinfs:
-				logfile.write("\nHAHAHA: "+ participle)
-				logfile.write("\n\t\t\tNow processing participle: " + participle + ' (analyzing verbal complex)')
-				if ttttpos[-1] == 'VAFIN': #or (len(ersatzcandidates) > 1 and ttttpos[0] == 'VAFIN'):
+				verbose(v,["\n\t\t\tNow processing participle: ", participle, ' (analyzing verbal complex)'], logfile)
+				if ttttpos[-1] == 'VAFIN':
 					candidate = wwords[-1]
-					logfile.write("\nLAST WORD IN VC: " + candidate + "\n") #debug
+					verbose(v,["Last word in VC: " + candidate + "\n"], logfile) #debug
 					if llemmas[-1] == "haben":
-#						# check tense (don't rely on Marmot morph annotations: there is not annotation if Marmot thinks it is 'VAINF')
+#						# check tense (don't rely on Marmot morph annotations: there will be no annotation if Marmot thinks it is 'VAINF')
 						if haben_pres(candidate):
-							logfile.write("\nwent through haben_pres")
 							sent_perfcounter += 1
 							donelist.append(participle)
 							verbose(v,['\n\t\tA finite perfect aux (pres) found in verbal complex: ', candidate, ' \n\t\t\t=====> PERFECT'], logfile)
 						elif haben_past(candidate): 
-							logfile.write("\nwent through haben_past")
 							sent_pluperfcounter += 1
 							verbose(v,['\n\t\tB finite perfect aux (past) found in verbal complex: ', candidate, ' \n\t\t\t=====> PLUPERFECT'], logfile)
 					elif llemmas[-1] == "sein":
 					# check if participle is among those that take 'sein' as perfect tense auxiliary: 
 						if sein_part_re.match(participle) or participle in sein_part_restdic: 
 							if sein_pres(candidate):
-								logfile.write("\nwent through sein_pres")
 								sent_perfcounter += 1
 								verbose(v,['\n\t\tC finite perfect aux (pres) found in verbal complex: ', candidate, ' \n\t\t\t=====> PERFECT'], logfile)
 							elif sein_past(candidate): 
-								logfile.write("\nwent through sein_past")
 								sent_pluperfcounter += 1
 								verbose(v,['\n\t\tD finite perfect aux (past) found in verbal complex: ', candidate, ' \n\t\t\t=====> PLUPERFECT'], logfile)
-					logfile.write("\nParticiplelist after processing one participle (aux in vc): " + ", ".join(participles_and_ersatzinfs))
+					verbose(v,["\nParticiplelist after processing one participle (aux in vc): ", ", ".join(participles_and_ersatzinfs)], logfile)
 				
      		# get the left bracket of the immediately dominating fkonj, fkord or simplex-element:
 				else:
 					verbose(v,['\n\t\t\t\tno perfect aux found in verbal complex'], logfile)
-			logfile.write("\nParticiplelist after processing all participles (looking for aux in vc): " + ", ".join(participles_and_ersatzinfs))
+			verbose(v,["\nParticiplelist after processing all participles (looking for aux in vc): ", ", ".join(participles_and_ersatzinfs)], logfile)
                         
-			# make sure we do not process participles twice:
-			logfile.write("\n Donelist: " + ", ".join(donelist))
+			# make sure we do not process a participle twice:
+			verbose(v,["\n Donelist: ", ", ".join(donelist)], logfile)
 			participles_and_ersatzinfs = [participle for participle in participles_and_ersatzinfs if not participle in donelist]
-			logfile.write("\n Remaining part_and_ersatzinfs: " + ", ".join(participles_and_ersatzinfs))
+			verbose(v,["\n Remaining part_and_ersatzinfs: " , ", ".join(participles_and_ersatzinfs)], logfile)
 
 			for participle in participles_and_ersatzinfs:
-						logfile.write("\n\t\t\tNow processing participle: " + participle + "\n\t\t\tLooking for a left bracket")
-					#	vcparent = get_dominating_simpx(vc)
-                                        #        logfile.write(vcparent.text)
-					#	lks = get_dominating_lk2(v,vcparent,logfile)
-						lks = get_dominating_lk3(v,vc,logfile)
+						verbose(v,["\n\t\t\tNow processing participle: ", participle, "\n\t\t\tLooking for a left bracket"], logfile)
+						lks = get_dominating_lk(v,vc,logfile)
                                                 if lks == []:
 						#	verbose(v,['\n\t\t\t\tno left bracket filled with a verb in this clause',' \n\t\t\t\t=====> NO PERFECT'], logfile)
 							pass
@@ -325,7 +238,7 @@ def count_perfect(doc, outfile, logfile): # outfile and logfile are for debuggin
 											elif sein_past(candidate): 
 												sent_pluperfcounter += 1
 												verbose(v,['\n\t\t\t\tH finite perfect aux (past) found in left bracket: ', candidate, '\n\t\t\t\t=====> PLUPERFECT'],  logfile)
-									logfile.write('\nFound a suitable aux: ' + candidate + ', stop searching for more LKs')
+									verbose(v,['\nFound a suitable aux: ', candidate, ', stop searching for more LKs'], logfile)
 									break # stop looking for aux in further lk when one suitable aux has been found 
                                                             # no perfect auxiliary in left bracket:
 								else:
@@ -335,8 +248,9 @@ def count_perfect(doc, outfile, logfile): # outfile and logfile are for debuggin
 			verbose(v, ["\n\t\tNo past participle or infinitive found in verbal complex","\n\t\t\t=====> NO PERFECT\n"],  logfile)
 
 	    # check for Oberfeldumstellung with Ersatzinfinitiv (no point in using topo-parse information here, it's almost always incorrect)
-	    #for simpx in s.findall('.//simpx'): do this one for every s, not for every simpx; will yield duplicated hits with embedded simpxs.
+	    #for simpx in s.findall('.//simpx'): do this once for every s, not for every simpx; will yield duplicated hits with embedded simpxs.
 	    #	(wwords,ttttpos,llemmas,mmpos,mmorph) = get_wplpm(simpx)
+	    
 	    (wwords,ttttpos,llemmas,mmpos,mmorph) = get_wplpm(s)
 	    words_and_tags_and_lemmas = zip(wwords,ttttpos,llemmas)
 	    for i in range(0, len(words_and_tags_and_lemmas)):
@@ -365,19 +279,17 @@ def count_perfect(doc, outfile, logfile): # outfile and logfile are for debuggin
 					
 	 
 	    ttttpos_string = " ".join(ttttpos)
-	    logfile.write("\n all pos tags in this <simpx>: "+ttttpos_string)
+	    verbose(v,["\n\tAll pos tags in this <simpx>: ", ttttpos_string], logfile) 
 	    ofu = oberfeld_re.findall(ttttpos_string)
-	    logfile.write("\n Obefeldumstellungssequenz: " + ", ".join(ofu))
+	    verbose(v,["\n\tOberfeldumstellung, sequence: ", ", ".join(ofu)], logfile)
 
 	
-	    line = words_to_string(s).strip()
-	    line = line + "\t" + str(sent_perfcounter) + "\t" + str(sent_pluperfcounter)	
+#	    line = words_to_string(s).strip()
+#	    line = line + "\t" + str(sent_perfcounter) + "\t" + str(sent_pluperfcounter)	
 #	    outfile.write(line + "\n")
-	    perfcounter = perfcounter + sent_perfcounter
-	    pluperfcounter = pluperfcounter + sent_pluperfcounter
-
-            verbose(True,["\n", 'Total perfect in this sentence:\t\t', str(sent_perfcounter)], logfile)
-	    verbose(True,["\n", 'Total plu-perfect in this sentence:\t', str(sent_pluperfcounter), '\n'], logfile)
+            verbose(v,["\n", 'Total perfect in this sentence:\t\t', str(sent_perfcounter)], logfile)
+	    verbose(v,["\n", 'Total plu-perfect in this sentence:\t', str(sent_pluperfcounter), '\n'], logfile)
+	
 	    if sent_perfcounter > 0:
 		s.set('crx_perf', "yes")
 	    else:
@@ -386,10 +298,11 @@ def count_perfect(doc, outfile, logfile): # outfile and logfile are for debuggin
 		s.set('crx_plu', "yes")
 	    else:
 		s.set('crx_plu', "no")
+	
+	    perfcounter = perfcounter + sent_perfcounter
+	    pluperfcounter = pluperfcounter + sent_pluperfcounter
 
 	return((str(perfcounter), str(pluperfcounter)))
-#	doc.set('crx_perf', str(perfcounter))
-	#sys.stderr.write("\nPassives in doc: " + str(passcounter) + "\n")	
 
 
 
@@ -445,7 +358,7 @@ def main():
 	(perfect, pluperfect) = count_perfect(doc,outfile,logfile)
 	doc.set('crx_perf', perfect)
 	doc.set('crx_plu', pluperfect)	
-	outfile.write(outify(doc))
+	outfile.write(outify(doc) + "\n")
 
 
 
