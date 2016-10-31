@@ -28,7 +28,9 @@ def main():
         sys.stdout.write('\n')
         sys.stdout.flush()
       else:
-        sys.stdout.write(l.split('\t')[0].encode('utf-8') + ' ')
+        s = l.split('\t')[0]
+        s = s.replace(u'\u00a0', '').replace(u'\u2060', '').replace(u'\u200b', '')
+        sys.stdout.write(s.encode('utf-8') + ' ')
 
     f.close()
 

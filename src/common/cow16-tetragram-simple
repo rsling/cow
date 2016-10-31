@@ -6,7 +6,7 @@ set -u
 paste \
   <(gunzip -c ${1} | cut -f1 | tr [:upper:] [:lower:] ) \
   <(gunzip -c ${1} | cut -f1 | tail -n +2 | tr [:upper:] [:lower:] ) \
-  <(gunzip -c ${1} | cut -f1 | tail -n +3 | tr [:upper:] [:lower:] ) |
+  <(gunzip -c ${1} | cut -f1 | tail -n +3 | tr [:upper:] [:lower:] ) \
   <(gunzip -c ${1} | cut -f1 | tail -n +4 | tr [:upper:] [:lower:] ) |
   grep '^[^	]\+	[^	]\+	[^	]\+	[^	]\+$' |
   grep -v "[^a-zäöüß	]" |

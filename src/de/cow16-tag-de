@@ -6,6 +6,7 @@
 #    TT_MODEL_DE   (TT model abs. path)
 #    TT_LEXIC_DE   (additional lexicon abs, path)
 #    TT_TMP        (TMP path for ad-hoc lexicon and tmp tagging)
+#    TT_FILTER     (full path to filter-german-tags)
 
 set -e
 set -u
@@ -28,6 +29,7 @@ gunzip -c ${1} | cut -f 1 |
 # Preserve sentence endings.
   sed 's/^$/\n<SÄTZÄNDÖ>\n/' |
   tree-tagger $OPTS -lex <(cat ${lexf} ${TT_LEXIC_DE}) $TT_MODEL_DE |
+  ${TT_FILTER} |
 # Restore sentence ending blank lines.
   sed 's/^<SÄTZÄNDÖ>$//' |
 # fix dupblank etc. annotation
