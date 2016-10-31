@@ -19,7 +19,9 @@ import re
 
 sein_part_re = re.compile('.*ge(gangen|fallen|laufen|flogen|wachsen|fahren|reist|schritten|geblieben|sprungen|kommen|blieben|drungen|wichen|stiegen|worden|stehen|taucht|storben|rutscht|rannt)')
 
-sein_part_restdic = {u'geboren': '', u'gelungen': '', u'verhungert': '', u'zusammengebrochen': '', u'verklungen': '', u'passiert': '', u'weggezogen': '', u'fehlgeschlagen': '', u'geschehen': '', u'verreist': '', u'geflohen': '', u'gewandert': '', u'begegnet': '', u'verschmolzen': '', u'abgek\xfchlt': '', u'versunken': '', u'eingeschlafen': '', u'gestrandet': '', u'abgebogen': '', u'misslungen': '', u'explodiert': '', u'gekrochen': '', u'ausgetrocknet': '', u'ausgetreten': '', u'worden': '', u'zerfallen': '', u'abgehauen': '', u'gest\xfcrzt': '', u'abgewandert': '', u'geplatzt': '', u'ertrunken': '', u'erschienen': '', u'erwachsen': '', u'verschwunden': '', u'widerfahren': '', u'zerbrochen': '', u'eingetreten': '', u'gestartet': '', u'verstrichen': '', u'entkommen': '', u'zugesto\xdfen': '', u'verblieben': '', u'gelandet': '', u'gefolgt': '', u'abgest\xfcrzt': '', u'aufgesessen': '', u'geschl\xfcpft': '', u'entwachsen': '', u'abgebrannt': '', u'geraten': '', u'umgezogen': '', u'eingeschlagen': '', u'bekommen': '', u'geklettert': '', u'gereift': '', u'dagewesen': '', u'gewesen': '', u'auferstanden': '', u'zur\xfcckgetreten': '', u'gekippt': '', u'vergangen': '', u'eingebrochen': '', u'geschwommen': '', u'gelangt': '', u'erschrocken': '', u'eingest\xfcrzt': '', u'geschmolzen': '', u'verflogen': '', u'hervorgetreten': '', u'mutiert': '', u'verheilt': '', u'unterlaufen': '', u'ergangen': '', u'beigetreten': '', u'ausgezogen': '', u'ausgewandert': '', u'erwacht': '', u'aufgestanden': '', u'eingewandert': '', u'erfolgt': '', u'gescheitert': '', u'aufgewacht': '', u'gefl\xfcchtet': '', u'entsprungen': '', u'\xfcberlaufen': '', u'zugezogen': '', u'angetreten': '', u'gestolpert': '', u'eingeflossen': '', u'entstanden': '', u'gegl\xfcckt': '', u'gestanden': '', u'abgeklungen': '', u'angeschwollen': '', u'entgangen': '', u'geschrumpft': '', u'gesunken': '', u'zerrissen': '', u'verfallen': '', u'aufgetreten': '', u'ausgebrochen': '', u'verkommen': '', u'verstorben': '', u'abgezogen': '', u'erloschen': '', u'ausgeschieden': '', u'durchgebrannt': '', u'verungl\xfcckt': '', u'abgesunken': ''}
+sein_part_restdic = {u'geboren': '', u'gelungen': '', u'verhungert': '', u'zusammengebrochen': '', u'verklungen': '', u'passiert': '', u'weggezogen': '', u'fehlgeschlagen': '', u'geschehen': '', u'verreist': '', u'geflohen': '', u'gesto\xdfen': '', u'gewandert': '', u'begegnet': '', u'verschmolzen': '', u'abgek\xfchlt': '', u'versunken': '', u'eingeschlafen': '', u'gestrandet': '', u'abgebogen': '', u'misslungen': '', u'explodiert': '', u'gekrochen': '', u'ausgetrocknet': '', u'ausgetreten': '', u'worden': '', u'zerfallen': '', u'abgehauen': '', u'gest\xfcrzt': '', u'abgewandert': '', u'geplatzt': '', u'ertrunken': '', u'erschienen': '', u'erwachsen': '', u'verschwunden': '', u'widerfahren': '', u'zerbrochen': '', u'eingetreten': '', u'gestartet': '', u'verstrichen': '', u'entkommen': '', u'zugesto\xdfen': '', u'verblieben': '', u'gelandet': '', u'gefolgt': '', u'abgest\xfcrzt': '', u'aufgesessen': '', u'geschl\xfcpft': '', u'entwachsen': '', u'abgebrannt': '', u'geraten': '', u'umgezogen': '', u'eingeschlagen': '', u'bekommen': '', u'geklettert': '', u'gereift': '', u'dagewesen': '', u'gewesen': '', u'auferstanden': '', u'zur\xfcckgetreten': '', u'gekippt': '', u'vergangen': '', u'eingebrochen': '', u'geschwommen': '', u'gelangt': '', u'erschrocken': '', u'eingest\xfcrzt': '', u'geschmolzen': '', u'verflogen': '', u'hervorgetreten': '', u'mutiert': '', u'verheilt': '', u'unterlaufen': '', u'ergangen': '', u'beigetreten': '', u'ausgezogen': '', u'ausgewandert': '', u'erwacht': '', u'aufgestanden': '', u'eingewandert': '', u'erfolgt': '', u'gescheitert': '', u'aufgewacht': '', u'gefl\xfcchtet': '', u'entsprungen': '', u'\xfcberlaufen': '', u'zugezogen': '', u'angetreten': '', u'gestolpert': '', u'eingeflossen': '', u'entstanden': '', u'gegl\xfcckt': '', u'gestanden': '', u'abgeklungen': '', u'angeschwollen': '', u'entgangen': '', u'geschrumpft': '', u'gesunken': '', u'zerrissen': '', u'verfallen': '', u'aufgetreten': '', u'ausgebrochen': '', u'verkommen': '', u'verstorben': '', u'abgezogen': '', u'erloschen': '', u'ausgeschieden': '', u'durchgebrannt': '', u'verungl\xfcckt': '', u'abgesunken': ''}
+
+oberfeld_re = re.compile('VAFIN (?:VVINF )+VMINF')
 
 def words_to_string(parent):
 	b = []
@@ -100,8 +102,11 @@ def get_dominating_lk3(v,vc,logfile):
         lks = []
         while True:
 		parent = get_dominating_X(current)
-		verbose(v,['\n\t\t\t\tLooking for LK in clause: ', "'", words_to_string(parent), "'"], logfile)
-               	lks = parent.findall('lk')
+		verbose(v,['\n\t\t\t\tLooking for LK in clause: ', "'", words_to_string(parent), "'", " (", parent.tag, ")"], logfile)
+#              	lks = parent.findall('lk')
+		lks =  parent.findall('.//lk')
+		tags = [i.tag for i in lks]
+		logfile.write("\nLKS: " + ", ".join(tags))
 		if len(lks) > 0:
 			verbose(v,['\n\t\t\t\tFound LK in clause: ', "'", words_to_string(parent), "'"], logfile)
 			break
@@ -185,7 +190,7 @@ def infinitives2tokens(ttttpos, wwords):
 # returns tokens tagged as 'VAFIN'
 	tokens = []
 	for i in range(0,len(ttttpos)):
-		if ttttpos[i] in [u'VVINF', u'VAINF']:
+		if ttttpos[i] in [u'VVINF', u'VAINF', u'VMINF']:
 			tokens.append(wwords[i])
 	return(tokens)
 
@@ -193,7 +198,7 @@ def infinitives2tokens(ttttpos, wwords):
 def ersatzinfinitives_candidates(wwords, ttttpos, llemmas):
 	ersatzcandidates = []
 	for i in range(0,len(ttttpos)):
-		if ttttpos[i] == 'VVINF' and llemmas[i] in [u'sehen', u'hören', u'fühlen', u'lassen', u'wollen', u'müssen', u'dürfen', u'sollen', u'können', u'mögen']: # more verbs here? 
+		if ttttpos[i] in [u'VVINF', u'VMINF'] and llemmas[i] in [u'sehen', u'hören', u'fühlen', u'lassen', u'wollen', u'müssen', u'dürfen', u'sollen', u'können', u'mögen']: # more verbs here? 
 			ersatzcandidates.append(wwords[i])
 	return(ersatzcandidates)
 
@@ -214,16 +219,18 @@ def count_perfect(doc, outfile, logfile): # outfile and logfile are for debuggin
 		# most general case: verbal complex contains a participle
 		participles = participles2tokens(ttttpos, mmpos, wwords)
 		infinitives = infinitives2tokens(ttttpos, wwords)
-		if len(infinitives) > 0:
-			ersatzcandidates = ersatzinfinitives_candidates(wwords, ttttpos, llemmas)
-			
-        	if len(participles) > 0:
+		logfile.write("\nInfinitives: " + ", ".join(infinitives))
+		ersatzcandidates = ersatzinfinitives_candidates(wwords, ttttpos, llemmas)
+		logfile.write("\nPotential ersatzinfinitives: " + ", ".join(ersatzcandidates))
+		participles_and_ersatzinfs = participles + ersatzcandidates 	
+#        	if len(participles) > 0:
+		if len(participles_and_ersatzinfs) > 0:
 		#	print(participles)
-			verbose(v,['\n\t\tpast participle(s) found: ', ', '.join(participles)], logfile)
+			verbose(v,['\n\t\tpast participle(s) and infinitives found: ', ', '.join(participles)], logfile)
                 # check if verbal complex ends with a perfect aux:                     
-			for participle in participles:
+			for participle in participles_and_ersatzinfs:
 				logfile.write("\n\t\t\tNow processing participle: " + participle + ' (analyzing verbal complex)')
-				if ttttpos[-1] == 'VAFIN':
+				if ttttpos[-1] == 'VAFIN': #or (len(ersatzcandidates) > 1 and ttttpos[0] == 'VAFIN'):
 					candidate = wwords[-1]
 				#	sys.stderr.write("\nLAST WORD IN VC: " + candidate + "\n") #debug
 					if llemmas[-1] == "haben":
@@ -234,29 +241,29 @@ def count_perfect(doc, outfile, logfile): # outfile and logfile are for debuggin
 						#	sys.stderr.write("\nLAST WORD IN VC, tense: present\n")
 						#	logfile.write("\nLAST WORD IN VC, tense: present\n") #debug
 							sent_perfcounter += 1
-							participles.remove(participle)
+							participles_and_ersatzinfs.remove(participle)
 							verbose(v,['\n\t\tA finite perfect aux (pres) found in verbal complex: ', candidate, ' \n\t\t\t=====> PERFECT'], logfile)
 						elif haben_past(candidate): 
 							sent_pluperfcounter += 1
-							participles.remove(participle)
+							participles_and_ersatzinfs.remove(participle)
 							verbose(v,['\n\t\tB finite perfect aux (past) found in verbal complex: ', candidate, ' \n\t\t\t=====> PLUPERFECT'], logfile)
 					elif llemmas[-1] == "sein":
 					# check if participle is among those that take 'sein' as perfect tense auxiliary: 
 						if sein_part_re.match(participle) or participle in sein_part_restdic: 
 							if sein_pres(candidate): 
 								sent_perfcounter += 1
-								participles.remove(participle)
+								participles_and_ersatzinfs.remove(participle)
 								verbose(v,['\n\t\tC finite perfect aux (pres) found in verbal complex: ', candidate, ' \n\t\t\t=====> PERFECT'], logfile)
 							elif sein_past(candidate): 
 								sent_pluperfcounter += 1
-								participles.remove(participle)
+								participles_and_ersatzinfs.remove(participle)
 								verbose(v,['\n\t\tD finite perfect aux (past) found in verbal complex: ', candidate, ' \n\t\t\t=====> PLUPERFECT'], logfile)
 			
      		# get the left bracket of the immediately dominating <simplex>-element:
 		#	if has_perfect == False:
 				else:
 					verbose(v,['\n\t\t\t\tno perfect aux found in verbal complex'], logfile)
-			for participle in participles:
+			for participle in participles_and_ersatzinfs:
 						logfile.write("\n\t\t\tNow processing participle: " + participle + "\n\t\t\tLooking for a left bracket")
 					#	vcparent = get_dominating_simpx(vc)
                                         #        logfile.write(vcparent.text)
@@ -295,7 +302,36 @@ def count_perfect(doc, outfile, logfile): # outfile and logfile are for debuggin
 									verbose(v, ["\n\t\t\t\tno finite perfect aux in left bracket", "\n\t\t\t\t"],  logfile)
 			
 		else:
-			verbose(v, ["\n\t\tNo past participle found in verbal complex","\n\t\t\t=====> NO PERFECT\n"],  logfile)
+			verbose(v, ["\n\t\tNo past participle or infinitive found in verbal complex","\n\t\t\t=====> NO PERFECT\n"],  logfile)
+
+	    # check for Oberfeldumstellung with Ersatzinfinitiv (no point in using topo-parse information here, it's almost always incorrect)
+	    for simpx in s.findall('.//simpx'):
+	    	(wwords,ttttpos,llemmas,mmpos,mmorph) = get_wplpm(simpx)
+	    	words_and_tags_and_lemmas = zip(wwords,ttttpos,llemmas)
+	    	for i in range(0, len(words_and_tags_and_lemmas)):
+			if words_and_tags_and_lemmas[i][1] == 'VAFIN':
+				try:
+					if  words_and_tags_and_lemmas[i+1][1] == 'VVINF':
+						try:
+							if words_and_tags_and_lemmas[i+2][1] == 'VMINF':
+								candidate = wwords[i]
+								if haben_pres(candidate):
+									verbose(v,['\n\t\t\t\tI Oberfeldumstellung, finite perfect aux (pres) found in verbal complex: ', candidate, '\n\t\t\t\t=====> PERFECT'],  logfile)
+									sent_perfcounter += 1
+								elif haben_past(candidate):
+									verbose(v,['\n\t\t\t\tJ Oberfeldumstellung, finite perfect aux (past) found in verbal complex: ', candidate, '\n\t\t\t\t=====> PLUPERFECT'],  logfile)
+									sent_pluperfcounter += 1
+						except IndexError:
+							break
+				except IndexError:
+					break
+
+					
+	 
+	    ttttpos_string = " ".join(ttttpos)
+	    logfile.write("\n"+ttttpos_string)
+	    ofu = oberfeld_re.findall(ttttpos_string)
+	    logfile.write("\n Obefeldumstellungssequenz: " + ", ".join(ofu))
 
 	
 	    line = words_to_string(s).strip()
