@@ -10,8 +10,10 @@ import re
 
 
 dict_n = set()
+dict_pn = set()
 dict_rest = set()
 
+NO_ANNO=['_', '_', '|', '|']
 
 def substitute_nulls(s):
   s = re.sub(u'(?:\w|<[^>]+>):#0#', r'', s, re.UNICODE)
@@ -55,16 +57,26 @@ def fix_cap(s):
   return s
 
 
-# Checks whether a single element is known as NN or other to TT.
-# Under the assumption that TT knows all simplex nouns and quite some compounds.
-def check_lex(s):
+def check_lex_single(s):
   global dict_n
+  global dict_pn
   global dict_rest
-  if re.match(u'^[A-ZÄÖÜ]', s) and not s in dict_noun:
-    s = ''
-  elif s not in dict_rest:
-    s = ''
-  return s
+  if re.match(u'^[A-ZÄÖÜ][a-zäöüß]+$', s, re.UNICODE):
+    return 1 if s in dict_n or s in dict_pn else 0
+  elif re.match(u'^[a-zäöüß]+$', s, re.UNICODE):
+    return 1 if s in dict_rest else 0
+  else:
+    return 1
+
+
+def check_lex(l):
+  lex = [e for e in l if re.match(u'^[A-ZÄÖÜ][a-zäöüß]+$|^[a-zäöüß]+$', e, re.UNICODE)]
+  chex = [check_lex_single(e) for e in lex]
+  if len(chex) > 0:
+    return [int(round(sum(chex)/float(len(chex))*100)), len(lex), len(l)]
+  else:
+    return [-1, 0, len(l)]
+
 
 
 def nounalize(s):
@@ -134,7 +146,6 @@ def nounalize(s):
 
   # Some cleanups.
   nouns = [x.replace('<+NN>', '').strip() if not x == '+' else '' for x in nouns]
-  nouns = filter(None, nouns)
 
   # Do NOT keep umlaut in head noun. Is plural!
   nouns = nouns[:-1] + [re.sub(u'([aou]):([äöü])', r'\1', nouns[-1], re.UNICODE)]
@@ -150,23 +161,27 @@ def nounalize(s):
   # Clean remaining to/from-NULL substitutions.
   nouns = [substitute_nulls(x) for x in nouns]
 
-  # Make lexicon checks and compact list.
-  nouns = [x if check_lex(x) else '' for x in nouns]
+  # Compact.
   nouns = filter(None, nouns)
 
-  return nouns
+  return [nouns] + check_lex(nouns)
 
 def main():
   parser = argparse.ArgumentParser()
   parser.add_argument('infile', help='input from SMOR (gzip)')
   parser.add_argument('outfile', help='output file name (gzip)')
   parser.add_argument('nouns', help='noun dictionary file name (gzip)')
+  parser.add_argument('names', help='name dictionary file name (gzip)')
   parser.add_argument('rest', help='verb, adjective, etc. dictionary file name (gzip)')
+  parser.add_argument("--nounlim", type=int, help="only use the first <this number> of nouns from list")
+  parser.add_argument("--namelim", type=int, default=10000, help="only use the first <this number> of names from list")
+  parser.add_argument("--restlim", type=int, help="only use the first <this number> of non-noun lemmas from list")
+  parser.add_argument("--lexperc", default=67, type=int, help="percentage of lexical items required to be known in lexicon")
   parser.add_argument("--erase", action='store_true', help="erase outout files if present")
   args = parser.parse_args()
 
   # Check input files.
-  infiles = [args.infile]
+  infiles = [args.infile, args.nouns, args.names, args.rest]
   for fn in infiles:
       if not os.path.exists(fn):
           sys.exit("Input file does not exist: " + fn)
@@ -185,16 +200,34 @@ def main():
 
   # Load the dictionaries.
   global dict_n
+  global dict_pn
   global dict_rest
   fh_dict = gzip.open(args.nouns)
+  counter = 0
   for l in fh_dict:
+    counter = counter + 1
     dict_n.add(l.decode('utf-8').strip())
-  fh_dict.close()
-  fh_dict = gzip.open(args.rest)
-  for l in fh_dict:
-    dict_rest.add(l.decode('utf-8').strip())
+    if args.nounlim and counter >= args.nounlim:
+      break
   fh_dict.close()
 
+  fh_dict = gzip.open(args.names)
+  counter = 0
+  for l in fh_dict:
+    counter = counter + 1
+    dict_pn.add(l.decode('utf-8').strip())
+    if args.namelim and counter >= args.namelim:
+      break
+  fh_dict.close()
+
+  fh_dict = gzip.open(args.rest)
+  counter = 0
+  for l in fh_dict:
+    counter = counter + 1
+    dict_rest.add(l.decode('utf-8').strip())
+    if args.restlim and counter >= args.restlim:
+      break
+  fh_dict.close()
 
   ofh = gzip.open(args.outfile, 'wb')
   ifh = gzip.open(args.infile, 'r')
@@ -202,38 +235,60 @@ def main():
   c_analyses  = list()
   c_token     = ''
 
-  for l in ifh:
-    l = l.decode('utf-8')
-    l = l.strip()
-
-    if not l:
-      continue
+  while True:
+    l = ifh.readline().decode('utf-8')
 
     # Start new word.
-    if re.match(r'^> ', l) or l == '>':
+    if re.match(r'^> ', l) or l == '>' or not l:
 
-      # Save full analyses for later.
-      cdata = '<![CDATA[' + '|+|'.join(c_analyses) + ']]>'
+      if len(c_analyses) > 0 and c_token:
 
-      # Remove trailing inflection analysis
-      c_analyses = [re.sub(r'(<\+[^>]+>).*$', r'\1', x).replace('<NEWORTH>','').replace('<OLDORTH>','') for x in c_analyses] 
+          # Save full analyses for later.
+          cdata = '<![CDATA[' + ' '.join(c_analyses) + ']]>'
+    
+          # Remove trailing inflection analysis and useless ORTH info.
+          c_analyses = [re.sub(r'(<\+[^>]+>).*$', r'\1', x).replace('<NEWORTH>','').replace('<OLDORTH>','') for x in c_analyses] 
+    
+          # Only get analyses for this as noun.
+          nounalyses = [nounalize(x) for x in c_analyses if '<+NN>' in x]
 
-      # Only get analyses for this as noun.
-      nounalyses = [nounalize(x) for x in c_analyses if '<+NN>' in x]
+          # Eliminate analyses below required lexical sanity level.
+          # Also: Only use analyses with the best possible lexical score.
+          if len(nounalyses) > 1:
+            lex_max = max([a[1] for a in nounalyses])
+            nounalyses = [e for e in nounalyses if len(e) > 0 and e[1] >= args.lexperc and e[1] == lex_max]
+    
+          # One lexical item means "not compound". Get rid.
+          nounalyses = [e for e in nounalyses if e[2] > 1]
 
-      if len(nounalyses) > 0:
-        for n in nounalyses:
-          if len(n) > 1:
+          # If there are still multiple analyses left, use the ones with the least no. of lexical items. 
+          if len(nounalyses) > 1:
+            lex_item_min = min([a[2] for a in nounalyses])
+            nounalyses = [e for e in nounalyses if e[2] <= lex_item_min]
+          
+          # If there are still multiple analyses left, use the ones with the least no. of items. 
+          if len(nounalyses) > 1:
+            lex_item_min = min([a[3] for a in nounalyses])
+            nounalyses = [e for e in nounalyses if e[3] <= lex_item_min]
 
-            # TODO "Disambiguation".
+          # Out of criteria. Just use the first f there is at least one analysis or empty annotation if non.
+          # First case: Work around > token problem. Requires > tokens to be transformed to GÖTÖBLÄNKK before smor-infl run.
+          if c_token == u'GÖTÖBLÄNKK':
+            annotation = '\t'.join([u'>'] + NO_ANNO)
+          elif len(nounalyses) > 0:
+            lexies = [e for e in nounalyses[0][0] if re.match(u'^[a-zA-ZäöüÄÖÜß]+$', e, re.UNICODE)]
+            fugies = [e[1:] for e in nounalyses[0][0] if re.match(u'^\+[a-z]+$', e, re.UNICODE)]
+            annotation = '\t'.join([c_token, '_'.join(nounalyses[0][0]), lexies[-1], '|'+'|'.join(lexies[:-1])+'|', '|'+'|'.join(fugies)+'|'])
+          elif not c_token == '>':
+            annotation = '\t'.join([c_token] + NO_ANNO)
+          else:
+            annotation = ''
 
-            print c_token.encode('utf-8') + '\t\t',
-            print ('\t'.join(n)).encode('utf-8')
-            #print ('\t'.join(n)).encode('utf-8') + '\t' + cdata.encode('utf-8')
+          ofh.write(annotation.encode('utf-8') + '\n')
 
       # Fresh start.
       c_analyses = list()
-      c_token    = re.sub(r'^> ', r'', l)
+      c_token    = re.sub(r'^> ', r'', l.strip())
 
     else:
 
@@ -241,8 +296,8 @@ def main():
       if not l == 'no result for':
         c_analyses = c_analyses + [l]
 
-  # TODO Last element is not printed.
-  # TODO Also check whether "no analysis" etc. are handled. Consistent Token numbers in in/out.
+    if not l:
+      break
 
   ofh.close()
   ifh.close()
