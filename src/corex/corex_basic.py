@@ -24,7 +24,15 @@ def parsemorphs(text):
 	if len(text) > 1:
 		morphlist = text.strip('|').split('|')
 	return(morphlist)
-	
+
+
+def firstlemma(lemmastring):
+    # selects the first lemma from a string denoting a "set" of lemmas,
+    # e.g. |bla|blub|  ==>  bla
+    lemmastring = lemmastring.strip("|")
+    lemmalist = lemmastring.split("|")
+    return(lemmalist[0])
+
 
 def annotate_basic(dom):
 
@@ -105,12 +113,12 @@ def annotate_basic(dom):
 
     
     # We need parents -> lemmas for article counting.
-    posse_lemmas = [p.find('../lemma').text for p in posse if p.text == 'ART']
+    posse_lemmas = [firstlemma(p.find('../lemma').text) for p in posse if p.text == 'ART']
     
-    c_def_article = len([a for a in posse_lemmas if a == 'd'])
+    c_def_article = len([a for a in posse_lemmas if a == 'die'])
     add_per(dom, 'crx_def', c_def_article, c_word, 1000)
     
-    c_indef_article = len([a for a in posse_lemmas if a == 'ein'])
+    c_indef_article = len([a for a in posse_lemmas if a == 'eine'])
     add_per(dom, 'crx_indef', c_indef_article, c_word, 1000)
    
     # NER-related counts.
@@ -129,7 +137,7 @@ def annotate_basic(dom):
     lemmas = dom.findall('.//*lemma')
 
     # Emoticons:
-    c_emo = len([l for l in lemmas if l.text == '(smiley)'])
+    c_emo = len([l for l in lemmas if firstlemma(l.text) == '(smiley)'])
     add_per(dom, 'crx_emo', c_emo, c_word, 1000)
 
     # Quotes:
@@ -228,6 +236,12 @@ def annotate_basic(dom):
     # Just look for a simpx as a child of vf; do not look for further embedded simpxs
     c_clausal_vf = len([vfelement.findall('simpx') for vfelement in vfs if len(vfelement.findall('simpx')) > 0])
     add_per(dom, 'crx_clausevf', c_clausal_vf, c_vf, 1)
+
+    # Get compound nouns
+    c_posse_nn_comp = len([p.find('../comp').text for p in posse if p.text == 'NN' and len(p.find('../comp').text) > 1])
+    add_per(dom, 'crx_cmpnd', c_posse_nn_comp, c_commonnouns, 1)
+
+
 
 
 def annotate_lexicon(dom):

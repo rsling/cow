@@ -69,6 +69,13 @@ def get_dominating_lk(v,vc,logfile):
 	return(lks)
 
 
+def firstlemma(lemmastring):
+	# selects the first lemma from a string denoting a "set" of lemmas,
+        # e.g. |bla|blub|
+	lemmastring = lemmastring.strip("|")
+	lemmalist = lemmastring.split("|")
+	return(lemmalist[0])
+
 	
 def get_wplpm(enclosing_element):
 	words = enclosing_element.findall('.//*word')			
@@ -79,7 +86,8 @@ def get_wplpm(enclosing_element):
 
 	wwords = [w.text for w in words]
 	ttttpos = [p.text for p in ttpos]
-  	llemmas = [l.text for l in lemmas]
+	lemmasetstrings =  [l.text for l in lemmas]
+  	llemmas = [firstlemma(l) for l in lemmasetstrings]
        	mmpos = [p.text for p in mpos]
 	mmorph =  [m.text for m in morph]
 

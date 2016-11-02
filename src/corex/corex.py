@@ -86,10 +86,10 @@ def main():
             Gn.annotate(doc)
 
         # count passives:
-#	passive(doc)
+	passive(doc)
 
 	# count perfect and pluperfect:
-#	perfect(doc)
+	perfect(doc)
 
         # Save the (potentially modified) DOM.
         flat = outify(doc)

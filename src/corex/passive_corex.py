@@ -71,6 +71,12 @@ def get_dominating_lk2(v,vcparent):
 
 	return(lks)
 
+def firstlemma(lemmastring):
+	# selects the first lemma from a string denoting a "set" of lemmas,
+        # e.g. |bla|blub|
+	lemmastring = lemmastring.strip("|")
+	lemmalist = lemmastring.split("|")
+	return(lemmalist[0])
 
 	
 def get_wpl(enclosing_element):
@@ -79,7 +85,8 @@ def get_wpl(enclosing_element):
 	lemmas =  enclosing_element.findall('.//*lemma')
 	wwords = [w.text for w in words]
 	ppos = [p.text for p in pos]
-  	llemmas = [l.text for l in lemmas]
+	lemmasetstrings =  [l.text for l in lemmas]
+  	llemmas = [firstlemma(l) for l in lemmasetstrings]
 	return(wwords,ppos,llemmas)
 
 
