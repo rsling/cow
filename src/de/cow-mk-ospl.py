@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 #!/usr/bin/python
 
 # Takes as input a COW-XML file with sentences delimited by <s> ... </s>
@@ -8,45 +10,30 @@
 import sys
 import codecs
 import re
-
-infile = codecs.open(sys.argv[1])
-tag = re.compile(' *</?[^>]+> *')
+import gzip
 
 
 def ospl(buf):
-	out = " ".join(buf)
-	out = re.sub(tag, '', out) 
-	out = out.strip()
-	return(out)
+  out = " ".join(buf)
+  out = re.sub(r' *</?[^>]+> *', r'', out) 
+  out = out.strip()
+  return(out)
+
 
 def readsentence(infile, stopstring):
-	for line in infile:
-		sline = line.split("\t")
-		token = sline[0].strip()
-		b.append(token)
-		if token.startswith(stopstring):
-			out = ospl(b)
-			print(out)
-			break
+  for line in infile:
+    sline = line.split("\t")
+    token = sline[0].strip()
+    b.append(token)
+    if token.startswith(stopstring):
+      out = ospl(b)
+      print(out)
+      break
 
 
-	
-for line in infile:
-	sline = line.split("\t")
-	token = sline[0].strip()
-	if token == ('<s>'):
-		b = []
-		readsentence(infile, '</s>')
-        else:
-		if not token.startswith('<'):
-			b = [token]
-			readsentence(infile, '<')			
-
-						
-
-		
+def main():  
 
 
-
-
+if __name__ == "__main__":
+    main()
 

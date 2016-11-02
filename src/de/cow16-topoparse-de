@@ -1,119 +1,51 @@
 #!/bin/bash
 
-# This takes a corpus in COW-XML format as input, does some preprocessing,
-# runs the Berkeleparser with the topological model, converts the result to XML,
-# and merges the topological annotation with the COW-XML from the input file.
+# Pass:
+# xml-infile token-infile outfile
+
+# Define envvars:
+# PARSERHOME   # location of Berkeley + model
+# PARSER_TMP   # Where to put temp files.
+
 # Important: Merging will only work if there are no XML-tags embedded within
 # <s> ... </s> regions in the COW-XML file.
 
-#
+set -e
+set -u
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+RESOURCES="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# Try to read PATHS from '' in the same directory this script resides in:
-if [ -f $DIR/cow-topo-de.cfg ];
-	then
-		source $DIR/cow-topo-de.cfg
-    echo "
-Reading configuration from $DIR/cow-topo-de.cfg ..."
-	else
-		# if $DIR/resources-paths does not exist, use these:
-		echo "No config file found, using defaults..."
-		RESOURCES="/Users/felix/NLP/cow/src/corex"
-		PARSERHOME="/Users/felix/NLP/berkelyparser/topoparser"
-fi
+prefix="${PARSER_TMP}/${RANDOM}_$(basename $1 .gz)"
+ospl="${prefix}_ospl.gz"
+topo="${prefix}_topo.gz"
+topoclean="${prefix}_topoclean.gz"
+topoxml="${prefix}_topo.xml.gz"
 
+echo $ospl
 
-type $RESOURCES/cow-mk-ospl.py >/dev/null 2>&1 || { echo >&2 "cow-mk-ospl.py not found in $RESOURCES"; exit 1; }
+# Make one sentence per line from TOKEN infile.
+python ${RESOURCES}/cow16-ospl.py ${2} ${ospl}
 
-if [ ! -f  $PARSERHOME/berkeleyParser.jar ]; then
-    echo "berkeleyParser.jar not found in $PARSERHOME"
-		exit 1
-fi
+echo $topo
 
-if [ ! -f  $PARSERHOME/tuebadz_topf_no_edge.gr ]; then
-    echo "tuebadz_topf_no_edge.gr not found in $PARSERHOME"
-		exit 1
-fi
+# Run the topological field parser on one sentence per line file.
+gunzip -c ${ospl} | java -Xmx7g -jar ${PARSERHOME}/berkeleyParser.jar -gr ${PARSERHOME}/tuebadz_topf_no_edge.gr | gzip -c > ${topo}
 
-type $RESOURCES/save_unparsables.py >/dev/null 2>&1 || { echo >&2 "save_unparsables.py not found in $RESOURCES"; exit 1; }
-type $RESOURCES/berkeley2sattr.py >/dev/null 2>&1 || { echo >&2 "berkeley2sattr.py not found in $RESOURCES"; exit 1; }
-type $RESOURCES/join-cowxml-topoxml.py >/dev/null 2>&1 || { echo >&2 "join-cowxml-topoxml.py not found in $RESOURCES"; exit 1; }
+exit
 
+$RESOURCES/save_unparsables.py ${ospl} ${topo} ${topoclean}
 
-#################################################################
+# Make xml form parser output.
+$RESOURCES/berkeley2sattr.py ${topoclean} |
+  cut -f 1 |
+  sed '/<\/\?>/d' |
+  sed '/<\/\?pseudo>/d' | gzip -c >  ${topoxml}
 
-cowxmlfile=$1
-prefix=$(basename $1 .xml)
-outfilename=$prefix""_tf.xml
-#echo $outfilename
-# Delete any Tree-Tagger-Chunker tags from the COW-XML file:
-echo "Cleaning input file ..." 1>&2
-sed '/<\/\?[vnp]c>$/d' $cowxmlfile > $prefix-nochunks.tmp &&\
-# Make one-sentence-per line format required for Berkeleyparser
-# (both sentence regions and non-sentence material):
-echo "Making one sentence per line ..." 1>&2
-$RESOURCES/cow-mk-ospl.py $prefix-nochunks.tmp|\
-# reduce any sequence of whitespace chars to a single one (Berkeleyparser doesn't like it):
-sed 's/  \+/ /g' |\
-# remove any empty lines:
-sed '/^$/d' |\
-# substitute xml-entities:
-sed 's/\&quot;/"/g'|\
-sed "s/\&apos;/'/g"|\
-sed 's/\&lt;/</g' |\
-sed 's/\&gt;/>/g' |\
-sed 's/\&amp;/\&/g'|\
-# convert parentheses to square brackets (Berkeleyparser doesn't seem to deal with them properly):
-sed 's/(/[/g' |\
-sed 's/)/]/g' > $prefix-ospl.tmp &&\
-# run the topological field parser:
-echo "Running the Berkeley parser ..." 1>&2
-java -jar $PARSERHOME/berkeleyParser.jar -gr $PARSERHOME/tuebadz_topf_no_edge.gr < $prefix-ospl.tmp > $prefix-topo-raw.tmp && \
-#$RESOURCES/berkeleywrapper.sh $prefix-ospl.tmp > $prefix-topo-raw.tmp && \
-echo "Repairing parser output ..." 1>&2
-$RESOURCES/save_unparsables.py $prefix-ospl.tmp $prefix-topo-raw.tmp > $prefix-topo-clean.tmp && \
-# make xml form parser output:
-echo "XMLify parser output ..." 1>&2
-$RESOURCES/berkeley2sattr.py $prefix-topo-clean.tmp |\
-# # grab the first column (tokens and xml):
-cut -f 1 |\
-# do some postprocessing:
-# delete empty tags:
-sed '/<\/\?>/d' |\
-# delete <pseudo> and </pseudo> tags:
-sed '/<\/\?pseudo>/d' >  $prefix-topo-xml.tmp && \
-# delete 'chunks':
-#sed '/<\/\?[^>]\+x[^>]*>/d' |\
-# revert substitutions:
-# sed '/^</! s/\&/\&amp;/g'|\ handled by berkeley2sattr.py before inserting xml tags 
-# sed '/^</! s/"/\&quot;/g' |\ handled by berkeley2sattr.py before inserting xml tags 
-# sed "/^</! s/'/\&apos;/g" handled by berkeley2sattr.py before inserting xml tags 
+# Merge xml files.
+$RESOURCES/join-cowxml-topoxml.py ${1} ${topoxml} | gzip -c >  ${2}
 
-#sed '/^<.\+>$/! s/</\&lt;/g' |\  handled by berkeley2sattr.py before inserting xml tags 
-#sed '/^<.\+>$/! s/>/\&gt;/g'     handled by berkeley2sattr.py before inserting xml tags 
-
-#sed 's/\[/(/g' |\ # this is handled (better) in join-cowxml-topoxml.py now
-#sed 's/\]/)/g' # this is handled (better) in join-cowxml-topoxml.py now
-
-# merge xml files:
-echo "Merging structural attributes ..." 1>&2
-$RESOURCES/join-cowxml-topoxml.py $prefix-nochunks.tmp $prefix-topo-xml.tmp >  $outfilename && \
-# remove temporary files:
-\rm $prefix-topo-raw.tmp && \
-\rm $prefix-topo-xml.tmp && \
-\rm $prefix-nochunks.tmp && \
-\rm $prefix-ospl.tmp && \
-\rm $prefix-topo-clean.tmp &&\
-echo "Output is in $outfilename" 1>&2 && \
-# run xmlwf on outfilename
-#echo "Checking XML..." 1>&2 && \
-#xmlwf $outfilename 1>&2 && \
-echo "Done.
-" 1>&2
-
-#
-#
-#
-#
-#
+# Remove temporary files.
+\rm ${ospl}
+\rm ${topo}
+\rm ${topoclean}
+\rm ${topoxml}
