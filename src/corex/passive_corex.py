@@ -12,7 +12,6 @@ import argparse
 import os.path
 import sys
 from corexreader import CORexReader as CX
-#import lxml.etree as ET
 import codecs
 
 
@@ -32,7 +31,7 @@ def get_dominating_simpx(element):
 			break
 		else:
 			element = parent
-        sys.stderr.write("\nDominating element: " + parent.tag + "\n") # debug
+#        sys.stderr.write("\nDominating element: " + parent.tag + "\n") # debug
 	return(parent)
 
 def get_dominating_lk(v,vcparent):
@@ -68,17 +67,15 @@ def get_dominating_lk2(v,vcparent):
 						lks = lks + fkonj.findall('lk')
 	if lks == []:
 		verbose(v,['\n\t\tverb-final clause','\n\t\t\t\t=====> NO PASSIVE'])
-        sys.stderr.write("\nNumber of LK found: " + str(len(lks))) # debug
+	verbose(v,["\n\tNumber of LK found: ", str(len(lks))])
 
 	return(lks)
-
-
 
 
 	
 def get_wpl(enclosing_element):
 	words = enclosing_element.findall('.//*word')			
-	pos =  enclosing_element.findall('.//*pos')
+	pos =  enclosing_element.findall('.//*ttpos')
 	lemmas =  enclosing_element.findall('.//*lemma')
 	wwords = [w.text for w in words]
 	ppos = [p.text for p in pos]
@@ -93,19 +90,22 @@ def verbose(verbosearg,sentencelist):
 
 
 
-def count_passives(doc):
-	v = True
+def passive(doc):
+	v = False
     	passcounter = 0
-	perfcounter = 0
 	for s in doc.iter('s'):
-	    verbose(True,["\n=========\n", words_to_string(s)])
+	    verbose(v,["\n=========\n", words_to_string(s)])
 	    sent_passcounter = 0
 	    sent_perfcounter = 0
             for vc in s.findall('.//vc'): # vc is not always a direct child of simpx (e.g. in coordination)
 		verbose(v,["\n\tVC: ", "'", words_to_string(vc),"'"])
 		(wwords,ppos,llemmas) = get_wpl(vc)
+		verbose(v,["\n\tWords: ", ", ".join(wwords)])
+		verbose(v,["\n\tTags: ", ", ".join(ppos)])
+		verbose(v,["\n\tLemmas: ", ", ".join(llemmas)]) 
 		# most general case: verbal complex contains a participle (could be perfekt or passive)
 		participles = [word for word in ppos if word == 'VVPP']
+		verbose(v,["\n\tParticiples: ", ", ".join(participles)]) # debug
         	if len(participles) > 0:
 		#	print(participles)
 			has_passive = False
@@ -148,11 +148,15 @@ def count_passives(doc):
 			verbose(v, ["\n\t\tfound no past participle in verbal complex","\n\t\t\t=====> NO PASSIVE\n"])
 
 	
-	 #   line = words_to_string(s).strip()
-	 #   line = line + "\t" + str(sent_passcounter)	
-	 #  outfile.write(line + "\n")
+#	    line = words_to_string(s).strip()
+#	    line = line + "\t" + str(sent_passcounter)	
+#	    outfile.write(line + "\n")
 	    passcounter = passcounter + sent_passcounter
-            verbose(True,["\t", str(sent_passcounter)])
+            verbose(v,["\t", str(sent_passcounter)])
+	    if sent_passcounter > 0:
+		s.set('crx_pass', 'yes')
+	    else:
+		s.set('crx_pass', 'no')
 	
 	doc.set('crx_pass', str(passcounter))
 	#sys.stderr.write("\nPassives in doc: " + str(passcounter) + "\n")	
@@ -205,7 +209,7 @@ def main():
  
    
     for doc in corpus_in:
-	count_passives(doc)
+	passive(doc)
 
 	   
 if __name__ == "__main__":

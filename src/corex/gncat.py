@@ -46,7 +46,7 @@ class GNCategorizer:
         else:
             return None
 
-    def annotate(self, dom, xpath = './/*token', lemma = './lemma', pos = './pos'):
+    def annotate(self, dom, xpath = './/*token', lemma = './lemma', pos = './ttpos'):
         # Empty dict to store the cat => count mapping.
         sem_anno = dict()
 

@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 # This tool reads a COW-XML corpus and runs the COReX feature
@@ -15,8 +16,10 @@ import sys
 from lxml import etree as ET
 from corexreader import outify, CORexReader as CX
 from gncat import GNCategorizer as GN
-from corex_basic import annotate_basic
-from passive_corex import passives	
+from corex_basic import annotate_basic, annotate_lexicon
+from passive_corex import passive	
+from perfect_corex import perfect
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -76,16 +79,22 @@ def main():
         # All simple counts and more.
         annotate_basic(doc)
 
+        annotate_lexicon(doc)
+
         # Do the GermaNet semantic classes annotation.
         if args.germanet:
             Gn.annotate(doc)
 
         # count passives:
-	passives(doc)
+#	passive(doc)
+
+	# count perfect and pluperfect:
+#	perfect(doc)
 
         # Save the (potentially modified) DOM.
         flat = outify(doc)
         outf.write(flat + '\n' )
+      
 
 if __name__ == "__main__":
     main()

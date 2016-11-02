@@ -145,7 +145,9 @@ def ersatzinfinitives_candidates(wwords, ttttpos, llemmas):
 	return(ersatzcandidatetokens)
 
 
-def count_perfect(doc, outfile, logfile): # outfile and logfile are for debugging and testing; remove later
+#def perfect(doc, outfile): # outfile and logfile are for debugging and testing; remove later
+def perfect(doc): #	
+	logfile = codecs.open('perfect_logfile.txt', 'w', 'utf-8')
 	v = False
 	perfcounter = 0
 	pluperfcounter = 0
@@ -302,8 +304,9 @@ def count_perfect(doc, outfile, logfile): # outfile and logfile are for debuggin
 	    perfcounter = perfcounter + sent_perfcounter
 	    pluperfcounter = pluperfcounter + sent_pluperfcounter
 
-	return((str(perfcounter), str(pluperfcounter)))
-
+#	return((str(perfcounter), str(pluperfcounter)))
+	doc.set('crx_perf', str(perfcounter))
+	doc.set('crx_plu', str(pluperfcounter))	
 
 
 def main():
@@ -352,12 +355,14 @@ def main():
     outfile = open(fn_out, 'w')
 
     # open log file (debugging only; remove later):
-    logfile = codecs.open('perfect_logfile.txt', 'w', 'utf-8')
+    #logfile = codecs.open('perfect_logfile.txt', 'w', 'utf-8')
    
     for doc in corpus_in:
-	(perfect, pluperfect) = count_perfect(doc,outfile,logfile)
-	doc.set('crx_perf', perfect)
-	doc.set('crx_plu', pluperfect)	
+#	(perfectcount, pluperfectcount) = perfect(doc,outfile,logfile)
+#	perfect(doc,outfile)
+	perfect(doc)
+#	doc.set('crx_perf', perfectcount)
+#	doc.set('crx_plu', pluperfectcount)	
 	outfile.write(outify(doc) + "\n")
 
 
