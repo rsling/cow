@@ -11,6 +11,7 @@
 import argparse
 import os.path
 import sys
+import gzip
 
 
 from lxml import etree as ET
@@ -59,7 +60,8 @@ def main():
         annos = args.annotations.split(',')
 
     # Open out file.
-    outf = open(fn_out, 'w')
+#    outf = open(fn_out, 'w')
+    outf = gzip.open(fn_out, 'w')
 
     # Create corpus iterator. 
     corpus_in = CX(fn_in, annos=annos)
@@ -70,7 +72,6 @@ def main():
 
     # Annotate the documents.
     for doc in corpus_in:
-  #      print doc
 
         # Minimal length filter.
         if len(doc.findall('.//*token')) < args.minlength:
@@ -79,17 +80,19 @@ def main():
         # All simple counts and more.
         annotate_basic(doc)
 
+        # count passives:
+	passive(doc)
+
+	# count perfect and pluperfect:
+	perfect(doc)
+
+        # Count non-standard contracted forms of verbs and prepositions:
         annotate_lexicon(doc)
 
         # Do the GermaNet semantic classes annotation.
         if args.germanet:
             Gn.annotate(doc)
 
-        # count passives:
-	passive(doc)
-
-	# count perfect and pluperfect:
-	perfect(doc)
 
         # Save the (potentially modified) DOM.
         flat = outify(doc)
