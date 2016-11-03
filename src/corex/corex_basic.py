@@ -13,7 +13,7 @@ def per(x, n, p = 1000):
     if n > 0:
         return x/float(n)*p
     else:
-        return 0
+        return float(0)
 
 
 def add_per(doc, attr, x, n, p = 1000):
@@ -156,13 +156,13 @@ def annotate_basic(dom):
     nerds = dom.findall('.//*ne')
     
     c_ne_per = len([n for n in nerds if n.text == 'I-PER'])
-    add_per(dom, 'crx_per', c_ne_per, c_word, 1000)
+    add_per(dom, 'crx_neper', c_ne_per, c_word, 1000)
     
     c_ne_loc = len([n for n in nerds if n.text == 'I-LOC'])
-    add_per(dom, 'crx_loc', c_ne_loc, c_word, 1000)
+    add_per(dom, 'crx_neloc', c_ne_loc, c_word, 1000)
     
     c_ne_org = len([n for n in nerds if n.text == 'I-ORG'])
-    add_per(dom, 'crx_org', c_ne_org, c_word, 1000)
+    add_per(dom, 'crx_neorg', c_ne_org, c_word, 1000)
 
     # Get all lemmas:
     lemmas = dom.findall('.//*lemma')
@@ -215,10 +215,11 @@ def annotate_basic(dom):
 
 
     # Get Marmot's POS:
-    mposse = dom.findall('.//*mpos')
+#    mposse = dom.findall('.//*mpos')
+    mposse = posse
 
     # Get Marmot's morphological annotation for personal pronouns:
-    mposse_pp_morphs = [parsemorphs(p.find('../morph').text) for p in mposse if p.text == 'PPER']
+    mposse_pp_morphs = [parsemorphs(p.find('../morph').text) for p in mposse if p.text in ['PPER', 'PRF']]
 
     # Get 1st person personal pronouns:
     c_pper_1st = len([m for m in mposse_pp_morphs if '1' in m])
@@ -232,10 +233,11 @@ def annotate_basic(dom):
     c_pper_3rd = len([m for m in mposse_pp_morphs if '3' in m])
     add_per(dom, 'crx_pper_3rd', c_pper_3rd, c_word, 1000)
 
-    # Get proportion genitive NNs / all NNs:
-    mposse_n_morphs = [parsemorphs(p.find('../morph').text) for p in mposse if p.text in ['NN', 'NE']]
-    c_gen = len([m for m in mposse_n_morphs if 'gen' in m])
-    add_per(dom, 'crx_gen', c_gen, float(len( mposse_n_morphs )), 1000)
+    # Get proportion genitive NNs / all NNs
+    # (use TreeTaggers POS-tags: has extended lexicon, should be more reliable)
+    posse_n_morphs = [parsemorphs(p.find('../morph').text) for p in mposse if p.text in ['NN', 'NE']]
+    c_gen = len([m for m in posse_n_morphs if 'gen' in m])
+    add_per(dom, 'crx_gen', c_gen, float(len( posse_n_morphs )), 1000)
 
 
     # Counts related to topological fields.
