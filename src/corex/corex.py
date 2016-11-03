@@ -17,7 +17,7 @@ import gzip
 from lxml import etree as ET
 from corexreader import outify, CORexReader as CX
 from gncat import GNCategorizer as GN
-from corex_basic import annotate_basic, annotate_lexicon
+from corex_basic import annotate_basic#, annotate_lexicon
 from passive_corex import passive	
 from perfect_corex import perfect
 
@@ -87,7 +87,7 @@ def main():
 	perfect(doc)
 
         # Count non-standard contracted forms of verbs and prepositions:
-        annotate_lexicon(doc)
+ #       annotate_lexicon(doc)
 
         # Do the GermaNet semantic classes annotation.
         if args.germanet:

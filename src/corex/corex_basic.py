@@ -13,7 +13,7 @@ def per(x, n, p = 1000):
     if n > 0:
         return x/float(n)*p
     else:
-        return -1
+        return 0
 
 
 def add_per(doc, attr, x, n, p = 1000):
@@ -75,6 +75,16 @@ def annotate_basic(dom):
 
     c_modals = len([p for p in posse if p.text[:2] == 'VM'])
     add_per(dom, 'crx_mod', c_modals, c_word, 1000)
+
+    c_verbs = len([p for p in posse if p.text[:2] == 'VV'])
+    add_per(dom, 'crx_vv', c_verbs, c_word, 1000)
+
+    c_aux = len([p for p in posse if p.text[:2] == 'VA'])
+    add_per(dom, 'crx_vaux', c_aux, c_word, 1000)
+
+    vfin = [p for p in posse if p.text in ['VAFIN', 'VMFIN', 'VVFIN']]
+    c_vfin = len(vfin)
+    add_per(dom, 'crx_vfin', c_vfin, c_word, 1000)
 
     c_commonnouns = len([p for p in posse if p.text == 'NN'])
     add_per(dom, 'crx_cn', c_commonnouns, c_word, 1000)
@@ -187,9 +197,21 @@ def annotate_basic(dom):
     add_per(dom, 'crx_vpres', c_vpres, c_word, 1000)
 
     # Get present tense, subjunctive mood verbs
-    c_vsubj = len([m for m in morphsets if 'pres' in m and 'subj' in m])
+    c_vpressubj = len([m for m in morphsets if 'pres' in m and 'subj' in m])
 #   dom.attrib['crx_vsubj'] = str(c_vsubj)
-    add_per(dom, 'crx_vsubj', c_vsubj, c_word, 1000)
+    add_per(dom, 'crx_vpressubj', c_vpressubj, c_word, 1000)
+
+    # Get count for all verbs, subjunctive & past tense:
+    past_subj = [m for m in morphs if 'past' in parsemorphs(m.text) and 'subj' in parsemorphs(m.text)]
+    c_past_subj = len(past_subj)
+  
+    # Get count for 'werden', subjunctive & past tense:
+    wpast_subj =  [m for m in past_subj if firstlemma(m.findall('../lemma')[0].text) == 'werden']
+    c_wpast_subj = len(wpast_subj)
+#    print([w.findall('../word')[0].text for w in wpast_subj])
+    add_per(dom, 'crx_wpastsubj', c_wpast_subj, c_word, 1000)
+    # The difference is the count for non-'werden' subjunctive & past tense:
+    add_per(dom, 'crx_vvpastsubj', (c_past_subj - c_wpast_subj), c_word, 1000)
 
 
     # Get Marmot's POS:
@@ -210,10 +232,11 @@ def annotate_basic(dom):
     c_pper_3rd = len([m for m in mposse_pp_morphs if '3' in m])
     add_per(dom, 'crx_pper_3rd', c_pper_3rd, c_word, 1000)
 
-    # Get Marmot's morphological annotation for personal pronouns:
+    # Get proportion genitive NNs / all NNs:
     mposse_n_morphs = [parsemorphs(p.find('../morph').text) for p in mposse if p.text in ['NN', 'NE']]
     c_gen = len([m for m in mposse_n_morphs if 'gen' in m])
     add_per(dom, 'crx_gen', c_gen, float(len( mposse_n_morphs )), 1000)
+
 
     # Counts related to topological fields.
        
@@ -274,13 +297,6 @@ def annotate_basic(dom):
     add_per(dom, 'crx_unkn', c_unknowns, c_word, 1000)
 
    
-    
-
-
-
-
-def annotate_lexicon(dom):
-
     # dictionaries of some shortened or contracted forms (mostly from decow16 lexicon additions):
     contracted_verbs = {'find': '', 'findeste': '', 'finds': '', 'fänd': '', 'gabs': '', 'geh': '', 'gehn': '', 'gehts': '', 'gibbet': '', 'gibs': '', 'gibts': '', 'hab': '', 'habs': '', 'ham': '', 'hamm': '', 'hamma': '', 'haste': '', 'hats': '', 'hatt': '', 'hätt': '', 'is': '', 'isser': '', 'isses': '', 'ists': '', 'kamste': '', 'kanns': '', 'kannste': '', 'klappts': '', 'kommste': '', 'kommts': '', 'konnt': '', 'konnteste': '', 'lern': '', 'lernste': '', 'läufste': '', 'läufts': '', 'mach': '', 'machs': '', 'machts': '', 'musste': '', 'möcht': '', 'möchts': '', 'nehm': '', 'nimms': '', 'nimmste': '', 'sach': '', 'sacht': '', 'schaus': '', 'schauts': '', 'schomma': '', 'seh': '', 'siehts': '', 'sinds': '', 'sollste': '', 'tu': '', 'tuen': '', 'tuste': '', 'tuts': '', 'wars': '', 'wat': '', 'werd': '', 'werds': '', 'willste': '', 'wirds': '', 'wirste': '', 'wär': '', 'wärs': '', 'würd': '', 'würds': ''}
 
@@ -296,10 +312,14 @@ def annotate_lexicon(dom):
     c_qsvoc = len([t for t in tokens if t in ['nich', 'net', 'nochma', 'nochwas', 'nichtmal', 'nichtmehr', 'schonmal', 'schomma', 'ok', 'okay' ]])
     add_per(dom, 'crx_qsvoc', c_qsvoc, c_word, 1000)
 
-    c_isierung = len([t for t in tokens if re.match(u'.+isierung.*', t)])
-    add_per(dom, 'crx_isierung', c_isierung, c_word, 1000)
+    c_loan_n = len([firstlemma(l.text) for l in lemmas if l.findall('../ttpos')[0].text == 'NN' and l.findall('../ne')[0].text == 'O' and re.match(u'.{3,}(or|ent|ant|iat|aph|af|ide|ast|[bcdfghjklmnpqrstvwxyz](it|a|o|u|il|us|on|um|ik|ist|ur|ar|ade|et|ip)|eur|ör|ium|ion|ve|iv|iar|ion|x|enz|ät|ette|enz|ens|ell|ee|ole|äre)$', firstlemma(l.text))])
+    add_per(dom, 'crx_cnloan', c_loan_n, c_commonnouns, 1000)
 
-    
+    c_ieren_v = len([firstlemma(l.text) for l in lemmas if l.findall('../ttpos')[0].text[:2] == 'VV' and firstlemma(l.text) != 'verlieren' and re.match(u'.{2,}[bcdfghjklmnpqrstvwxyz]ieren$', firstlemma(l.text))])
+    add_per(dom, 'crx_vvieren', c_ieren_v,  c_verbs, 1000)
+
+    c_sapos = len([t for t in tokens if t == "'s"])
+    add_per(dom, 'crx_sapos', c_sapos,  c_word, 1000)
 
 
  
