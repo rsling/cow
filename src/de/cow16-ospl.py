@@ -49,8 +49,16 @@ def main():
   ifh = gzip.open(args.infile, 'r')
 
   c_sent = list()
-  for l in ifh:
-    l = l.decode('utf-8').strip()
+  while True:
+    l = ifh.readline()
+    if not l:
+      if len(c_sent) > 0:
+        ofh.write(cleanup(" ".join(c_sent)).encode('utf-8') + '\n')
+        c_sent = list()
+      break
+
+    l = l.decode('utf-8')
+    l = l.strip()
     if not l:
       if len(c_sent) > 0:
         ofh.write(cleanup(" ".join(c_sent)).encode('utf-8') + '\n')

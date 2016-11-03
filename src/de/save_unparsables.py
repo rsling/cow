@@ -28,9 +28,9 @@ def get_tokens(line):
     if len(pt) > 0:
       pt = [i.split(" ") for i in pt]
       t = [i[1] for i in pt]
-  s = " ".join(t)
+      s = " ".join(t)
     else:
-  s = ''
+      s = ''
     return(s)
 
 

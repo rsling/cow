@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# This turns (())-parses from Berkeley parser into XML-coompatible material.
+
 import sys
 import re
 import gzip
