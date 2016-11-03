@@ -4,6 +4,7 @@
 
 import re
 from lxml import etree as ET
+import gzip
 
 
 def entify(s):
@@ -26,7 +27,9 @@ def flatten_tokens(dom):
     """Flattens <token> nodes in DOM"""
 
     # Modify the DOM, flattening <token>s
-    for node in dom.findall('.//*token'):
+    # './/*token' does not find <token>s that are children of <doc>
+    
+    for node in dom.findall('.//token'):
 
         # Flatten the children of <token> with \t
         flat = "\t".join(node.itertext())
@@ -47,7 +50,8 @@ class CORexReader:
 
     def __init__(self, filename, annos = list()):
         self.infilename = filename
-        self.infile = open(self.infilename)
+#        self.infile = open(self.infilename)
+        self.infile = gzip.open(self.infilename)
         self.annos = annos
         self.count = 0
         self.docstart = re.compile(r'^<doc .+> *$')
