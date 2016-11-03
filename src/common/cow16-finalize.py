@@ -137,7 +137,7 @@ def main():
     ngrams = list()
     with open(args.ngrams, 'r') as ngf:
       for li in ngf:
-        li.decode('utf-8')
+        li = li.decode('utf-8')
         if li:
           ngrams = ngrams + [li.strip()]
 

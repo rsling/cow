@@ -59,14 +59,17 @@ def main():
 
     # Within a sentence, the parse file is advanced first to see whether XML must be written.
     if in_sentence:
-      p = advance(fh_parse)
+      try:
+        p = advance(fh_parse)
+      except Eof:
+        sys.exit('Premature end of parse file at line: ' + str(j+1))
       j = j + 1
       if re.match(r'^</s>', p):
         in_sentence = False
 
         # Also consume line from XML file and see whether sentence starts there, too.
         if not re.match(r'^</s>', advance(fh_xml)):
-          raise Exception('Sentence not closed in XML for lines ' + str(i) + ',' + str(j))
+          sys.exit('Sentence not closed in XML for lines ' + str(i) + ',' + str(j))
         i = i + 1
         fh_out.write(u'</s>\n')
 
@@ -82,10 +85,10 @@ def main():
           ls = l.split('\t')
           ps = p.split('\t')
           if ls[0] == ps[0] or ls[0] == ps[0].replace('[', '(') or ls[0] == ps[0].replace(']', ')'):
-            fh_out.write(l.encode('utf-8'))
+            fh_out.write(l.encode('utf-8') + '\n')
           else:
             mess = 'Inconsistent annotations in lines ' + str(i) + ',' + str(j) + ':' + l.encode('utf-8') + ':' + p.encode('utf-8')
-            raise Exception(mess)
+            sys.exit(mess)
         
 
     # Just write line from XML and check whether new sentence begins.
@@ -93,14 +96,20 @@ def main():
       try:
         l = advance(fh_xml)
         i = i + 1
-      except:
-        break # EOF
+      except Eof:
+        break
+
       if re.match(r'^<s( |>)', l):
         in_sentence = True
 
         # Also consume line from parse file and see whether sentence starts there, too.
-        if not re.match(r'^<s( |>)', advance(fh_parse)):
-          raise Exception('Sentence not opened in parse for line ' + str(i) + ',' + str(j))
+        try:
+          p = advance(fh_parse)
+        except Eof:
+          sys.exit('Premature end of parse file at line: ' + str(j+1))
+        j = j + 1
+        if not re.match(r'^<s( |>)', p):
+          sys.exit('Sentence not opened in parse for line ' + str(i) + ',' + str(j))
 
       # Regardless of whether a sentence started, write this line to output.
       fh_out.write(l.encode('utf-8') + '\n')

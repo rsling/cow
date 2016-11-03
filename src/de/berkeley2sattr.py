@@ -3,15 +3,13 @@
 import sys
 import re
 import codecs
+import gzip
 
 pos_and_token = re.compile('\(([^ ]+ (?:[^ )]+|\)))\)')
-# split on '(ATTR' or on ')' if followed by something other than '~' (lookahead),
-# or on ')' if it is the last character on the line:
 separator = re.compile('(\([^()~]+|\) *(?=(?:[^~]|$)))') 
 noparse = re.compile('^[()]+$')
 
-
-readfrom = codecs.open(sys.argv[1])
+readfrom = codecs.getreader('utf-8')(gzip.open(sys.argv[1], 'r'))
 
 def sattrify(line):
   stack = []
@@ -20,7 +18,7 @@ def sattrify(line):
       tagname = e.lstrip('(').lower()
       optag = '<' + tagname + '>'
       print(optag)
-                        stack.append(tagname) 
+      stack.append(tagname) 
     elif e == ')':
       try:
         tagname = stack.pop()
@@ -31,11 +29,11 @@ def sattrify(line):
     else:
       tokenposlist = process_tokens(e)
       for e in tokenposlist:
-        print(e)
+        print(e.encode('utf-8'))
 
   if len(stack) > 0:
     print("Stack: "),
-    print(stack)
+    print(stack.encode('utf-8'))
     raise Exception("Stack not empty.")
 
 def revert_postok(somestring):

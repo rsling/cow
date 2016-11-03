@@ -11,9 +11,10 @@
 import sys
 import codecs
 import re
+import gzip
 
-cowxml = codecs.open(sys.argv[1], "r", "utf-8")
-topoxml = codecs.open(sys.argv[2], "r", "utf-8")
+cowxml = codecs.getreader('utf-8')(gzip.open(sys.argv[1], 'r'))
+topoxml = codecs.getreader('utf-8')(gzip.open(sys.argv[2], 'r'))
 
 openingtag = re.compile('<[^/]')
 squarebracket = re.compile('.*[\[\]].*')
