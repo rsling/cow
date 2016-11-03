@@ -15,7 +15,7 @@ from corexreader import CORexReader as CX
 from corexreader import outify
 import codecs
 import re
-
+import hashlib
 
 sein_part_re = re.compile('.*ge(gangen|fallen|laufen|flogen|wachsen|fahren|reist|schritten|geblieben|sprungen|kommen|blieben|drungen|wichen|stiegen|worden|stehen|taucht|storben|rutscht|rannt)')
 
@@ -97,8 +97,8 @@ def get_wplpm(enclosing_element):
 def verbose(verbosearg,sentencelist,logfile): # debugging; remove logfile later
 	if verbosearg == True:
 		for s in sentencelist:
-		#	sys.stderr.write(s.encode('utf-8'))
-			logfile.write(s)
+			sys.stderr.write(s.encode('utf-8'))
+		#	logfile.write(s)
 
 
 def haben_pres(candidate):
@@ -154,9 +154,9 @@ def ersatzinfinitives_candidates(wwords, ttttpos, llemmas):
 
 
 #def perfect(doc, outfile): # outfile and logfile are for debugging and testing; remove later
-def perfect(doc): #	
-	logfile = codecs.open('perfect_logfile.txt', 'w', 'utf-8')
+def perfect(doc): #
 	v = False
+	logfile = "dummy"
 	perfcounter = 0
 	pluperfcounter = 0
 	for s in doc.iter('s'):
