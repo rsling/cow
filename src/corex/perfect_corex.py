@@ -36,12 +36,16 @@ def words_to_string(parent):
 def get_dominating_X(element):
 	while True:
 		parent = element.getparent()
-		if parent.tag in ['simpx', 'rsimpx', 'fkonj', 'fkoord']:
-			break
-		elif parent.tag == '<s>':
-			break
+		if parent is not None:
+			if parent.tag in ['simpx', 'rsimpx', 'fkonj', 'fkoord']:
+				break
+			elif parent.tag == '<s>':
+				break
+			else:
+				element = parent
 		else:
-			element = parent
+			parent = None
+			break
 #        sys.stderr.write("\nDominating element: " + parent.tag + "\n") # debug
 	return(parent)
 
@@ -52,7 +56,8 @@ def get_dominating_lk(v,vc,logfile):
 	current = vc
         lks = []
         while True:
-		parent = get_dominating_X(current)
+	  parent = get_dominating_X(current)
+	  if parent is not None:
 		verbose(v,['\n\t\t\t\tLooking for LK in clause: ', "'", words_to_string(parent), "'", " (", parent.tag, ")"], logfile)
 #              	lks = parent.findall('lk')
 		lks =  parent.findall('.//lk')
@@ -66,6 +71,8 @@ def get_dominating_lk(v,vc,logfile):
 				break
 			else:
 				current = parent
+          else:
+		break
 	return(lks)
 
 

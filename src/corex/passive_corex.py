@@ -25,30 +25,19 @@ def words_to_string(parent):
 def get_dominating_simpx(element):
 	while True:
 		parent = element.getparent()
-		if parent.tag in ['simpx', 'rsimpx']: # 'fkonj' is experimental
-			break
-		elif parent.tag == '<s>':
-			break
+		if parent is not None:
+			if parent.tag in ['simpx', 'rsimpx']: # 'fkonj' is experimental
+				break
+			elif parent.tag == '<s>':
+				break
+			else:
+				element = parent
 		else:
-			element = parent
+			parent = None
+			break
 #        sys.stderr.write("\nDominating element: " + parent.tag + "\n") # debug
 	return(parent)
 
-def get_dominating_lk(v,vcparent):
-	verbose(v,['\n\t\tclause: ', "'", words_to_string(vcparent), "'"])
-		# check if we have a non-verb-final structure (left bracket in verb-final clauses is "c", not "lk"):
-#	lks =  vcparent.findall('.//lk') # 
-	lks =  vcparent.findall('lk')
-	if lks:
-		if lks > 0:
-#			lks = lks[0]
-			pass # debug
-	else:
-		lks = []
-		verbose(v,['\n\t\tverb-final clause','\n\t\t\t\t=====> NO PASSIVE'])
-        sys.stderr.write("\nNumber of LK found: " + str(len(lks))) # debug
-
-	return(lks)
 
 
 def get_dominating_lk2(v,vcparent):
@@ -134,7 +123,8 @@ def passive(doc):
 			if has_passive == False:
 					verbose(v,['\n\t\tno passive aux found in verbal complex'])
 					for participle in participles:
-						vcparent = get_dominating_simpx(vc)
+					    vcparent = get_dominating_simpx(vc)
+					    if vcparent is not None:
 						lks = get_dominating_lk2(v,vcparent)
                                                 if lks == []:
 							verbose(v,['\n\t\t\tno left bracket filled with a verb in this clause',' \n\t\t\t=====> NO PASSIVE'])

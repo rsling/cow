@@ -82,7 +82,13 @@ class GNCategorizer:
 
         # Finally, convert all figures to per-thousand.
         token_count = len(tokens)
+        if token_count == 0:
+            sys.stderr.write("\ngncat: found no tokens in " + dom.get("url"))
+
         for s in sem_anno:
-            sem_anno[s] = sem_anno[s]/float(token_count)*1000
-        
+            if token_count > 0:
+                sem_anno[s] = sem_anno[s]/float(token_count)*1000
+            else:
+                sem_anno[s] = 0
+                                
         dom.attrib['crx_sem'] = ','.join([':'.join([k,str(sem_anno[k])]) for k in sorted(sem_anno)])
