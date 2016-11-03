@@ -5,6 +5,7 @@
 import os.path
 import sys
 import glob
+import re
 from lxml import etree as ET
 
 
@@ -108,9 +109,29 @@ def annotate_basic(dom):
     c_dem = len([p for p in posse if p.text[:2] == 'PD'])
     add_per(dom, 'crx_dem', c_dem, c_word, 1000)
  
+    c_poss =  len([p for p in posse if p.text[:4] == 'PPOS'])
+    add_per(dom, 'crx_poss', c_poss, c_word, 1000)
+
+    c_neg =  len([p for p in posse if p.text == 'PTKNEG'])
+    add_per(dom, 'crx_neg', c_neg, c_word, 1000)
+
+    c_answ = len([p for p in posse if p.text == 'PTKANT'])
+    add_per(dom, 'crx_answ', c_answ, c_word, 1000)
+
+    c_zuinf = len([p for p in posse if p.text == 'PTKZU'])
+    add_per(dom, 'crx_zuinf', c_zuinf, c_word, 1000)
+
+    c_parta = len([p for p in posse if p.text == 'PTKA'])
+    add_per(dom, 'crx_parta', c_parta, c_word, 1000)
+
+    c_card = len([p for p in posse if p.text == 'CARD'])
+    add_per(dom, 'crx_card', c_card, c_word, 1000)
+
     c_itj = len([p for p in posse if p.text == 'ITJ'])
     add_per(dom, 'crx_itj', c_itj, c_word, 1000)
 
+    c_nonwrd = len([p for p in posse if p.text == 'XY'])
+    add_per(dom, 'crx_nonwrd', c_nonwrd, c_word, 1000)
     
     # We need parents -> lemmas for article counting.
     posse_lemmas = [firstlemma(p.find('../lemma').text) for p in posse if p.text == 'ART']
@@ -146,7 +167,7 @@ def annotate_basic(dom):
 
     # Cliticized indefinite articles:
     c_clit_indef_article = len([a for a in posse_lemmas if a == 'n'])
-    add_per(dom, 'crx_clitindef', c_clit_indef_article, (c_indef_article + c_clit_indef_article), 1)
+    add_per(dom, 'crx_clitindef', c_clit_indef_article, (c_indef_article + c_clit_indef_article), 1000)
 
     # Counts using morphological information.
  
@@ -157,15 +178,19 @@ def annotate_basic(dom):
    
     # Get past tense verbs:
     c_vpast = len([m for m in morphsets if 'past' in m])
-    dom.attrib['crx_vpast'] = str(c_vpast)
+#   dom.attrib['crx_vpast'] = str(c_vpast)
+    add_per(dom, 'crx_vpast', c_vpast, c_word, 1000)
 
     # Get present tense verbs:
     c_vpres = len([m for m in morphsets if 'pres' in m])
-    dom.attrib['crx_vpres'] = str(c_vpres)
+#   dom.attrib['crx_vpres'] = str(c_vpres)
+    add_per(dom, 'crx_vpres', c_vpres, c_word, 1000)
 
     # Get present tense, subjunctive mood verbs
     c_vsubj = len([m for m in morphsets if 'pres' in m and 'subj' in m])
-    dom.attrib['crx_vsubj'] = str(c_vsubj)
+#   dom.attrib['crx_vsubj'] = str(c_vsubj)
+    add_per(dom, 'crx_vsubj', c_vsubj, c_word, 1000)
+
 
     # Get Marmot's POS:
     mposse = dom.findall('.//*mpos')
@@ -188,7 +213,7 @@ def annotate_basic(dom):
     # Get Marmot's morphological annotation for personal pronouns:
     mposse_n_morphs = [parsemorphs(p.find('../morph').text) for p in mposse if p.text in ['NN', 'NE']]
     c_gen = len([m for m in mposse_n_morphs if 'gen' in m])
-    add_per(dom, 'crx_gen', c_gen, float(len( mposse_n_morphs )), 1)
+    add_per(dom, 'crx_gen', c_gen, float(len( mposse_n_morphs )), 1000)
 
     # Counts related to topological fields.
        
@@ -211,11 +236,14 @@ def annotate_basic(dom):
 
     # Get verb-second sentences:
     c_vf = len(vfs)
-    dom.attrib['crx_vfc'] = str(c_vf)
+#   dom.attrib['crx_vfc'] = str(c_vf)
+    add_per(dom, 'crx_v2', c_vf, c_word, 1000)
 
     # Get verb-last sentences:
     c_c = len(dom.findall('.//c'))
-    dom.attrib['crx_cc'] = str(c_c)
+#   dom.attrib['crx_cc'] = str(c_c)
+    add_per(dom, 'crx_vlast', c_c, c_word, 1000)
+
 
     # Get text in the prefield:
     wordelements_in_vf = [vf.findall('.//word') for vf in vfs]
@@ -225,21 +253,28 @@ def annotate_basic(dom):
     if c_vf > 0:
     	avg_vf_length = sum([len(t) for t in texts_in_vf ])/float(c_vf)
     else:
-	avg_vf_length = -1
+	avg_vf_length = 0
     dom.attrib['crx_vflen'] = str(avg_vf_length)
 
     # Get pronoun 'es' in the prefield:
     c_es_vf = len([t for t in texts_in_vf if t == ['Es'] or t == ['es']])
-    add_per(dom, 'crx_esvf', c_es_vf, c_vf, 1)
+    add_per(dom, 'crx_esvf', c_es_vf, c_vf, 1000)
 
     # Get complex prefields (containing a clause):
     # Just look for a simpx as a child of vf; do not look for further embedded simpxs
     c_clausal_vf = len([vfelement.findall('simpx') for vfelement in vfs if len(vfelement.findall('simpx')) > 0])
-    add_per(dom, 'crx_clausevf', c_clausal_vf, c_vf, 1)
+    add_per(dom, 'crx_clausevf', c_clausal_vf, c_vf, 1000)
 
     # Get compound nouns
     c_posse_nn_comp = len([p.find('../comp').text for p in posse if p.text == 'NN' and len(p.find('../comp').text) > 1])
-    add_per(dom, 'crx_cmpnd', c_posse_nn_comp, c_commonnouns, 1)
+    add_per(dom, 'crx_cmpnd', c_posse_nn_comp, c_commonnouns, 1000)
+
+    # Get (unknown)s. Condition: not a named entity and not a compound noun.
+    c_unknowns = len([t.text for t in words if firstlemma(t.findall('../lemma')[0].text) == '(unknown)' and t.findall('../ne')[0].text == 'O' and len(t.findall('../comp')[0].text) == 1])
+    add_per(dom, 'crx_unkn', c_unknowns, c_word, 1000)
+
+   
+    
 
 
 
@@ -256,10 +291,15 @@ def annotate_lexicon(dom):
     tokens = [t.text.lower() for t in words]
 
     c_shortform = len([t for t in tokens if t in contracted_preps or t in contracted_verbs])
-    add_per(dom, 'crx_shortform', c_shortform, c_word, 1000)
+    add_per(dom, 'crx_short', c_shortform, c_word, 1000)
 
     c_qsvoc = len([t for t in tokens if t in ['nich', 'net', 'nochma', 'nochwas', 'nichtmal', 'nichtmehr', 'schonmal', 'schomma', 'ok', 'okay' ]])
     add_per(dom, 'crx_qsvoc', c_qsvoc, c_word, 1000)
+
+    c_isierung = len([t for t in tokens if re.match(u'.+isierung.*', t)])
+    add_per(dom, 'crx_isierung', c_isierung, c_word, 1000)
+
+    
 
 
  

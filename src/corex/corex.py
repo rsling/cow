@@ -80,17 +80,19 @@ def main():
         # All simple counts and more.
         annotate_basic(doc)
 
+        # count passives:
+	passive(doc)
+
+	# count perfect and pluperfect:
+	perfect(doc)
+
+        # Count non-standard contracted forms of verbs and prepositions:
         annotate_lexicon(doc)
 
         # Do the GermaNet semantic classes annotation.
         if args.germanet:
             Gn.annotate(doc)
 
-        # count passives:
-	passive(doc)
-
-	# count perfect and pluperfect:
-	perfect(doc)
 
         # Save the (potentially modified) DOM.
         flat = outify(doc)
