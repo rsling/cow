@@ -28,15 +28,13 @@ python ${RESOURCES}/cow16-ospl.py ${2} ${ospl} --erase
 gunzip -c ${ospl} | java -Xmx7g -jar ${PARSERHOME}/berkeleyParser.jar -gr ${PARSERHOME}/tuebadz_topf_no_edge.gr | gzip -c > ${topo}
 
 python $RESOURCES/cow16-topoparser-fix.py ${ospl} ${topo} ${topoclean} --erase
+\rm ${ospl}
+\rm ${topo}
 
 # Make xml form parser output.
 python $RESOURCES/cow16-topoparser-makexml.py ${topoclean} ${topoxml} --erase
+\rm ${topoclean}
 
 # Merge xml files.
 python $RESOURCES/cow16-join-topo.py ${1} ${topoxml} ${3} --erase
-
-# Remove temporary files.
-\rm ${ospl}
-\rm ${topo}
-\rm ${topoclean}
 \rm ${topoxml}

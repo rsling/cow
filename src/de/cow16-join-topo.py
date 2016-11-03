@@ -82,9 +82,10 @@ def main():
         else:
           l = advance(fh_xml)
           i = i +1
-          ls = l.split('\t')
-          ps = p.split('\t')
-          if ls[0] == ps[0] or ls[0] == ps[0].replace('[', '(') or ls[0] == ps[0].replace(']', ')'):
+          ls = l.split('\t')[0]
+          ps = p.split('\t')[0]
+          psx = ps.replace('[', '(').replace(']', ')')
+          if ls == ps or ls == psx:
             fh_out.write(l.encode('utf-8') + '\n')
           else:
             mess = 'Inconsistent annotations in lines ' + str(i) + ',' + str(j) + ':' + l.encode('utf-8') + ':' + p.encode('utf-8')

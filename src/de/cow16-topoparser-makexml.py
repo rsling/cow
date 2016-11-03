@@ -88,7 +88,7 @@ def main():
   
     # If not a parse, just write to outfile OTL.
     if not line.startswith('('):
-      ofh.write('\n'.join(line.split(' ')).encode('utf-8') + '\n')
+      ofh.write('\n'.join(['<s>'] + line.split(' ') + ['</s>']).encode('utf-8') + '\n')
  
     else:   
       line = entity_encode(line)
