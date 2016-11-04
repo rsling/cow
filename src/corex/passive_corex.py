@@ -12,6 +12,7 @@ import argparse
 import os.path
 import sys
 from corexreader import CORexReader as CX
+from corex_basic import per, add_per
 import codecs
 
 
@@ -154,8 +155,10 @@ def passive(doc):
 		s.set('crx_pass', 'yes')
 	    else:
 		s.set('crx_pass', 'no')
-	
-	doc.set('crx_pass', str(passcounter))
+	c_word = int(doc.get('crx_tokc'))
+	add_per(doc, 'crx_pass', passcounter, c_word, 1000)
+
+#	doc.set('crx_pass', str(passcounter))
 	#sys.stderr.write("\nPassives in doc: " + str(passcounter) + "\n")	
 
 

@@ -13,9 +13,10 @@ import os.path
 import sys
 from corexreader import CORexReader as CX
 from corexreader import outify
+from corex_basic import per, add_per
 import codecs
 import re
-import hashlib
+
 
 sein_part_re = re.compile('.*ge(gangen|fallen|laufen|flogen|wachsen|fahren|reist|schritten|geblieben|sprungen|kommen|blieben|drungen|wichen|stiegen|worden|stehen|taucht|storben|rutscht|rannt)')
 
@@ -23,7 +24,8 @@ sein_part_restdic = {u'geboren': '', u'gelungen': '', u'verhungert': '', u'zusam
 
 oberfeld_re = re.compile('VAFIN(?: V.INF)+')
 
-ersatzinfinitives_dict = {u'sehen': '', u'hören': '', u'fühlen': '', u'lassen': '', u'wollen': '', u'müssen': '', u'dürfen': '', u'sollen': '', u'können': '', u'mögen': ''} # more verbs here? 
+ersatzinfinitives_dict = {u'sehen': '', u'hören': '', u'fühlen': '', u'lassen': '', u'wollen': '', u'müssen': '', u'dürfen': '', u'sollen': '', u'können': '', u'mögen': '', u'spüren': ''} # more verbs here? 
+
 
 def words_to_string(parent):
 	b = []
@@ -320,8 +322,12 @@ def perfect(doc): #
 	    pluperfcounter = pluperfcounter + sent_pluperfcounter
 
 #	return((str(perfcounter), str(pluperfcounter)))
-	doc.set('crx_perf', str(perfcounter))
-	doc.set('crx_plu', str(pluperfcounter))	
+	c_word = int(doc.get('crx_tokc'))
+	add_per(doc, 'crx_perf', perfcounter, c_word, 1000)
+	add_per(doc, 'crx_plu', pluperfcounter, c_word, 1000)
+
+#	doc.set('crx_perf', str(perfcounter))
+#	doc.set('crx_plu', str(pluperfcounter))	
 
 
 def main():
