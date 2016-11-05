@@ -89,9 +89,10 @@ def main():
             if not ' id="' in line:
                 docid = mk_docid(line)
                 line = add_docid(line, docid)
-
-            prettyprint_docattributes(line, metadatafile, reference_attrsline, doccounter)
-
+            try:
+                prettyprint_docattributes(line, metadatafile, reference_attrsline, doccounter)
+            except IndexError:
+                sys.exit(1)
 #            docheadersfile.write(line)
 #            print(line)
         if args.outfile:
@@ -99,8 +100,10 @@ def main():
     
     sys.stderr.write("\nTotal documents: " + str(doccounter) + "\n")
     infile.close()
-    outfile.close()
     metadatafile.close()
+    if args.outfile:
+        outfile.close()
+
 
 if __name__ == "__main__":
     main()

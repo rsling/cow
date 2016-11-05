@@ -34,11 +34,18 @@ def filter_attrs(attrval_tuples):
 
 def get_attrvals(line):
     attrdict = dict()
-    line = line.strip().replace('<doc', '').replace('>', '').replace('"', '')
-    attrval_strings = line.split()
+    line = line.strip().replace('<doc', '').replace('>', '')#.replace('"', '')
+    attrval_strings = line.split('" ')
     attrval_strings = [string for string in attrval_strings if len(string) > 0]
 
-    attrval_tuples = [(s.split('=')[0].strip(), (s.split('=')[1].strip())) for s in attrval_strings]
+    try:
+        attrval_tuples = [(s.split('="')[0].strip(), (s.split('="')[1].strip())) for s in attrval_strings]
+    except IndexError:
+        print("Index error in: ")
+        sys.stderr.write(line)
+        print(attrval_strings) 
+        print(attrval_tuples)
+        raise
     
     attrval_tuples = filter_attrs(attrval_tuples)
     attrval_tuples = split_germanet(attrval_tuples)
