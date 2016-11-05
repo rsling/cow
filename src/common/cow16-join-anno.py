@@ -128,7 +128,7 @@ def main():
 
           #print 'SMOR ' + '|'.join(fsa).encode('utf-8')
           if fsa[0] == fs[0]:
-            fs = fs + [fsa[i] for i in [3,4,5,6]]
+            fs = fs + [fsa[1]] + [u'|' if fsa[2] == u'|' else u'|'+fsa[2]+u'|'] + [fsa[i] for i in [3,4,5,6]]
           else:
             prob='[' + str(counter) + '] Inconsistent annotations (SMOR): ' + ' '.join([fs[0]] + [fsa[0]]).encode('utf-8')
             raise Exception(prob)
