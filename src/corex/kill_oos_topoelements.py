@@ -12,8 +12,8 @@ import gzip
 
 def main():
 
-    infile = open(sys.argv[1])
-    outfile = open(sys.argv[2], "w")
+    infile = gzip.open(sys.argv[1])
+    outfile = gzip.open(sys.argv[2], "w")
 
 
     within_s = False
@@ -40,7 +40,7 @@ def main():
         
         if within_s == False:
             if not line.startswith('<') or line.startswith('<doc ') or line.startswith('</doc>'):
-#                print('5 Keep this line, is token or <doc> </doc>') 
+#	                print('5 Keep this line, is token or <doc> </doc>') 
                 outfile.write(line.encode('utf8'))
                                   
 #            else:
