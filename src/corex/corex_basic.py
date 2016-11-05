@@ -38,12 +38,21 @@ def firstlemma(lemmastring):
 def annotate_basic(dom):
 
     # Get word count.
-    words = dom.findall('.//*word')
+    allwords = dom.findall('.//*word')
+    c_allword = len(allwords)
+    dom.attrib['crx_alltokc'] = str(c_allword)
+
+    # Get sentences:
+    sentences = dom.findall('.//s')
+    wordlists = [s.findall('.//word') for s in sentences]
+    words = [word for sublist in wordlists for word in sublist]
     c_word = len(words)
     dom.attrib['crx_tokc'] = str(c_word)
 
+ 
     # Get type/token ratio – based on lowercased tokens!
     tokens = [t.text.lower() for t in words]
+
     types = set(tokens)
     if len(tokens) > 0:
         r_type_token = len(types)/float(len(tokens))
@@ -59,7 +68,6 @@ def annotate_basic(dom):
     dom.attrib['crx_wlen'] = str(avg_word_length)
 
     # Get sentence count.
-    sentences = dom.findall('.//s')
     c_sentences = len(sentences)
     dom.attrib['crx_sentc'] = str(c_sentences)
 
