@@ -58,7 +58,7 @@ def main():
     parser = ArgumentParser()                                                                                         
     parser.add_argument('infile', help='COW xml input (gzipped)')                                                                  
     parser.add_argument('metadatafile', help='document meta data will be written here (gzipped)')  
-    parser.add_argument('-o', '--outfile', nargs='?', help='add missing id-attributes write modified corpus to outfile')                                                                                             
+    parser.add_argument('-o', '--outfile', nargs='?', help='add missing id-attributes, write modified corpus to outfile')                                                                                             
     args = parser.parse_args()
        
     try:

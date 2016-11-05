@@ -35,15 +35,21 @@ def filter_attrs(attrval_tuples):
 def get_attrvals(line):
     attrdict = dict()
     line = line.strip().replace('<doc', '').replace('>', '')#.replace('"', '')
+    # fill 'empty' values with dummy '_':
+    line = re.sub(u'=" *"' , u'="_"', line) 
+    # split after attr/val pairs:
     attrval_strings = line.split('" ')
+    # filter out potentially empty strings as list elements:
     attrval_strings = [string for string in attrval_strings if len(string) > 0]
-
+    # make list of (attr, val) tuples:
     try:
         attrval_tuples = [(s.split('="')[0].strip(), (s.split('="')[1].strip())) for s in attrval_strings]
     except IndexError:
-        print("Index error in: ")
-        sys.stderr.write(line)
+        print("\nIndex error in this line: ")
+        print(line)
+        print("\nattrval_strings:")
         print(attrval_strings) 
+        print("\nattrval_tuples:")
         print(attrval_tuples)
         raise
     
