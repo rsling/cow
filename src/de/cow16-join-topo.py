@@ -84,7 +84,8 @@ def main():
           i = i +1
           ls = l.split('\t')[0]
           ps = p.split('\t')[0]
-          psx = ps.replace('[', '(').replace(']', ')')
+          psx = ps.replace('[', '(')
+          psx = psx.replace(']', ')')
           if ls == ps or ls == psx:
             fh_out.write(l.encode('utf-8') + '\n')
           else:

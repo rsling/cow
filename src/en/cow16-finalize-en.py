@@ -20,6 +20,36 @@ def entity_encode(s):
   return s
 
 
+def noskify(d):
+  i = 0
+  in_sentence = False
+  while i < len(d)-1:
+
+    if not re.match(r'^<', d[i]):
+      if in_sentence:
+        fs = d[i].split('\t')
+        lc = fs[0].lower()
+        lemma_lc = fs[2].strip('|').split('|')[0].lower()
+        if lc == '(unknown)':
+          lempos = fs[0].lower() + '-' + fs[1]
+        elif lc == '_':
+          lempos = '_'
+        else:
+          lempos = lemma_lc + '-' + fs[1] 
+        fs = fs + [lc, lemma_lc, lempos]
+        d[i] = '\t'.join(fs)
+      else:
+        d[i] = d[i] + '\t_\t_\t_'
+
+    if re.match('<s( |>)', d[i]):
+      in_sentence = True
+    elif re.match('</s>', d[i]):
+      in_sentence = False
+
+    i = i + 1
+  return d
+
+
 # Read from file handle h a COW-XML document.
 # If eof, return None. Also detect forum status.
 def get_next_document(h):
@@ -33,10 +63,16 @@ def get_next_document(h):
       continue
   
     if re.match(u'^<doc ', l, re.UNICODE):
+
+      # Forum detection.
       if re.match(RE_FORUM, l, re.UNICODE):
         l = re.sub(u'>$', r' forum="1">', l, re.UNICODE)
       else:
         l = re.sub(u'>$', r' forum="0">', l, re.UNICODE)
+
+      # Host and tld extraction.
+      l = re.sub(r'( url="https{0,1}://)([^/]+)\.([a-z]{2,4})(|/|%)([^"]*")', r'\1\2.\3\4\5 host="\2.\3" tld="\3"', l)
+
       doc = [l]
     else:
       doc = doc + [l]
@@ -150,8 +186,13 @@ def main():
     if not doc:
       break
 
+    # Create NoSkE columns.
+    noskify(doc)
+
     # Process if doc was read.
     doc = sentence_proc(doc, ngrams, blank)
+
+    # Write doc
     for l in doc:
       fh_out.write(l.encode('utf-8') + '\n')
 
