@@ -277,7 +277,7 @@ def main():
             annotation = '\t'.join([u'>'] + NO_ANNO)
           elif len(nounalyses) > 0:
             lexies = [e for e in nounalyses[0][0] if re.match(u'^[a-zA-ZäöüÄÖÜß]+$', e, re.UNICODE)]
-            fugies = [e[1:] for e in nounalyses[0][0] if re.match(u'^\+[a-z]+$', e, re.UNICODE)]
+            fugies = [e[1:] for e in nounalyses[0][0] if re.match(u'^\+', e, re.UNICODE)]
             annotation = '\t'.join([c_token, '_'.join(nounalyses[0][0]), lexies[-1], '|'+'|'.join(lexies[:-1])+'|', '|'+'|'.join(fugies)+'|'])
           elif not c_token == '>':
             annotation = '\t'.join([c_token] + NO_ANNO)
