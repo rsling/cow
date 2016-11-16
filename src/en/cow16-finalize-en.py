@@ -20,7 +20,8 @@ def entity_encode(s):
   return s
 
 
-def noskify(d):
+# This also fixes all annotations outside sentences to blank.
+def noskify(d, blank):
   i = 0
   in_sentence = False
   while i < len(d)-1:
@@ -39,7 +40,7 @@ def noskify(d):
         fs = fs + [lc, lemma_lc, lempos]
         d[i] = '\t'.join(fs)
       else:
-        d[i] = d[i] + '\t_\t_\t_'
+        d[i] = d[i].split('\t')[0] + blank.decode('string-escape')
 
     if re.match('<s( |>)', d[i]):
       in_sentence = True
@@ -81,53 +82,73 @@ def get_next_document(h):
   return doc
 
 
+def lemma_strip(s):
+  return s.strip('|').split('|')[0]
+
+
 # If there is one of ngrams in a sentence in doc, remove <s></s>.
 # Also puts running numbers on sentences.
+# NEW: Also checks whether there is finite verb in sentence!
 def sentence_proc(doc, ngrams, blank):
-  if not ngrams:
-    counter = 1
-    for i in range(0, len(doc)-1):
-      if doc[i] == '<s>':
-        doc[i] = '<s idx="' + str(counter) + '">'
-        counter = counter + 1 
-  else:
-    sentence_start = -1
-    counter = 1
-    i = 0
-    while i < len(doc)-1:
+  sentence_start = -1
+  counter = 1
+  i = 0
+  while i < len(doc)-1:
 
-      # Start new sentence.
-      if re.match(r'<s>', doc[i]):
-        sentence_start = i
-        i = i +1
+    # Start new sentence.
+    if re.match(r'<s>', doc[i]):
+      sentence_start = i
+      i = i +1
 
-      # Process and write sentence ending here.
-      elif re.match(r'</s>', doc[i]):
-        sentence = doc[sentence_start:i]
-        tokenstream = filter(lambda x: not re.match(r'^<', x), sentence)
-        tokens = " ".join([x.split('\t')[0] for x in tokenstream])
-        tokens_lower = tokens.lower()
+    # Process and write sentence ending here.
+    elif re.match(r'</s>', doc[i]):
+      tokenstream = filter(lambda x: not re.match(r'^<', x), doc[sentence_start:i])
+      tokens = " ".join([x.split('\t')[0] for x in tokenstream])
+      tokens_lower = tokens.lower()
 
-        # Check for boilerplate.
-        is_boiler = False
+      # Check for boilerplate.
+      is_boiler = False
+      if ngrams:
         for ngram in ngrams:
           if ngram in tokens_lower:
             is_boiler = True
             break
 
-        if is_boiler:
-          doc = doc[0:sentence_start] + [x+blank.decode('string-escape') for x in tokens.split(' ')] + doc[i+1:]
+      if is_boiler:
+        doc = doc[0:sentence_start] + [x+blank.decode('string-escape') for x in tokens.split(' ')] + doc[i+1:]
 
-          # We need to fix the runnning index.
-          i = sentence_start + len(tokenstream) - 1
-        else:
-          doc[sentence_start] = '<s idx="' + str(counter) + '">'
-          counter = counter + 1
-          i = i + 1
-
-      # Neither sentence end nor beginning.
+        # We need to fix the runnning index.
+        i = sentence_start + len(tokenstream) - 1
       else:
-        i = i +1
+
+        # NEW: Sentence is not boiler, so check for "sentence type".
+        tags = [x.split('\t')[1] for x in tokenstream]
+        if set(tags).intersection(set(['VBD', 'VBP', 'VBZ', 'MD'])):
+          attr_type = u' type="finite"'
+        elif set(tags).intersection(set(['VB', 'VBG', 'VBN'])):
+          attr_type = u' type="nonfinite"'
+        else:
+          attr_type = u' type="noverb"'
+
+        # Create extra dependency columns.
+        # Highly inefficient solution.
+        tokenstream_mat = [tok.split('\t') for tok in tokenstream]
+        for j in [idx for idx in range(sentence_start, i) if not re.match(r'^<', doc[idx])]:
+          this_line = doc[j].split('\t')
+          this_head = [lemma_strip(h[2])+'-'+this_line[8] for h in tokenstream_mat if h[6]==this_line[7]]
+          this_deps = [lemma_strip(h[2])+'-'+h[8] for h in tokenstream_mat if h[7]==this_line[6]]
+          this_head = '0-root' if len(this_head) < 1 else this_head[0]
+          this_deps = '|' if len(this_deps) < 1 else '|' + '|'.join(this_deps) + '|'
+          doc[j] = doc[j] + '\t' + this_head + '\t' + this_deps
+
+        # Add index to sentence tag (and sentence type info.
+        doc[sentence_start] = '<s idx="' + str(counter) + '"' + attr_type + '>'
+        counter = counter + 1
+        i = i + 1
+
+    # Neither sentence end nor beginning.
+    else:
+      i = i +1
 
   return doc
 
@@ -137,7 +158,7 @@ def main():
   parser.add_argument("infile", help="COW-XML input file (gzip)")
   parser.add_argument("outfile", help="COW-XML output (gzip)")
   parser.add_argument("--ngrams", help="ngram blacklist (one ngram per line, tokens separated with blanks)")
-  parser.add_argument("--blank", help="if --ngrams used, add this as dummy annotation outside <s>")
+  parser.add_argument("--blank", help="add this as dummy annotation outside <s>")
   parser.add_argument("--erase", action='store_true', help="erase outout files if present")
   args = parser.parse_args()
 
@@ -187,7 +208,7 @@ def main():
       break
 
     # Create NoSkE columns.
-    noskify(doc)
+    noskify(doc, blank)
 
     # Process if doc was read.
     doc = sentence_proc(doc, ngrams, blank)
