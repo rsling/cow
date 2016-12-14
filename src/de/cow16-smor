@@ -12,6 +12,6 @@ tmp="${TT_TMP}/$(echo ${1} | md5sum | grep -o '[0-9a-f]\+').gz"
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 smor-infl -b -d -q <(gunzip -c ${1} | sed 's/^>$/GÖTÖBLÄNKK/g' ) | gzip -c > ${tmp}
-python ${dir}/cow16-smorconv.py ${tmp} ${2} ${dir}/nouns.gz ${dir}/names.gz ${dir}/verbsadjectives.gz --erase --lexperc 67 --nounlim 100000
+python ${dir}/cow16-smorconv.py ${tmp} ${2} ${dir}/nouns.gz ${dir}/names.gz ${dir}/verbsadjectives.gz --erase --nounlim 100000
 
-#\rm -f ${tmp}
+\rm -f ${tmp}
