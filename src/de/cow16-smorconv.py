@@ -78,6 +78,7 @@ rex_066 = re.compile(u'#0#:(\w)([^<>]*<V>:#0#<SUFF>:#0#<\+NN>)', re.UNICODE)
 rex_067 = re.compile(u'#0#:(\w)([^<>]*<V>:#0#<SUFF>:#0#<\+NN>)', re.UNICODE) 
 
 rex_068 = re.compile(u'([A-ZÄÖÜa-zäöüß:]+|)(#0#:[Gg]#0#:e|)([a-zäöüßA-ZÄÖÜ:]+)e:#0#n:#0#<V>:#0##0#:e#0#:n<PPast>:#0#<ADJ>:#0#<SUFF>:#0#<SUFF>:#0#<\+NN>', re.UNICODE)
+rex_068a = re.compile(u'([A-ZÄÖÜa-zäöüß:]+|)(#0#:[Gg]#0#:e|)([a-zäöüßA-ZÄÖÜ:]+)e:#0#n:#0#<V>:#0##0#:e#0#:n<PPast>:#0#<ADJ>:#0#<SUFF>:#0#([a-zäöüß]+)<SUFF>:#0#<\+NN>', re.UNICODE) # Abgerufenheit
 rex_069 = re.compile(u'([A-ZÄÖÜa-zäöüß:]+|)(#0#:[Gg]#0#:e|)([a-zäöüßA-ZÄÖÜ:]+)e:#0#n:#0#<V>:#0##0#:e#0#:n<PPast>:#0#<ADJ>:#0#<SUFF>:#0#', re.UNICODE)
 rex_070 = re.compile(u'([A-ZÄÖÜa-zäöüß:]+|)(#0#:[Gg]#0#:e|)([a-zäöüßA-ZÄÖÜ:]+)e:#0#n:#0#<V>:#0##0#:t<PPast>:#0#<ADJ>:#0#<SUFF>:#0##0#:e#0#:n<NN>:#0#<SUFF>:#0#', re.UNICODE)
 rex_071 = re.compile(u'([A-ZÄÖÜa-zäöüß:]+|)(#0#:[Gg]#0#:e|)([a-zäöüßA-ZÄÖÜ:]+)e:#0#n:#0#<V>:#0##0#:t<PPast>:#0#<ADJ>:#0#<SUFF>:#0#<SUFF>:#0#<\+NN>', re.UNICODE)
@@ -123,15 +124,22 @@ rex_106 = re.compile(r'{:#0#([^}]+)}:#0#-<TRUNC>:#0#')
 rex_107 = re.compile(u'(\w):(\w)(\w*)(<ORD>|<PREF>):#0#', re.UNICODE)  # initial, make lower case
 rex_108 = re.compile(u'(?:<ORD>|<PREF>):#0#', re.UNICODE)  # not initial, just insert boundary
 rex_109 = re.compile(u'<NN>:#0#(\w+)<ADJ>:#0#<SUFF>:#0#', re.UNICODE)
+
 rex_110 = re.compile(u'<[A-Z]+>:#0#(\w+)<[A-Z]+>:#0#<SUFF>:#0#(\w+)<[A-Z]+>:#0#<SUFF>:#0#(\w+)<NN>:#0#<SUFF>:#0#', re.UNICODE)
+rex_110a= re.compile(u'<[A-Z]+>:#0#(\w+)<[A-Z]+>:#0#<SUFF>:#0#(\w+)<[A-Z]+>:#0#<SUFF>:#0#(\w+)<SUFF>:#0#<\+NN>', re.UNICODE)
 rex_111 = re.compile(u'<[A-Z]+>:#0#(\w+)<[A-Z]+>:#0#<SUFF>:#0#(\w+)<[A-Z]+>:#0#<SUFF>:#0#(\w+)<ADJ>:#0#<SUFF>:#0#', re.UNICODE)
 rex_112 = re.compile(u'<[A-Z]+>:#0#(\w+)<[A-Z]+>:#0#<SUFF>:#0#(\w+)<[A-Z]+>:#0#<SUFF>:#0#(\w+)<V>:#0#<SUFF>:#0#', re.UNICODE)
+
 rex_113 = re.compile(u'<[A-Z]+>:#0#(\w+)<[A-Z]+>:#0#<SUFF>:#0#(\w+)<NN>:#0#<SUFF>:#0#', re.UNICODE)
+rex_113a = re.compile(u'<[A-Z]+>:#0#(\w+)<[A-Z]+>:#0#<SUFF>:#0#(\w+)<SUFF>:#0#<\+NN>', re.UNICODE) # Abrechenbarkeit
+rex_113b = re.compile(u'<[A-Z]+>:#0#(\w+)<[A-Z]+>:#0#<SUFF>:#0#(\w+)([#0:a-zäöü]+)<NN>:#0#<SUFF>:#0#', re.UNICODE) # Abrechenbarkeits...
 rex_114 = re.compile(u'<[A-Z]+>:#0#(\w+)<[A-Z]+>:#0#<SUFF>:#0#(\w+)<ADJ>:#0#<SUFF>:#0#', re.UNICODE)
 rex_115 = re.compile(u'<[A-Z]+>:#0#(\w+)<[A-Z]+>:#0#<SUFF>:#0#(\w+)<V>:#0#<SUFF>:#0#', re.UNICODE)
+
 rex_116 = re.compile(u'<[A-Z]+>:#0#(\w+)<NN>:#0#<SUFF>:#0#', re.UNICODE)
 rex_117 = re.compile(u'<[A-Z]+>:#0#(\w+)<ADJ>:#0#<SUFF>:#0#', re.UNICODE)
 rex_118 = re.compile(u'<[A-Z]+>:#0#(\w+)<V>:#0#<SUFF>:#0#', re.UNICODE)
+
 rex_119 = re.compile(u'<NN>:#0##0#:n#0#:e#0#:n<\+NN>', re.UNICODE) 
 rex_120 = re.compile(u'([A-ZÄÖÜa-zäöüß:]+)[aou]:([äöü])([a-zäöüß]+)<ADJ>:#0##0#:e#0#:r<Comp>:#0#<ADJ>:#0#<SUFF>:#0#<SUFF>:#0#<\+NN>', re.UNICODE) # Comp w/umlaut final. 
 rex_121 = re.compile(u'<ADJ>:#0##0#:e#0#:r<Comp>:#0#<ADJ>:#0#<SUFF>:#0#<SUFF>:#0#<\+NN>', re.UNICODE) # w/o umlaut final. 
@@ -169,6 +177,21 @@ rex_290 = re.compile(u'[aeiouäöü]:', re.UNICODE)
 rex_300 = re.compile(u'([a-zäöüß]):#0#([a-zäöüß]):#0##0#:([a-zäöüß])#0#:([a-zäöüß])', re.UNICODE)
 rex_301 = re.compile(u'<NN>:#0#([a-zäöüß:#0]+)<SUFF>:#0#', re.UNICODE)
 
+rex_400 = re.compile(u'<V>:#0##0#:t<PPast>:#0#<[A-Z]+>:#0#<SUFF>:#0#(\w+)<SUFF>:#0#<\+NN>', re.UNICODE)
+rex_401 = re.compile(u'<V>:#0##0#:t<PPast>:#0#<[A-Z]+>:#0#<SUFF>:#0#(\w+)([#0:a-z]+)<NN>:#0#<SUFF>:#0#', re.UNICODE)
+
+rex_499 = re.compile(u'[aou]:([äöü])([a-zäöüß:#0]+)<NN>:#0#([a-zäöüß]+)<NN>:#0#<SUFF>:#0#in#0#:n#0#:e#0#:n<NN>:#0#<SUFF>:#0#', re.UNICODE)
+rex_500 = re.compile(u'[aou]:([äöü])([a-zäöüß:#0]+)<NN>:#0#:#0#([a-zäöüß]+)<NN>:#0#<SUFF>:#0#in<SUFF>:#0#<\+NN>', re.UNICODE)
+rex_501 = re.compile(u'[aou]:([äöü])([a-zäöüß:#0]+)<NN>:#0#([a-zäöüß]+)<NN>:#0#<SUFF>:#0#', re.UNICODE)
+
+rex_550 = re.compile(u'([a-zäöüß]):#0#([a-zäöüß]):#0##0#:e#0#:n<\+NN>')
+
+rex_570 = re.compile(u'#0#:([a-zäöüß])<NN>:#0#is<V>:#0#<SUFF>:#0#ier<V>:#0#<SUFF>:#0#ung<SUFF>:#0#<\+NN>', re.UNICODE)
+rex_571 = re.compile(u'#0#:([a-zäöüß])<NN>:#0#is<V>:#0#<SUFF>:#0#ier<V>:#0#<SUFF>:#0#ung', re.UNICODE)
+
+rex_777 = re.compile(u'e:#0#i([a-zäöüß]+)e:#0#n:#0#<V>:#0##0#:e#0#:n<PPast>:#0#<ADJ>:#0#<SUFF>:#0#([a-zäöüß]+)<SUFF>:#0#', re.UNICODE)
+rex_778 = re.compile(u'e:#0#i([a-zäöüß]+)e:#0#n:#0#<V>:#0##0#:e#0#:n<PPast>:#0#<ADJ>:#0#<SUFF>:#0#', re.UNICODE)
+
 rex_900 = re.compile(u'^:#0#', re.UNICODE)
 
 rex_1001 = re.compile(u'(?:<[^>]+>|\w):#0#', re.UNICODE) 
@@ -203,7 +226,7 @@ rex_2007 = re.compile(u'^\+', re.UNICODE)
 
 NO_ANNO=['_', '_', '|', '|']
 
-DEBUG = 5
+DEBUG = 1
 
 def debug(s, l = 1):
   if l >= DEBUG:
@@ -310,6 +333,12 @@ def nounalize(s):
 
   debug('01\t' + s, 2)
 
+  # At least 'Alltagsbewusstsein' is effed up somehow by SMOR.
+  s = s.replace(u'sein:#0#<+NN>', u'sein<+NN>')
+
+  # Same with "missbrauch"
+  s = s.replace(u'auch:#0#<+NN>', u'auch<+NN>')
+
   # Very specific lexical defect of SMOR: does not know plural of "Ausfall".
   s = s.replace(u'aus<VPART>:#0#fa:älle:#0#n:#0#<V>:#0#<SUFF>:#0#<+NN>', u'\tAusfall')
   s = s.replace(u'aus<VPART>:#0#fälle:#0#n:#0#<V>:#0##0#:e#0#:n<SUFF>:#0#<+NN>', u'\tAusfall')
@@ -337,6 +366,11 @@ def nounalize(s):
   s = rex_024.sub(r'\1\2\3erin+KAP+<+NN>', s)
   s = rex_025.sub(r'\1erin+KAP+<+NN>', s)
 
+  # Klässlerinnen, Klässlerin, Klässler (non-last)
+  s = rex_499.sub(r'\1\2\3in+KAP+\t+nen\t', s)
+  s = rex_500.sub(r'\1\2\3in+KAP+', s)
+  s = rex_501.sub(r'\1\2\3+KAP+\t', s)
+
   # Grobmotorikerin (triple NN suffixation).
   s = rex_026.sub(r'\1\2in+KAP+<+NN>', s)
   s = rex_027.sub(r'\1\2in+KAP+<+NN>', s)
@@ -359,7 +393,11 @@ def nounalize(s):
   s = rex_036.sub(u'ss', s)
   s = rex_037.sub(u'ss', s)
   s = rex_038.sub(u'ss', s)
+  s = s.replace(u's:#0#s#0#:s', 'ss')
 
+  # sometimes <ADJ>:#0#:#0#
+  s = s.replace(u'>:#0#:#0#', '>:#0#')
+ 
   debug('03\t' + s)
 
   # No distinction between NN and NE.
@@ -370,13 +408,18 @@ def nounalize(s):
   # Rescue original ablaut vowel in V>N derivations. "Annahme(verweigerung)"
   s = rex_039.sub(r'\1\3\4+KAP+\6\t+n\t', s)
   s = rex_040.sub(r'\1\3\4+KAP+\6\t', s)
+  debug('04 A\t' + s)
 
   # ... final.
   s = rex_041.sub(r'\1\3\4\6+KAP+', s)
+  debug('04 B\t' + s)
 
   # ... and deal with loan word plurals in final elements.
+  s = rex_550.sub(r'\1\2+KAP+', s)
+
   s = rex_260.sub(r'\1', s)
   s = rex_261.sub(r'\1\2', s)
+  debug('04 C\t' + s)
 
   # "Mitnahme" final.
   s = rex_042.sub(r'\2\3+KAP+', s)
@@ -399,7 +442,34 @@ def nounalize(s):
   s = rex_047.sub(r'\tge\1ie\2en-KAP-', s)
   s = rex_048.sub(r'\tge\1ie\2en-KAP-\t+en\t', s)
 
+  # ausgeglichen
+  s = rex_777.sub(r'i\1en\2+KAP+', s)
+  s = rex_778.sub(r'i\1en', s)
+
+  # ausgewogen
+  s = s.replace(u'i:oe:#0#', u'o')
+
+  # auszubildend
+  s = s.replace(u'e:#0#n:#0#<V>:#0##0#:e#0#:n#0#:d<PPres>:#0#<zu>:#0#<ADJ>:#0#<SUFF>:#0##0#:e#0#:n<NN>:#0#<SUFF>:#0#', u'end\t+en\t')
+  s = s.replace(u'e:#0#n:#0#<V>:#0##0#:e#0#:n#0#:d<PPres>:#0#<zu>:#0#<ADJ>:#0#<SUFF>:#0#<SUFF>:#0#', u'end')
+
   debug('06\t' + s, 2)
+
+  # Abschrift 
+  s = s.replace(u'e:#0#ib:f#0#:te:#0#n:#0#<V>:#0#<SUFF>:#0#', u'ift+KAP+')
+  s = s.replace(u'e:#0#ib:f#0#:te:#0#n:#0#<V>:#0#', u'ift+KAP+')
+
+  # Mitschnitt
+  s = s.replace(u'e:#0#id:t#0#:te:#0#n:#0#<V>:#0#<SUFF>:#0#', u'itt+KAP+')
+  s = s.replace(u'e:#0#id:t#0#:te:#0#n:#0#<V>:#0#', u'itt+KAP+')
+ 
+  # Abriss etc. derived from verb. Ugh.
+  s = s.replace(u'e:#0#iß:se:#0#n:#0#<V>:#0##0#:s<NN>:#0#<SUFF>:#0#:#0#', u'iss+KAP+\t')
+  s = s.replace(u'e:#0#iß:se:#0#n:#0#<V>:#0#<SUFF>:#0#:s<+NN>', u'iss+KAP+')
+  s = s.replace(u'e:#0#iße:#0#n:#0#<V>:#0#<SUFF>:#0#:#0#<+NN>', u'iss+KAP+')
+
+  # Stieg
+  s = s.replace(u'e:ii:e', u'ie')
 
   # "Umzug" from "ziehen". Wow!
   s = rex_049.sub(r'\1\2', s)
@@ -413,6 +483,9 @@ def nounalize(s):
   s = rex_057.sub(r'\1\2', s)
   s = rex_058.sub(r'+KAP+\1', s)
 
+  # "Amerikanisierung"
+  s = rex_570.sub(r'\1isierung+KAP+', s)
+  s = rex_571.sub(r'\1isierung', s)
   debug('06 a\t' + s, 2)
 
   # "Stoß" as 0-derivation, final.
@@ -422,7 +495,6 @@ def nounalize(s):
   debug('06 A\t' + s, 2)
 
   # The same, final.
-  # e:ii:ege:<>n:<><V>:<><SUFF>:<><+NN>
   s = rex_059.sub(r'\1\2', s)
   s = rex_060.sub(r'\1\2', s)
   s = rex_061.sub(r'\1\2', s)
@@ -433,20 +505,28 @@ def nounalize(s):
   s = rex_066.sub(r'\1\2', s)
   s = rex_067.sub(r'\1\2', s)
 
+  # beschrieben
+  s = s.replace(u'#0#:iei:#0#', u'ie')
+
   debug('06 B\t' + s, 2)
 
   # Very specific V > PP > Adj > NN word formation. Final and non-final "Anspruchsberechtigte" etc. (also strong verbs).
   s = rex_068.sub(r'\t\1\2\3en-KAP-+ABL+\t', s)
+  s = rex_068a.sub(r'\t\1\2\3en\4+KAP++ABL+\t', s)
   s = rex_069.sub(r'\t\1\2\3en-KAP-+ABL+\t', s)
+  debug('06 Ba\t' + s)
 
   s = rex_070.sub(r'\t\1\2\3t-KAP-\t+en\t', s)
   s = rex_071.sub(r'\t\1\2\3t-KAP-\t', s)
+  debug('06 Bb\t' + s)
 
   s = rex_072.sub(r'\t\1\2\3t-KAP-\t', s)
   s = rex_073.sub(r'\t\1\2\3t-KAP-\t+en\t', s)
+  debug('06 Bc\t' + s)
 
   s = rex_074.sub(r'\t\1\2\3et-KAP-\t', s)
   s = rex_075.sub(r'\t\1\2\3et-KAP-\t+en\t', s)
+  debug('06 Bd\t' + s)
 
   # No idea why this goes wrong otherwise: "Bodybuildingbegeistert".
   s = rex_076.sub(r'\t\1-KAP-', s)
@@ -478,7 +558,10 @@ def nounalize(s):
   s = rex_087.sub(r'erin+KAP+\t+nen\t', s)
 
   s = rex_088.sub(r'in+KAP+\t+nen<NN>:#0#', s)
-  
+ 
+  # SMOR and some weird stuff on "Berlinerin"
+  s = s.replace(u'<NN>:#0#er<NN>:#0#<SUFF>:#0#in<SUFF>:#0##0#:n#0#:e#0#:n<+NN>', u'erin+KAP+')
+ 
   debug('06 F\t' + s)
 
   # Diminutives.
@@ -537,23 +620,42 @@ def nounalize(s):
   s = rex_230.sub(r'\1\2+KAP+\t', s) # NN-ADJ-NN
   s = rex_231.sub(r'\1\2+KAP+\t+\3\t', s) # NN-ADJ-NN
   s = rex_232.sub(r'\1\2+KAP+\t+0\t', s) # NN-ADJ-NN
-  
+  debug('13 Aa\t' + s)
+ 
+#u'<NN>:#0#al<ADJ>:#0#<SUFF>:#0#is<V>:#0#<SUFF>:#0#ier<V>:#0#<SUFF>:#0#ung<SUFF>:#0#<+NN>'
+#u'<NN>:#0#al<ADJ>:#0#<SUFF>:#0#is<V>:#0#<SUFF>:#0#ier<V>:#0#<SUFF>:#0#ung#0#:s<NN>:#0#<SUFF>:#0#'
+ 
   s = rex_109.sub(r'\1-KAP-\t', s) # NN-ADJ
+  debug('13 Ab\t' + s)
 
   s = rex_110.sub(r'\1\2\3+KAP+\t', s)
+  s = rex_110a.sub(r'\1\2\3+KAP+\t', s)
   s = rex_111.sub(r'\1\2\3-KAP-\t', s)
   s = rex_112.sub(r'\1\2\3-KAP-\t', s)
+  debug('13 Ac\t' + s)
+
   s = rex_113.sub(r'\1\2+KAP+\t', s)
+  s = rex_113a.sub(r'\1\2+KAP+', s)
+  debug('13 Ac.1\t' + s)
+  s = rex_113b.sub(r'\1\2+KAP+\t\3\t', s)
+  debug('13 Ac.2\t' + s)
   s = rex_114.sub(r'\1\2-KAP-\t', s)
   s = rex_115.sub(r'\1\2-KAP-\t', s)
+  debug('13 Ad\t' + s)
+
   s = rex_116.sub(r'\1+KAP+\t', s)
   s = rex_117.sub(r'\1-KAP-\t', s)
   s = rex_118.sub(r'\1-KAP-\t', s)
+  
+  s = rex_400.sub(r't\1+KAP+', s)
+  s = rex_401.sub(r't\1+KAP+\t\2\t', s)
+
+  debug('13 B\t' + s, 2)
 
   # Fix "in nen".
   s = rex_119.sub(r'<+NN>', s)
 
-  debug('13 B\t' + s, 2)
+  debug('13 Ba\t' + s, 2)
 
   # Comparatives and superlatives.
 
@@ -574,6 +676,9 @@ def nounalize(s):
  
   s = rex_130.sub(r'\t\1\2\3st-KAP-\t+en\t', s)
   s = rex_131.sub(r'st-KAP-\t+en\t', s)
+
+  # still some superlatives left
+  s = s.replace('<ADJ>:#0##0#:e#0#:s#0#:t<Sup>:#0#<ADJ>:#0#<SUFF>:#0#<SUFF>:#0#', u'est')
 
   debug('13 C\t' + s, 2)
 
@@ -629,14 +734,14 @@ def nounalize(s):
 
   debug('22\t' + "\t".join(nouns))
 
-  # Make capitalization substitutions.
-  nouns = [rex_1044.sub(r'\1', x) for x in nouns]
-  nouns = [fix_cap(x) for x in nouns]
+  # Clean remaining to/from-NULL substitutions.
+  nouns = [substitute_nulls(x) for x in nouns]
 
   debug('23\t' + "\t".join(nouns))
 
-  # Clean remaining to/from-NULL substitutions.
-  nouns = [substitute_nulls(x) for x in nouns]
+  # Make capitalization substitutions.
+  nouns = [rex_1044.sub(r'\1', x) for x in nouns]
+  nouns = [fix_cap(x) for x in nouns]
 
   debug('24\t' + "\t".join(nouns))
 
