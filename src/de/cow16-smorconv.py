@@ -24,7 +24,7 @@ def rr(regex):
 
 NO_ANNO=['_', '_', '|', '|']
 
-DEBUG = 4
+DEBUG = 1
 
 def debug(s, l = 1):
   if l >= DEBUG:
@@ -155,12 +155,19 @@ def nounalize(s):
   s = s.replace(u'aus<VPART>:#0#fa:älle:#0#n:#0#<V>:#0#<SUFF>:#0#<+NN>', u'\tAusfall')
   s = s.replace(u'aus<VPART>:#0#fälle:#0#n:#0#<V>:#0##0#:e#0#:n<SUFF>:#0#<+NN>', u'\tAusfall')
 
+  # Pl of Index > Indices
+  s = s.replace(u'e:ix:z#0#:e#0#:s', u'ex+KAP+')
+
+  # Akzeptabilität
+  s = rr(u'e:il<ADJ>:#0#<SUFF>:#0#ität(!:<SUFF>:#0#|)').sub(u'ilität', s)
+
   debug('01 B\t' + s, 2)
 
   # Remove "Schreibweise" tags.
   s = rr(u'<Simp>:#0#|<UC>:#0#|<SS>:#0#').sub(r'', s)
 
   # Get rid of verb prefix information as early as possible
+  s = rr(u'<(VPART|VPREF)>:#0##0#:g#0#:e').sub(r'ge', s)
   s = rr(u'([a-z]):([A-Z])([a-zäöüß]+)(?:<VPART>|<VPREF>):#0#').sub(r'\1\3', s)
   s = rr(u'(?:<VPART>|<VPREF>):#0#').sub(r'', s, re.UNICODE)
 
@@ -200,6 +207,13 @@ def nounalize(s):
   s = rr(u'[aeiouäöü]:([aeiouäöü])(\w*)(?:e:#0#|)(\w|)n:#0#<V>:#0#er<NN>:#0#<SUFF>:#0#in#0#:n#0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'\1\2erin+KAP+\t+en\t', s)
   s = rr(u'(?:e:#0#|)(\w|)n:#0#<V>:#0#er<NN>:#0#<SUFF>:#0#in#0#:n#0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'\1erin+KAP+\t+en\t', s)
 
+  # "Bauten"
+  s = s.replace('au#0#:ten<V>:#0#<SUFF>:#0#<+NN>', u'au+KAP+')
+  s = s.replace('au#0#:ten<V>:#0#<NN>:#0#<SUFF>:#0#', u'au+KAP+\t(t)\t+en\t')
+
+  # Angio
+  s = s.replace(u'<NN>:#0#o<NN>:#0#<SUFF>:#0#', u'o+KAP+\t')
+
   # ... and for some reason, Touristinnen still fails.
   s = s.replace(u'<NN>:#0#ist<NN>:#0#<SUFF>:#0#in<SUFF>:#0##0#:n#0#:e#0#:n<+NN>', u'istin+KAP+')
 
@@ -221,6 +235,9 @@ def nounalize(s):
 
   # No distinction between NN and NE.
   s = s.replace(r'<NPROP>', r'<NN>')
+
+  # Aue-e+er
+  s = s.replace(u'e:#0#<NN>:#0#er<NN>:#0#', u'er+KAP+\t')
 
   debug('04\t' + s)
 
@@ -288,7 +305,13 @@ def nounalize(s):
   s = s.replace(u'e:#0#n:#0#<V>:#0##0#:e#0#:n#0#:d<PPres>:#0#<zu>:#0#<ADJ>:#0#<SUFF>:#0#<SUFF>:#0#', u'end')
   s = s.replace(u'e:#0#n:#0#<V>:#0##0#:e#0#:n#0#:d<PPres>:#0#<ADJ>:#0#<SUFF>:#0#', u'end-KAP-\t')
 
+  # das Aufeinanderprallen(lassen)
+  s = s.replace(u'e:#0#n:#0#<V>:#0##0#:e#0#:n<NN>:#0#<SUFF>:#0#', u'en-KAP-\t')
+
   debug('06\t' + s, 2)
+
+  # Bewunderns(wert)
+  s = s.replace(u'ern:#0#<V>:#0##0#:n#0#:s<NN>:#0#<SUFF>:#0#', u'ern-KAP-\t+s\t')
 
   # Abschrift 
   s = s.replace(u'e:#0#ib:f#0#:te:#0#n:#0#<V>:#0#<SUFF>:#0#', u'ift+KAP+')
@@ -334,7 +357,7 @@ def nounalize(s):
 
   debug('06 A\t' + s, 2)
 
-  # The same, final.
+  # 0 derivations, final.
   s = rr(u'\w:(\w)([^<>]*<V>:#0#<SUFF>:#0#<\+NN>)').sub(r'\1\2', s)
   s = rr(u'\w:(\w)([^<>]*<V>:#0#<SUFF>:#0#<\+NN>)').sub(r'\1\2', s)
   s = rr(u'\w:(\w)([^<>]*<V>:#0#<SUFF>:#0#<\+NN>)').sub(r'\1\2', s)
@@ -517,18 +540,23 @@ def nounalize(s):
   s = rr(u'<ADJ>:#0##0#:e#0#:r<Comp>:#0#<ADJ>:#0#<SUFF>:#0#<SUFF>:#0#<\+NN>').sub(r'er-KAP-', s) # w/o umlaut final.
   s = rr(u'([A-ZÄÖÜa-zäöüß:]+)[aou]:([äöü])([a-zäöüß]+)<ADJ>:#0##0#:e#0#:r<Comp>:#0#<ADJ>:#0#<SUFF>:#0##0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'\t\1\2\3er-KAP-\t+en\t', s) # w/umlaut final.
   s = rr(u'<ADJ>:#0##0#:e#0#:r<Comp>:#0#<ADJ>:#0#<SUFF>:#0##0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'er-KAP-\t+en\t', s)
+  debug('13 Ba1\t' + s, 2)
    
   s = rr(u'([A-ZÄÖÜa-zäöüß:]+)[aou]:([äöü])([a-zäöüß]+)<ADJ>:#0##0#:e#0#:r<Comp>:#0#<ADJ>:#0#<SUFF>:#0#').sub(r'\t\1\2\3er-KAP-\t', s) # Comp in "Stärkerstellung".
   s = rr(u'<ADJ>:#0##0#:e#0#:r<Comp>:#0#<ADJ>:#0#<SUFF>:#0#').sub(r'er-KAP-\t', s) # w/o umlaut.
+  debug('13 Ba2\t' + s, 2)
   
   s = rr(u'([A-ZÄÖÜa-zäöüß:]+)[aou]:([äöü])([a-zäöüß]+)<ADJ>:#0##0#:s#0#:t<Sup>:#0#<ADJ>:#0#<SUFF>:#0#<SUFF>:#0#<\+NN>').sub(r'\t\1\2\3st-KAP-', s) # Lichtstärksten
   s = rr(u'<ADJ>:#0##0#:s#0#:t<Sup>:#0#<ADJ>:#0#<SUFF>:#0#<SUFF>:#0#<\+NN>').sub(r'st-KAP-', s) 
+  debug('13 Ba3\t' + s, 2)
 
   s = rr(u'([A-ZÄÖÜa-zäöüß:]+)[aou]:([äöü])([a-zäöüß]+)<ADJ>:#0##0#:s#0#:t<Sup>:#0#<ADJ>:#0#<SUFF>:#0#').sub(r'\t\1\2\3st-KAP-\t', s) # Stärkststellung.
   s = rr(u'<ADJ>:#0##0#:s#0#:t<Sup>:#0#<ADJ>:#0#<SUFF>:#0#').sub(r'st-KAP-\t', s)
+  debug('13 Ba4\t' + s, 2)
  
   s = rr(u'([A-ZÄÖÜa-zäöüß:]+)[aou]:([äöü])([a-zäöüß]+)<ADJ>:#0##0#:s#0#:t<Sup>:#0#<ADJ>:#0#<SUFF>:#0##0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'\t\1\2\3st-KAP-\t+en\t', s) # Superl w/umlaut.
   s = rr(u'<ADJ>:#0##0#:s#0#:t<Sup>:#0#<ADJ>:#0#<SUFF>:#0##0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'st-KAP-\t+en\t', s) # Superl w/o umlaut.
+  debug('13 Ba5\t' + s, 2)
 
   # still some superlatives left
   s = s.replace('<ADJ>:#0##0#:e#0#:s#0#:t<Sup>:#0#<ADJ>:#0#<SUFF>:#0#<SUFF>:#0#', u'est')
@@ -550,10 +578,19 @@ def nounalize(s):
   # Try to rescue Ärztekammer (A:ä).
   s = rr(u'([AOU]):[äöü]([a-zäöüß]+)#0#:e<NN>:#0#').sub(r'\1\2\t+=e\t', s)
 
+  # And final 'Ärzt'
+  s = rr(u'([AOU]):[äöü]([a-zäöüß]+)(?:<\+NN>|)').sub(r'\1\2', s)
+
+  # Abschus-s
+  s = s.replace(u's<V>:#0##0#:s', u'ss')
+
   # First split. We will join & split again later.
   nouns = re.split(r'<NN>:#0#|\t|<ADJ>:#0#', s)
 
   debug('15\t' + "\t".join(nouns))
+
+  # Fix g:best
+  nouns = [rr('^[Gg]:[Bb]').sub(r'b', n) for n in nouns]
 
   # Rescue "Bedürfnisse" (avoid +se linking element).
   nouns = [rr(u'nis#0#:s#0#:e$').sub(r'nis\t+e\t', x) for x in nouns]
@@ -604,6 +641,7 @@ def nounalize(s):
   debug('23\t' + "\t".join(nouns))
 
   # Try to catch remaining ablauts.
+  nouns = [x.replace(u're:üch', u'ruch') for x in nouns] # Bre:üch
   nouns = [rr(u'[aeiouäöü]:([aeiouäöü])').sub(r'\1', x) for x in nouns]
   
   # Some uncaught umlauts, such as A:ärztin
