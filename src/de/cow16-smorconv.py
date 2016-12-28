@@ -24,7 +24,7 @@ def rr(regex):
 
 NO_ANNO=['_', '_', '|', '|']
 
-DEBUG = 1
+DEBUG = 4
 
 def debug(s, l = 1):
   if l >= DEBUG:
@@ -49,8 +49,9 @@ def fix_fes(s):
   # Unfortunately represented in more complex way (vowel substitution + suffix): Marienbild.
   s = rr(u'([a-z]):([a-z])#0#:([a-z])').sub(r'\1\t-\1\t+\2\3', s)
 
-  # Pure umlaut, "Mütter".
+  # Pure umlaut, "Mütter", Öfen.
   s = rr(u'([aou]):([äöü])([^#0:]*\w$)').sub(r'\1\3\t+=', s)
+  s = rr(u'^([AOUaou]):([ÄÖÜäöü])([^#0:]*\w$)').sub(r'\1\3\t+=', s)
 
   # Suffixation with umlaut.
   s = rr(u'([aou]):([äöü])(.*)#0#:([a-z])#0#:([a-z])#0#:([a-z])$').sub(r'\1\3\t+=\4\5\6', s)
@@ -122,11 +123,99 @@ def is_lexically_sane(e):
     return False if e[1] < 67 else True
      
 
+def loan_fix(s):
+  if u'+FEFIX+' in s and rr(u'(?:[a-z]|#0#):[a-z]').search(s):
+    s = rr(u'([a-z]):([a-z])([a-z]):([a-z])').sub(r'\1\3\t-\1\3\t+\2\4', s)
+    s = rr(u'((?:#0#:[a-z])+)').sub(r'\t+\1', s)
+    s = rr(u'((?:[a-z]:#0#)+)').sub(r'\1\t-\1', s)
+    if '+KAP+' in s:
+      s = '+KAP+' + s.replace(u'+KAP+', u'')
+  elif u'+PLFIX+' in s:
+    s = rr(u'([a-z]):(?:[a-z])([a-z]):(?:[a-z])').sub(r'\1\3', s)
+    s = rr(u'(#0#:[a-z])+').sub(r'', s)
+    s = rr(u'([a-z]):#0#').sub(r'\1', s)
+    if '+KAP+' in s:
+      s = '+KAP+' + s.replace(u'+KAP+', u'')
+
+  s = s.replace(u'+PLFIX+', u'')
+  s = s.replace(u'+FEFIX+', u'')
+  return s
+
+
+ERRS = [
+         {'from' : [u'Blech','Dosis'], 'to' : ['Blech', 'Dose']}
+         ,{'from' : [u'Einkommen', u'+s', u'teuerer', u'Klärung'], 'to' : [u'Einkommen', u'Steuer', u'Erklärung']}
+         ,{'from' : [u'Fischer', u'Ei'], 'to' : [u'Fischerei']}
+         ,{'from' : [u'Hang', u'+=e'], 'to' : [u'hängen', u'#en']}
+         ,{'from' : [u'Pferd', u'+es', u'Port'], 'to' : [u'Pferd', u'+e', u'Sport']}
+         ,{'from' : [u'rege', u'-e', u'Lunge'], 'to' : [u'Regelung']}
+         ,{'from' : [u'rege', u'Lunge'], 'to' : [u'Regelung']}
+         ,{'from' : [u'regen', u'#en', u'Lunge'], 'to' : [u'Regelung']}
+         ,{'from' : [u'Wart', u'+e'], 'to' : [u'warten', u'#n']}
+         ,{'from' : [u'List', '+en'], 'to' : [u'Liste', u'+n']}
+         ,{'from' : [u'best', u'Ehe'], 'to' : [u'bestehen', u'#n']}
+         ,{'from' : [u'best', u'Elle'], 'to' : [u'bestellen', u'#n']}
+         ,{'from' : [u'eins', u'Ehe'], 'to' : [u'einsehen', u'#n']}
+         ,{'from' : [u'früher', u'Kennung'], 'to' : [u'früh', u'Erkennung']}
+         ,{'from' : [u'herb', 'Ei'], 'to' : [u'herbei']}
+         ,{'from' : [u'kohlen', u'+s', u'Aura'], 'to' : [u'Kohle', '+n', u'sauer']}
+         ,{'from' : [u'tastend', u'Ruck'], 'to' : [u'Taste', u'+n', u'Druck']}
+         ,{'from' : [u'unterdrucken', u'#en'], 'to' : [u'unter', u'Druck']}
+         ,{'from' : [u'unterputzen', u'#en'], 'to' : [u'unter', u'Putz']}
+         ,{'from' : [u'untertonen', u'#en'], 'to' : [u'unter', u'Ton']}
+         ,{'from' : [u'unterwassern', u'#n'], 'to' : [u'unter', u'Wasser']}
+         ,{'from' : [u'unterst', u'Elle'], 'to' : [u'unterstellen', u'#n']}
+         ,{'from' : [u'unterstufen'], 'to' : [u'unter', u'Stufe', u'+n']}
+         ,{'from' : [u'verschleißt', u'Eile'], 'to' : [u'verchleißen', u'#en', u'Teile']}
+         ,{'from' : [u'vorschulen', u'#en'], 'to' : [u'vor', u'Schule', u'-e']}
+         ,{'from' : [u'weit', u'ergeben'], 'to' : [u'weitergeben']}
+         ,{'from' : [u'zubetten', u'#en'], 'to' : [u'zu', u'Bett']}
+         ,{'from' : [u'überlanden', '#en'], 'to' : [u'über', 'Land']}
+         ,{'from' : [u'Konzept', u'Ionierung'], 'to' : [u'Konzeptionierung']}
+         ,{'from' : [u'Vers', u'Ionierung'], 'to' : [u'Versionierung']}
+         ,{'from' : [u'Unglück', u'Lich', u'er', u'Weise'], 'to' : [u'unglücklicherweise']}
+         ,{'from' : [u'Gott', u'+s', u'Ei', u'Dank'], 'to' : [u'Gottseidank']}
+         ,{'from' : [u'best', u'reiten', u'#en', u'Bar'], 'to' : [u'unbestreitbar']}
+         ,{'from' : [u'ermögen', u'#en', u'Licht'], 'to' : [u'ermöglicht']}
+         ,{'from' : [u'gefahren'], 'to' : [u'Gefahr', '+en']}
+         ,{'from' : [u'gegenfahren', '#en'], 'to' : [u'gegen', u'fahren', u'#en']}
+         ,{'from' : [u'irren', u'Haus'], 'to' : [u'irr', u'+en', u'Haus']}
+         ,{'from' : [u'irre', u'-e', u'+en', u'Haus'], 'to' : [u'irr', u'+en', u'Haus']}
+         ,{'from' : [u'sitzen', u'Bleibe'], 'to' : [u'sitzen', u'bleiben']}
+         ,{'from' : [u'Skriptum'], 'to' : [u'Skript']}
+         ,{'from' : [u'Kolleg'], 'to' : [u'Kollege']}
+         ,{'from' : [u'nierder', u'landen'], 'to' : [u'Niederlande']}
+         ,{'from' : [u'Schi', u'Essen'], 'to' : [u'schießen']}
+         ,{'from' : [u'Gel', u'Ernte'], 'to' : [u'gelernt']}
+         ,{'from' : [u'irre', u'-re', u'Real'], 'to' : [u'irreal']}
+         ,{'from' : [u'Türe'], 'to' : [u'Tür']}
+         ,{'from' : [u'+s', u'Trasse'], 'to' : [u'Straße']}
+         ,{'from' : [u'zuwidern', u'#n'], 'to' : [u'zuwider']}
+         #,{'from' : [], 'to' : []}
+       ]
+
+
+def sublist(sub_list,this_list):
+    if sub_list[0] in this_list:
+        for i,item in enumerate(sub_list[1:]):
+            if item not in this_list[this_list.index(sub_list[i]):]:
+                return False
+        return(this_list.index(sub_list[0]),len(sub_list))
+
+
+def err_check(ns):
+  global ERRS
+  for e in ERRS:
+    if len(e['from']) <= len(ns):
+      sl = sublist(e['from'], ns)
+      if sl:
+        ns = ns[0:sl[0]] + e['to'] + ns[sl[1]:]
+  return ns
 
 def nounalize(s):
   s = s.strip()
 
-  debug('=========================================', 2)
+  debug('=========================================', 4)
 
   debug('00\t' + s, 2)
 
@@ -134,6 +223,29 @@ def nounalize(s):
   s = s.replace(r'<>', r'#0#')
 
   debug('01\t' + s, 2)
+
+  # Fix Aenderungs-, Oeffnungs-, Ueber- orthography
+  s = s.replace(u'<ASCII>:#0#ä:A#0#:e', u'ä')
+  s = s.replace(u'<ASCII>:#0#ö:O#0#:e', u'ö')
+  s = s.replace(u'<ASCII>:#0#ü:U#0#:e', u'ü')
+
+  s = s.replace(u'<ASCII>:#0#Ä:A#0#:e', u'Ä')
+  s = s.replace(u'<ASCII>:#0#Ö:O#0#:e', u'Ö')
+  s = s.replace(u'<ASCII>:#0#Ü:U#0#:e', u'Ü')
+
+  s = s.replace(u'<ASCII>:#0#A#0#:e', u'Ä') # Öfen etc. Some 
+  s = s.replace(u'<ASCII>:#0#O#0#:e', u'Ö')
+  s = s.replace(u'<ASCII>:#0#U#0#:e', u'Ü')
+
+  s = s.replace(u'ä:a#0#:e', u'ä')
+  s = s.replace(u'ö:a#0#:e', u'ü')
+  s = s.replace(u'u:a#0#:e', u'ö')
+
+  # Binnen-I
+  s = rr(u'<NN>:#0#<SUFF>:#0#In<SUFF>:#0#<\+NN>|<NN>:#0#<SUFF>:#0#In<SUFF>:#0##0#:n#0#:e#0#:n<\+NN>').sub(r'<NN>:#0#<SUFF>:#0#\t:In+KAP+', s) 
+  s = rr(u'<NN>:#0#In<SUFF>:#0#<\+NN>|<NN>:#0#In<SUFF>:#0##0#:n#0#:e#0#:n<\+NN>').sub(r'<NN>:#0#\t:In+KAP+', s)
+  s = rr(u'<NN>:#0#<SUFF>:#0#In#0#:n#0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'<NN>:#0#<SUFF>:#0#\t:In\t+en\t', s)
+  s = rr(u'<NN>:#0#In#0#:n#0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'<NN>:#0#\t:In\t+en\t', s)
 
   # (ver)dreifach(en)
   s = s.replace(u'<CARD>:#0#fach<ADJ>:#0#<SUFF>:#0#', u'fach')
@@ -157,6 +269,9 @@ def nounalize(s):
 
   # Pl of Index > Indices
   s = s.replace(u'e:ix:z#0#:e#0#:s', u'ex+KAP+')
+
+  # Party plural.
+  s = s.replace(u'y:i#0#:e#0#:s<+NN>', u'y<+NN>')
 
   # Akzeptabilität
   s = rr(u'e:il<ADJ>:#0#<SUFF>:#0#ität(!:<SUFF>:#0#|)').sub(u'ilität', s)
@@ -183,39 +298,88 @@ def nounalize(s):
   s = s.replace(u'r:Röntge:#0#n:#0#<V>:#0##0#:e#0#:n<NN>:#0#<SUFF>:#0#', u'Röntgen+KAP+\t')
   s = s.replace(u'röntge:#0#n:#0#<V>:#0##0#:e#0#:n<NN>:#0#<SUFF>:#0#', u'Röntgen+KAP+\t')
 
+  # "Somatisch" fail
+  s = s.replace(u'S:soma<NN>:#0#T:tisch<+NN>', u'\tsomatisch-KAP-')
+
+  # "Krise" fail
+  s = rr('(K:krisi:#0#s:#0##0#:e#0#:n|K:kris)<\+NN>').sub(r'\tKrise', s)
+
+  # New attempt at -ologie etc. loans (which are fully decomposed by SMOR)
+  s = rr(u'<NN>:#0#o<NN>:#0#<SUFF>:#0#([a-zäöüß:#0]+)<[A-Z]+>:#0#<SUFF>:#0#([a-zäöüß:#0]+)<[A-Z]+>:#0#<SUFF>:#0#([a-zäöüß:#0]+)<[A-Z]+>:#0#<SUFF>:#0#([a-zäöüß:#0]+)(?:<[A-Z]+>:#0#|)<SUFF>:#0#([a-z:#0]+|)<\+NN>').sub(r'o\1\2\3\4\5+PLFIX++KAP+', s)
+  debug('01 Ca\t' + s, 2)
+  s = rr(u'<NN>:#0#o<NN>:#0#<SUFF>:#0#([a-zäöüß:#0]+)<[A-Z]+>:#0#<SUFF>:#0#([a-zäöüß:#0]+)<[A-Z]+>:#0#<SUFF>:#0#([a-zäöüß:#0]+)(?:<[A-Z]+>:#0#|)<SUFF>:#0#([a-z:#0]+|)<\+NN>').sub(r'o\1\2\3\4+PLFIX++KAP+', s)
+  debug('01 Cb\t' + s, 2)
+  s = rr(u'<NN>:#0#o<NN>:#0#<SUFF>:#0#([a-zäöüß:#0]+)<[A-Z]+>:#0#<SUFF>:#0#([a-zäöüß:#0]+)(?:<[A-Z]+>:#0#|)<SUFF>:#0#([a-z:#0]+|)<\+NN>').sub(r'o\1\2\3+PLFIX++KAP+', s)
+  debug('01 Cc\t' + s, 2)
+  s = rr(u'<NN>:#0#o<NN>:#0#<SUFF>:#0#([a-zäöüß:#0]+)(?:<[A-Z]+>:#0#|)<SUFF>:#0#([a-z:#0]+|)<\+NN>').sub(r'o\1\2+PLFIX++KAP+', s)
+  debug('01 Cd\t' + s, 2)
+
+  s = rr(u'<NN>:#0#o<NN>:#0#<SUFF>:#0#([a-zäöüß:#0]+)<[A-Z]+>:#0#<SUFF>:#0#([a-zäöüß:#0]+)<[A-Z]+>:#0#<SUFF>:#0#([a-zäöüß:#0]+)<[A-Z]+>:#0#<SUFF>:#0#([a-zäöüß:#0]+)<NN>:#0#<SUFF>:#0#').sub(r'o\1\2\3\4+FEFIX++KAP+\t', s)
+  s = rr(u'<NN>:#0#o<NN>:#0#<SUFF>:#0#([a-zäöüß:#0]+)<[A-Z]+>:#0#<SUFF>:#0#([a-zäöüß:#0]+)<[A-Z]+>:#0#<SUFF>:#0#([a-zäöüß:#0]+)<NN>:#0#<SUFF>:#0#').sub(r'o\1\2\3+FEFIX++KAP+\t', s)
+  s = rr(u'<NN>:#0#o<NN>:#0#<SUFF>:#0#([a-zäöüß:#0]+)<[A-Z]+>:#0#<SUFF>:#0#([a-zäöüß:#0]+)<NN>:#0#<SUFF>:#0#').sub(r'o\1\2+FEFIX++KAP+\t', s)
+  s = rr(u'<NN>:#0#o<NN>:#0#<SUFF>:#0#([a-zäöüß:#0]+)<NN>:#0#<SUFF>:#0#').sub(r'o\1+FEFIX++KAP+\t', s)
+
+  # Anarchist etc.
+  s = s.replace(u'<NN>:#0#ist<NN>:#0#<SUFF>:#0#', u'ist')
+
   debug('01 C\t' + s, 2)
+
+  # gliedrig
+  s = s.replace(u'#0#:r<NN>:#0#<SUFF>:#0#ig<ADJ>:#0#<SUFF>:#0#keit<SUFF>:#0#<+NN>', u'rigkeit+KAP+')
+  s = s.replace(u'#0#:r<NN>:#0#<SUFF>:#0#ig<ADJ>:#0#<SUFF>:#0#keit#0#:s<NN>:#0#<SUFF>:#0#', u'rigkeit+KAP+\t+s\t')
+  s = s.replace(u'#0#:r<NN>:#0#<SUFF>:#0#ig<ADJ>:#0#<SUFF>:#0#', u'rig-KAP-\t')
+
+  # "Waller" as "Wall_-l_ler"
+  s = s.replace(u'll:#0#<NN>:#0#:#0#ler<NN>:#0#<SUFF>:#0#', u'ller\t')
+  s = rr(u'([^l])l<NN>:#0#ler<NN>:#0#<SUFF>:#0#').sub(r'\1ller\t', s)
 
   # Final "Betreuerin". Needs to be protected before other suffix rules apply.
   s = rr(u'[aeiouäöü]:([aeiouäöü])(\w*)(?:e:#0#|)(\w|)n:#0#<V>:#0#er<NN>:#0#<SUFF>:#0#in<SUFF>:#0#<\+NN>').sub(r'\1\2\3erin+KAP+<+NN>', s) # with umlaut
   s = rr(u'(?:e:#0#|)(\w|)n:#0#<V>:#0#er<NN>:#0#<SUFF>:#0#in<SUFF>:#0#<\+NN>').sub(r'\1erin+KAP+<+NN>', s) # w/o
 
   # Klässlerinnen, Klässlerin, Klässler (non-last)
-  s = rr(u'[aou]:([äöü])([a-zäöüß:#0]+)<NN>:#0#([a-zäöüß]+)<NN>:#0#<SUFF>:#0#in#0#:n#0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'\1\2\3in+KAP+\t+en\t', s)
+  s = rr(u'[aou]:([äöü])([a-zäöüß:#0]+)<NN>:#0#([a-zäöüß]+)<NN>:#0#<SUFF>:#0#in#0#:n#0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'\1\2\3in+KAP+\t(n)\t+en\t', s)
   s = rr(u'[aou]:([äöü])([a-zäöüß:#0]+)<NN>:#0#:#0#([a-zäöüß]+)<NN>:#0#<SUFF>:#0#in<SUFF>:#0#<\+NN>').sub(r'\1\2\3in+KAP+', s)
   s = rr(u'[aou]:([äöü])([a-zäöüß:#0]+)<NN>:#0#([a-zäöüß]+)<NN>:#0#<SUFF>:#0#').sub(r'\1\2\3+KAP+\t', s)
 
   # Grobmotorikerin (triple NN suffixation).
   s = rr(u'<NN>:#0#([a-z]+)<NN>:#0#<SUFF>:#0#([a-z]+)<NN>:#0#<SUFF>:#0#in<SUFF>:#0#<\+NN>').sub(r'\1\2in+KAP+<+NN>', s)
   s = rr(u'<NN>:#0#([a-z]+)<NN>:#0#<SUFF>:#0#([a-z]+)<NN>:#0#<SUFF>:#0#in<SUFF>:#0##0#:n#0#:e#0#:n<\+NN>').sub(r'\1\2in+KAP+<+NN>', s)
-  s = rr(u'<NN>:#0#([a-z]+)<NN>:#0#<SUFF>:#0#([a-z]+)<NN>:#0#<SUFF>:#0#in#0#:n#0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'\1\2in+KAP+\t+en\t', s)
+  s = rr(u'<NN>:#0#([a-z]+)<NN>:#0#<SUFF>:#0#([a-z]+)<NN>:#0#<SUFF>:#0#in#0#:n#0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'\1\2in+KAP+\t(n)\t+en\t', s)
 
   # Journalistin, Frauenrechtlerin etc. (double NN suffixation)
   s = rr(u'<NN>:#0#([a-zäöü]+)<NN>:#0#<SUFF>:#0#in<SUFF>:#0#<\+NN>').sub(r'\1in+KAP+<+NN>', s)
-  s = rr(u'<NN>:#0#([a-zäöü]+)<NN>:#0#<SUFF>:#0#in#0#:n#0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'\1in+KAP+\t+en\t', s)
+  s = rr(u'<NN>:#0#([a-zäöü]+)<NN>:#0#<SUFF>:#0#in#0#:n#0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'\1in+KAP+\t(n)\t+en\t', s)
  
   # For some reason, yet another analysis of the same thing.
-  s = rr(u'[aeiouäöü]:([aeiouäöü])(\w*)(?:e:#0#|)(\w|)n:#0#<V>:#0#er<NN>:#0#<SUFF>:#0#in#0#:n#0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'\1\2erin+KAP+\t+en\t', s)
-  s = rr(u'(?:e:#0#|)(\w|)n:#0#<V>:#0#er<NN>:#0#<SUFF>:#0#in#0#:n#0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'\1erin+KAP+\t+en\t', s)
+  s = rr(u'[aeiouäöü]:([aeiouäöü])(\w*)(?:e:#0#|)(\w|)n:#0#<V>:#0#er<NN>:#0#<SUFF>:#0#in#0#:n#0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'\1\2erin+KAP+\t(n)\t+en\t', s)
+  s = rr(u'(?:e:#0#|)(\w|)n:#0#<V>:#0#er<NN>:#0#<SUFF>:#0#in#0#:n#0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'\1erin+KAP+\t(n)\t+en\t', s)
 
   # "Bauten"
   s = s.replace('au#0#:ten<V>:#0#<SUFF>:#0#<+NN>', u'au+KAP+')
   s = s.replace('au#0#:ten<V>:#0#<NN>:#0#<SUFF>:#0#', u'au+KAP+\t(t)\t+en\t')
+  
+  # "ophilie" in "Bibliophilie"
+  #s = s.replace(u'<NN>:#0#o<NN>:#0#<SUFF>:#0#phil<ADJ>:#0#<SUFF>:#0#ie<SUFF>:#0#<+NN>', u'ophilie+KAP+')
+  #s = s.replace(u'<NN>:#0#o<NN>:#0#<SUFF>:#0#phil<ADJ>:#0#<SUFF>:#0#ie<NN>:#0#<SUFF>:#0#', u'ophilie+KAP+\t')
+  #s = s.replace(u'<NN>:#0#o<NN>:#0#<SUFF>:#0#log<NN>:#0#<SUFF>:#0#ikum<SUFF>:#0#<+NN>', u'ologikum+KAP+')
 
   # Angio
   s = s.replace(u'<NN>:#0#o<NN>:#0#<SUFF>:#0#', u'o+KAP+\t')
 
+  # Thermie
+  s = s.replace(u'<NN>:#0#ie<NN>:#0#<SUFF>:#0#', u'ie+KAP+\t')
+
   # ... and for some reason, Touristinnen still fails.
   s = s.replace(u'<NN>:#0#ist<NN>:#0#<SUFF>:#0#in<SUFF>:#0##0#:n#0#:e#0#:n<+NN>', u'istin+KAP+')
+
+  # Examina
+  s = s.replace(u'e:in#0#:a<+NN>', u'en+KAP+')
+  s = s.replace(u'e:in#0#:a<NN>:#0#', u'en+KAP+\t-en/in\t+a\t')
+
+  # "Stoffwechsel" fail
+  s = s.replace(u'S:stoff<NN>:#0#wechseln:#0#<V>:#0#', u'\tStoffwechsel+KAP+\t')
+  s = s.replace(u'Stoff<NN>:#0#wechseln:#0#<V>:#0#', u'\tStoffwechsel+KAP+\t')
 
   debug('02\t' + s)
 
@@ -235,6 +399,10 @@ def nounalize(s):
 
   # No distinction between NN and NE.
   s = s.replace(r'<NPROP>', r'<NN>')
+
+  # Complete "selber" fail
+  s = s.replace(u'Selb<NN>:#0#er<NN>:#0#<SUFF>:#0#', u'selber-KAP-\t')
+  s = s.replace(u'S:selb<NN>:#0#er<NN>:#0#<SUFF>:#0#', u'\tselber-KAP-\t')
 
   # Aue-e+er
   s = s.replace(u'e:#0#<NN>:#0#er<NN>:#0#', u'er+KAP+\t')
@@ -260,9 +428,21 @@ def nounalize(s):
   # "Mitnahme" final.
   s = rr(u'([aeiouäöü]):([aeiouäöü])(\w+)n:#0#<V>:#0#<SUFF>:#0#<\+NN>').sub(r'\2\3+KAP+', s)
 
+  # Begleiterinnen final
+  s = s.replace(u'e:#0#n:#0#<V>:#0#er<NN>:#0#<SUFF>:#0#in<SUFF>:#0##0#:n#0#:e#0#:n<+NN>', u'erin+KAP+')
+
+  # Harfenist/en/in/innen
+  s = s.replace(u'<NN>:#0#niste:#0#n:#0#<V>:#0##0#:e#0#:n<NN>:#0#<SUFF>:#0#', u'nist+KAP+\t(n)\t+en\t')
+  s = s.replace(u'<NN>:#0#niste:#0#n:#0#<V>:#0##0#:e#0#:n<SUFF>:#0#<+NN>', u'nist+KAP+')
+  s = s.replace(u'<NN>:#0#niste:#0#n:#0#<V>:#0#innen<ADJ>:#0#', u'nistin+KAP+\t(n)\t+en\t')
+
   # "Anfänger" (middle).
   s = rr(u'[aeiouäöü]:([aeiouäöü])(\w*)e:#0#(\w|)n:#0#<V>:#0#(\w+)<NN>:#0#<SUFF>:#0#').sub(r'\1\2\3\4+KAP+\t', s)
   s = rr(u'e:#0#(\w|)n:#0#<V>:#0#(\w+)<NN>:#0#<SUFF>:#0#').sub(r'\1\2+KAP+\t', s)
+
+  # "Buss" ???
+  s = s.replace(u'B:bus#0#:s<+NN>', u'Bus+KAP+')
+  s = s.replace(u'B:bus#0#:s#0#:e<NN>:#0#', u'\tBus\t+e\t')
 
   debug('05\t' + s)
 
@@ -293,6 +473,9 @@ def nounalize(s):
   # Bezogenheit
   s = s.replace(u'i:oe:gh:#0#e:#0#n:#0#<V>:#0##0#:e#0#:n<PPast>:#0#<ADJ>:#0#<SUFF>:#0#heit<SUFF>:#0#<+NN>', u'ogenheit+KAP+')
   s = s.replace(u'i:oe:gh:#0#e:#0#n:#0#<V>:#0##0#:e#0#:n<PPast>:#0#<ADJ>:#0#<SUFF>:#0#heit#0#:s<NN>:#0#<SUFF>:#0#', u'ogenheit+KAP+\t+s\t')
+
+  # bezogen
+  s = s.replace(u'zi:oe:gh:#0#', u'zog')
 
   # ausgewogen
   s = s.replace(u'i:oe:#0#', u'o')
@@ -329,8 +512,15 @@ def nounalize(s):
   s = s.replace(u'e:#0#iß:se:#0#n:#0#<V>:#0#<SUFF>:#0#:s<+NN>', u'iss+KAP+')
   s = s.replace(u'e:#0#iße:#0#n:#0#<V>:#0#<SUFF>:#0#:#0#<+NN>', u'iss+KAP+')
 
+  # Zusammenschlüsse/schluss
+  s = s.replace(u'schli:üe:#0#ß:se:#0#n:#0#<V>:#0#<SUFF>:#0##0#:s<+NN>', u'schluss+KAP+')
+  s = s.replace(u'schli:ue:#0#ß:se:#0#n:#0#<V>:#0#<SUFF>:#0#:s<+NN>', u'schluss+KAP+')
+
   # Stieg
   s = s.replace(u'e:ii:e', u'ie')
+
+  # Unterlegenheit
+  s = s.replace(u'i:#0#e', u'e')
 
   # "Umzug" from "ziehen". Wow!
   s = rr(u'\w:(\w)([^<>]*<V>:#0#[^<>]*<NN>:#0#<SUFF>:#0#)').sub(r'\1\2', s)
@@ -427,10 +617,10 @@ def nounalize(s):
   s = rr(u'[aeiouäöü]:([aeiouäöü])(\w*)#0#:e<NN>:#0#R:rinne<\+NN>$').sub(r'\1\2erin+KAP+', s)
   s = rr(u'#0#:e<NN>:#0#R:rinne<\+NN>$').sub(r'erin+KAP+', s) # without umlaut, final
 
-  s = rr(u'[aeiouäöü]:([aeiouäöü])(\w*)#0#:e<NN>:#0#R:rinne#0#:n<NN>:#0#').sub(r'\1\2erin+KAP+\t+en\t', s) # with umlaut, non-final
-  s = rr(u'#0#:e<NN>:#0#R:rinne#0#:n<NN>:#0#').sub(r'erin+KAP+\t+en\t', s) # without umlaut, non-final
+  s = rr(u'[aeiouäöü]:([aeiouäöü])(\w*)#0#:e<NN>:#0#R:rinne#0#:n<NN>:#0#').sub(r'\1\2erin+KAP+\t(n)\t+en\t', s) # with umlaut, non-final
+  s = rr(u'#0#:e<NN>:#0#R:rinne#0#:n<NN>:#0#').sub(r'erin+KAP+\t(n)\t+en\t', s) # without umlaut, non-final
 
-  s = rr(u'<NN>:#0#(?:<SUFF>:#0#|)in#0#:n#0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'in+KAP+\t+en<NN>:#0#', s) # "Betreuerinnen"
+  s = rr(u'<NN>:#0#(?:<SUFF>:#0#|)in#0#:n#0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'in+KAP+\t(n)\t+en<NN>:#0#', s) # "Betreuerinnen"
  
   # SMOR and some weird stuff on "Berlinerin"
   s = s.replace(u'<NN>:#0#er<NN>:#0#<SUFF>:#0#in<SUFF>:#0##0#:n#0#:e#0#:n<+NN>', u'erin+KAP+')
@@ -444,7 +634,10 @@ def nounalize(s):
   # ... final.
   s = rr(u'(\w*)([aeiouäöü]):([aeiouäöü])(\w*)(\w:#0#|)<NN>:#0#:#0#(lein|chen)<SUFF>:#0#<\+NN>').sub(r'\1\3\4\6+KAP+\t', s)
   s = rr(u'(\w*)([aeiouäöü]):([aeiouäöü])(\w*)(\w:#0#|)<NN>:#0#(lein|chen)<SUFF>:#0#<\+NN>').sub(r'\1\3\4\6+KAP+\t', s)
-  
+
+  # Äderchen, for some reason 
+  s = s.replace(u'<NN>:#0#chen<NN>:#0#<SUFF>:#0#', u'chen+KAP+\t')
+ 
   debug('06 G\t' + s)
 
   # Some NN suffixations.
@@ -486,6 +679,7 @@ def nounalize(s):
   debug('13\t' + s)
 
   # Separate prefixes and ORD ("Dritt-mittel").
+  s = rr(u'<ORD>:#0#el<SUFF>:#0#<\+NN>').sub(r'el+KAP+', s)
   s = rr(u'(\w):(\w)(\w*)(<ORD>|<PREF>):#0#').sub(r'\1\3~\t', s) # initial, make lower case
   s = rr(u'(?:<ORD>|<PREF>):#0#').sub(r'~\t', s)# not initial, just insert boundary
 
@@ -536,6 +730,8 @@ def nounalize(s):
 
   # Comparatives and superlatives.
 
+  s = rr(u'[gG]:[bB]u:et:s#0#:s<ADJ>:#0##0#:e#0#:r<Comp>:#0#<ADJ>:#0#<SUFF>:#0#').sub(r'besser', s)# besser
+
   s = rr(u'([A-ZÄÖÜa-zäöüß:]+)[aou]:([äöü])([a-zäöüß]+)<ADJ>:#0##0#:e#0#:r<Comp>:#0#<ADJ>:#0#<SUFF>:#0#<SUFF>:#0#<\+NN>').sub(r'\t\1\2\3er-KAP-', s) # Comp w/umlaut final.
   s = rr(u'<ADJ>:#0##0#:e#0#:r<Comp>:#0#<ADJ>:#0#<SUFF>:#0#<SUFF>:#0#<\+NN>').sub(r'er-KAP-', s) # w/o umlaut final.
   s = rr(u'([A-ZÄÖÜa-zäöüß:]+)[aou]:([äöü])([a-zäöüß]+)<ADJ>:#0##0#:e#0#:r<Comp>:#0#<ADJ>:#0#<SUFF>:#0##0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'\t\1\2\3er-KAP-\t+en\t', s) # w/umlaut final.
@@ -565,6 +761,10 @@ def nounalize(s):
   s = rr(u'[aou]:([äöü])([a-zäöüß]+)<ADJ>:#0##0#:t<Sup>:#0#<ADJ>:#0#<SUFF>:#0##0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'\1\2t-KAP-\t+en\t', s) # größten-
   s = rr(u'<ADJ>:#0##0#:t<Sup>:#0#<ADJ>:#0#<SUFF>:#0##0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(u't-KAP-\t+en\t', s) # no uml
 
+  # Complete "Inner" desaster
+  s = s.replace(u'Inn<NN>:#0#er<NN>:#0#<SUFF>:#0#', u'inner-KAP-\t')
+  s = s.replace(u'I:inn<NN>:#0#er<NN>:#0#<SUFF>:#0#', u'\tinner-KAP-\t')
+
   debug('13 C\t' + s, 2)
 
   s = rr(u'e:#0#n:#0#<V>:#0##0#:e#0#:n<SUFF>:#0#<\+NN>').sub(r'en-KAP-', s) # "gießen" in "Spritzgießen" as spritzen-en+en<SUFF>
@@ -573,31 +773,43 @@ def nounalize(s):
   # rescue strange -ismus/en analyses.
   s = rr(u'<NN>:#0#([a-zäöüß:#0]+)<SUFF>:#0#').sub(r'\1', s)
 
+  # "Tourismus" fail
+  s = s.replace(u'<NN>:#0#ismus<NN>:#0#<SUFF>:#0#', u'ismus+KAP+\t')
+
+  # "Türe" analyses instead of "Tür"
+  s = s.replace(u'T:türe:#0#<NN>:#0#', u'\tTür\t')
+  s = s.replace(u'Türe:#0#<NN>:#0#', u'\tTür\t')
+  s = s.replace(u'T:türe:#0#<+NN>', u'\tTür')
+
   debug('14\t' + s, 2)
+
+  # Rescue Konto/Konten
+  s = s.replace(u'o:e#0#:n<+NN>', u'o')
 
   # Try to rescue Ärztekammer (A:ä).
   s = rr(u'([AOU]):[äöü]([a-zäöüß]+)#0#:e<NN>:#0#').sub(r'\1\2\t+=e\t', s)
 
   # And final 'Ärzt'
-  s = rr(u'([AOU]):[äöü]([a-zäöüß]+)(?:<\+NN>|)').sub(r'\1\2', s)
+  s = rr(u'([AOU]):[äöü]([a-zäöüß]+)<\+NN>').sub(r'\1\2', s)
 
   # Abschus-s
   s = s.replace(u's<V>:#0##0#:s', u'ss')
 
   # First split. We will join & split again later.
   nouns = re.split(r'<NN>:#0#|\t|<ADJ>:#0#', s)
-
+  
   debug('15\t' + "\t".join(nouns))
-
-  # Fix g:best
-  nouns = [rr('^[Gg]:[Bb]').sub(r'b', n) for n in nouns]
 
   # Rescue "Bedürfnisse" (avoid +se linking element).
   nouns = [rr(u'nis#0#:s#0#:e$').sub(r'nis\t+e\t', x) for x in nouns]
   nouns = [rr(u'nis#0#:s<\+NN>').sub(r'nis', x) for x in nouns]
 
+  debug('15 A\t' + "\t".join(nouns))
+
   # Separate and mark remaning FEs.
-  nouns = [fix_fes(x) for x in nouns]
+  if rr(u'^\s*<\+NN>\s*$').match(nouns[-1]):
+    nouns = nouns[:-1]
+  nouns = [fix_fes(x) for x in nouns[:-1]] + [nouns[-1]]
 
   debug('16\t' + "\t".join(nouns))
 
@@ -613,9 +825,36 @@ def nounalize(s):
 
   debug('18\t' + "\t".join(nouns))
 
-  # Second split.
-  nouns = '\t'.join(nouns).split('\t')
+  # Join before second split.
+  nouns = '\t'.join(nouns)
+  
+  debug('18 a\t' + nouns)
 
+  # Rescue remaining +nen cases.
+  nouns = rr(u'\t\+nen').sub(r'\t(n)\t+en', nouns)
+  nouns = rr(u'\t\+es').sub(r'\t(e)\t+s', nouns)
+  nouns = rr(u'\t\+ien').sub(r'\t(i)\t+en', nouns)
+  
+  debug('18 b\t' + nouns)
+
+  # Remove studieren-en+Ende
+  nouns = rr(u'en\t#en\tEnde($|\t)').sub(r'end-KAP-\1', nouns)
+  
+  debug('18 c\t' + nouns)
+
+  # Second split.
+  nouns = nouns.split('\t')
+  
+  debug('18 d\t' + "\t".join(nouns))
+
+  # Fix g:best
+  nouns = [rr('^[Gg]:[Bb]').sub(r'b', n) for n in nouns]
+  
+  debug('18 A\t' + "\t".join(nouns))
+
+  # Resolve +FEFIX+ and +PLFIX+
+  nouns = [loan_fix(x) for x in nouns]
+  
   debug('19\t' + "\t".join(nouns))
 
   # Some cleanups.
@@ -655,6 +894,9 @@ def nounalize(s):
   # Compact.
   nouns = filter(None, nouns)
 
+  # Specifir error check.
+  nouns = err_check(nouns)
+
   debug('25\t' + "\t".join(nouns), 3)
 
   return [nouns] + check_lex(nouns)
@@ -663,8 +905,8 @@ def nounalize(s):
 # Checks whether analysis contains : # or <.
 def is_trash(a):
   ana = '_'.join(a[0])
-  if rr(u'[:#<>]').match(ana):
-    debug(ana, 4)
+  if rr(u'[<>]|[^_]:[^I]|[^_]#').search(ana):
+    debug(ana, 5)
     return False
   else:
     return True
@@ -681,7 +923,11 @@ def main():
   parser.add_argument("--restlim", type=int, help="only use the first <this number> of non-noun lemmas from list")
   parser.add_argument("--nosanitycheck", action='store_true', help="disable check for lexical sanity")
   parser.add_argument("--erase", action='store_true', help="erase outout files if present")
+  parser.add_argument("--debug", default=3, type=int, help="set debuglevel (default = 4 = debug messages off)")
   args = parser.parse_args()
+
+  global DEBUG
+  DEBUG = args.debug
 
   # Check input files.
   infiles = [args.infile, args.nouns, args.names, args.rest]
@@ -754,12 +1000,59 @@ def main():
 
           # Only get analyses for this as noun.
           nounalyses = [nounalize(x) for x in c_analyses if '<+NN>' in x]
-    
-          # One lexical item means "not compound". Get rid.
-          nounalyses = [e for e in nounalyses if e[2] > 1]
 
           # Eliminate analyses with : and # and <> in them and report them in debug mode.
           nounalyses = filter(is_trash, nounalyses)
+
+          debug("S01\t" + "|".join(["_".join(na[0]) for na in nounalyses]), 3)
+
+          # Remove "Rinnen" analyses for "movierte" nouns.
+          if len(nounalyses) > 0 and rr(u'.+rinnen$').match(c_token):
+            nounalyses = [e for e in nounalyses if len(e) > 0 and not e[0][-1] == 'Rinne' ]
+
+          debug("S03\t" + "|".join(["_".join(na[0]) for na in nounalyses]), 3)
+
+          # Remove "Nachstel-Lungen" etc.
+          if len(nounalyses) > 0 and rr(u'.+llungen$').match(c_token):
+            nounalyses = [e for e in nounalyses if len(e) > 0 and not e[0][-1] == 'Lunge' ]
+
+          debug("S04\t" + "|".join(["_".join(na[0]) for na in nounalyses]), 3)
+
+          # Prefer ...reise oder ...reis. Clumsy.
+          if set([u'Halle', u'Album', u'Reise']) & set([e[0][-1] for e in nounalyses]):
+            nounalyses = [e for e in nounalyses if not e[0][-1] in set([u'Hall', u'Alb', u'Reis'])]
+
+          debug("S05\t" + "|".join(["_".join(na[0]) for na in nounalyses]), 3)
+          
+          # Remove diverse misanalyses recognizable from last element.
+          if len(nounalyses) > 0:
+            nounalyses = [e for e in nounalyses if not e[0][-1] in [u'bar', u'Linger', u'Elen', u'El']]
+
+          debug("S06\t" + "|".join(["_".join(na[0]) for na in nounalyses]), 3)
+
+          # Remove misana recognizable from any element.
+          if len(nounalyses) > 0:
+            nounalyses = [e for e in nounalyses if not set(e[0]) & set([u'Lich', u'Medik:zis'])]
+
+          debug("S07\t" + "|".join(["_".join(na[0]) for na in nounalyses]), 3)
+
+          # Fix "Kassa".
+          if len(nounalyses) > 0 and rr(u'.*[Kk]assen.*').match(c_token):
+            nounalyses = [[[f if not f == u'Kassa' else u'Kasse' for f in e[0]], e[1], e[2], e[3]] for e in nounalyses if len(e) > 0 ]
+
+          debug("S08\t" + "|".join(["_".join(na[0]) for na in nounalyses]), 3)
+
+          # Prefern non-"Ende" analyses ("Studierende" as "Studier Ende")
+          if len(nounalyses) > 1 and ( set([e[0][-1] for e in nounalyses]) - set(u'Ende') ):
+            nounalyses = [e for e in nounalyses if not e[0][-1] == u'Ende' ]
+
+          debug("S09\t" + "|".join(["_".join(na[0]) for na in nounalyses]), 3)
+    
+          # One lexical item means "not compound". Get rid.
+          if len(nounalyses) > 0:
+            nounalyses = [e for e in nounalyses if e[2] > 1]
+
+          debug("S10\t" + "|".join(["_".join(na[0]) for na in nounalyses]), 3)
 
           # Only use analyses with the best possible lexical score.
           # Also: Eliminate analyses below required lexical sanity level.
@@ -767,27 +1060,21 @@ def main():
             lex_max = max([a[1] for a in nounalyses])
             nounalyses = [e for e in nounalyses if len(e) > 0 and e[1] == lex_max and (args.nosanitycheck or is_lexically_sane(e))]
 
-          # Remove "Rinnen" analyses for "movierte" nouns.
-          if len(nounalyses) > 0 and rr(u'.+rinnen$').match(c_token):
-            nounalyses = [e for e in nounalyses if len(e) > 0 and not e[0][-1] == 'Rinne' ]
-
-          # Remove "Nachstel-Lungen" etc.
-          if len(nounalyses) > 0 and rr(u'.+llungen$').match(c_token):
-            nounalyses = [e for e in nounalyses if len(e) > 0 and not e[0][-1] == 'Lunge' ]
-
-          # Fix "Kassa".
-          if len(nounalyses) > 0 and rr(u'.*[Kk]assen.*').match(c_token):
-            nounalyses = [[[f if not f == u'Kassa' else u'Kasse' for f in e[0]], e[1], e[2], e[3]] for e in nounalyses if len(e) > 0 ]
+          debug("S11\t" + "|".join(["_".join(na[0]) for na in nounalyses]), 3)
 
           # If there are still multiple analyses left, use the ones with the least no. of lexical items. 
           if len(nounalyses) > 1:
             lex_item_min = min([a[2] for a in nounalyses])
             nounalyses = [e for e in nounalyses if e[2] <= lex_item_min]
 
+          debug("S12\t" + "|".join(["_".join(na[0]) for na in nounalyses]), 3)
+
           # If there are still multiple analyses left, use the ones with the least no. of items. 
           if len(nounalyses) > 1:
             lex_item_min = min([a[3] for a in nounalyses])
             nounalyses = [e for e in nounalyses if e[3] <= lex_item_min]
+
+          debug("S13\t" + "|".join(["_".join(na[0]) for na in nounalyses]), 3)
 
           # Out of criteria. Just use the first f there is at least one analysis or empty annotation if non.
           # First case: Work around > token problem. Requires > tokens to be transformed to GÖTÖBLÄNKK before smor-infl run.
