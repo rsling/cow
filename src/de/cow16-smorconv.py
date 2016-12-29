@@ -284,6 +284,13 @@ def nounalize(s):
   # Party plural.
   s = s.replace(u'y:i#0#:e#0#:s<+NN>', u'y<+NN>')
 
+  # Heroen
+  s = s.replace(u'H:heros:e#0#:n<+NN>', u'Hero')
+  s = s.replace(u'H:heros:e#0#:n<NN>:#0#', u'Hero\t+en\t')
+
+  # Wanders(leut)
+  s = s.replace(u'andern:s<V>:#0#', u'andern\t#n\t+s\t')
+
   # Akzeptabilität
   s = rr(u'e:il<ADJ>:#0#<SUFF>:#0#ität(!:<SUFF>:#0#|)').sub(u'ilität', s)
 
@@ -409,6 +416,9 @@ def nounalize(s):
   s = s.replace(u's:ßs:#0#', u'ss')
   s = s.replace(u's:#0#s#0#:s', 'ss')
 
+  # Some cases still fail.
+  s = s.replace(u'ß:s#0#:s', u'ß')
+
   # sometimes <ADJ>:#0#:#0#
   s = s.replace(u'>:#0#:#0#', '>:#0#')
  
@@ -520,6 +530,9 @@ def nounalize(s):
 
   # ausgewogen
   s = s.replace(u'i:oe:#0#', u'o')
+
+  # ausgedacht
+  s = rr(u'e:an:ck:he:#0#n:#0#<V>:#0##0#:t<PPast>:#0#<ADJ>:#0#<SUFF>:#0#(<SUFF>:#0#|)').sub(u'acht', s)
 
   # verzerrt
   s = s.replace(u'e:#0#n:#0#<V>:#0##0#:t<PPast>:#0#<ADJ>:#0#<SUFF>:#0#', u't-KAP-\t')
@@ -981,6 +994,9 @@ def nounalize(s):
   # Make capitalization substitutions.
   nouns = [fix_cap(x) for x in nouns]
 
+  # Still some ßssshit left.
+  nouns = [rr(u'ß:Ss').sub(r'ss', x) for x in nouns]
+
   debug('24\t' + "\t".join(nouns))
 
   # Compact.
@@ -1019,7 +1035,7 @@ def main():
   parser.add_argument("--restlim", type=int, help="only use the first <this number> of non-noun lemmas from list")
   parser.add_argument("--nosanitycheck", action='store_true', help="disable check for lexical sanity")
   parser.add_argument("--erase", action='store_true', help="erase outout files if present")
-  parser.add_argument("--debug", default=5, type=int, help="set debuglevel (default = 4 = debug messages off)")
+  parser.add_argument("--debug", default=1, type=int, help="set debuglevel (default = 4 = debug messages off)")
   args = parser.parse_args()
 
   global DEBUG
