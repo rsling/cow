@@ -202,6 +202,11 @@ ERRS = [
          ,{'from' : [u'Spezi', u'Fisch'], 'to' : [u'spezifisch']}
          ,{'from' : [u'Hut', u'+=e', u'Hund'], 'to' : [u'hüten', u'#en', u'Hund']}
          ,{'from' : [u'Hoher:npriester'], 'to' : [u'Hohenpriester']}
+         ,{'from' : [u'Anus', u'-us', u'+i', u'Mal'], 'to' : [u'Animal']}
+         ,{'from' : [u'Diktum', u'-um', u'+a', u'Tor'], 'to' : [u'Diktator']}
+         ,{'from' : [u'Mitte', u'-e', u'Eilung'], 'to' : [u'Mitteilung']}
+         ,{'from' : [u'Haus', u'Mitte', u'-e', u'Elch'], 'to' : [u'Haus', u'Mittelchen']}
+         ,{'from' : [u'Partie', u'-e', u'ei'], 'to' : [u'Partei']}
          #,{'from' : [], 'to' : []}
        ]
 
@@ -1035,7 +1040,7 @@ def main():
   parser.add_argument("--restlim", type=int, help="only use the first <this number> of non-noun lemmas from list")
   parser.add_argument("--nosanitycheck", action='store_true', help="disable check for lexical sanity")
   parser.add_argument("--erase", action='store_true', help="erase outout files if present")
-  parser.add_argument("--debug", default=1, type=int, help="set debuglevel (default = 4 = debug messages off)")
+  parser.add_argument("--debug", default=5, type=int, help="set debuglevel (default = 4 = debug messages off)")
   args = parser.parse_args()
 
   global DEBUG
@@ -1140,7 +1145,7 @@ def main():
           
           # Remove diverse misanalyses recognizable from last element.
           if len(nounalyses) > 0:
-            nounalyses = [e for e in nounalyses if not e[0][-1] in [u'bar', u'Linger', u'Elen', u'El']]
+            nounalyses = [e for e in nounalyses if not e[0][-1] in [u'bar', u'Linger', u'Elen', u'El', u'Räger']]
 
           debug("S06\t" + "|".join(["_".join(na[0]) for na in nounalyses]), 3)
 
