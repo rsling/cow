@@ -847,16 +847,16 @@ def nounalize(s):
   s = rr(u'<ADJ>:#0##0#:e#0#:r<Comp>:#0#<ADJ>:#0#<SUFF>:#0#').sub(r'er-KAP-\t', s) # w/o umlaut.
   debug('13 Ba2\t' + s, 2)
   
-  s = rr(u'([A-ZÄÖÜa-zäöüß:]+)[aou]:([äöü])([a-zäöüß]+)<ADJ>:#0##0#:s#0#:t<Sup>:#0#<ADJ>:#0#<SUFF>:#0#<SUFF>:#0#<\+NN>').sub(r'\t\1\2\3st-KAP-', s) # Lichtstärksten
-  s = rr(u'<ADJ>:#0##0#:s#0#:t<Sup>:#0#<ADJ>:#0#<SUFF>:#0#<SUFF>:#0#<\+NN>').sub(r'st-KAP-', s) 
+  s = rr(u'([A-ZÄÖÜa-zäöüß:]+)[aou]:([äöü])([a-zäöüß]+)<ADJ>:#0#(#0#:e|)(#0#:s|)#0#:t<Sup>:#0#<ADJ>:#0#<SUFF>:#0#<SUFF>:#0#<\+NN>').sub(r'\t\1\2\3\4\5t-KAP-', s) # Lichtstärksten
+  s = rr(u'<ADJ>:#0#(#0#:e|)(#0#:s|)#0#:t<Sup>:#0#<ADJ>:#0#<SUFF>:#0#<SUFF>:#0#<\+NN>').sub(r'\1\2t-KAP-', s) 
   debug('13 Ba3\t' + s, 2)
 
-  s = rr(u'([A-ZÄÖÜa-zäöüß:]+)[aou]:([äöü])([a-zäöüß]+)<ADJ>:#0##0#:s#0#:t<Sup>:#0#<ADJ>:#0#<SUFF>:#0#').sub(r'\t\1\2\3st-KAP-\t', s) # Stärkststellung.
-  s = rr(u'<ADJ>:#0##0#:s#0#:t<Sup>:#0#<ADJ>:#0#<SUFF>:#0#').sub(r'st-KAP-\t', s)
+  s = rr(u'([A-ZÄÖÜa-zäöüß:]+)[aou]:([äöü])([a-zäöüß]+)<ADJ>:#0#(#0#:e)(#0#:s|)#0#:t<Sup>:#0#<ADJ>:#0#<SUFF>:#0#').sub(r'\t\1\2\3\4\5t-KAP-\t', s) # Stärkststellung.
+  s = rr(u'<ADJ>:#0#(#0#:e|)(#0#:s|)#0#:t<Sup>:#0#<ADJ>:#0#<SUFF>:#0#').sub(r'\1\2t-KAP-\t', s)
   debug('13 Ba4\t' + s, 2)
  
-  s = rr(u'([A-ZÄÖÜa-zäöüß:]+)[aou]:([äöü])([a-zäöüß]+)<ADJ>:#0##0#:s#0#:t<Sup>:#0#<ADJ>:#0#<SUFF>:#0##0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'\t\1\2\3st-KAP-\t+en\t', s) # Superl w/umlaut.
-  s = rr(u'<ADJ>:#0##0#:s#0#:t<Sup>:#0#<ADJ>:#0#<SUFF>:#0##0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'st-KAP-\t+en\t', s) # Superl w/o umlaut.
+  s = rr(u'([A-ZÄÖÜa-zäöüß:]+)[aou]:([äöü])([a-zäöüß]+)<ADJ>:#0#(#0#:e|)(#0#:s|)#0#:t<Sup>:#0#<ADJ>:#0#<SUFF>:#0##0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'\t\1\2\3\4\5t-KAP-\t+en\t', s) # Superl w/umlaut.
+  s = rr(u'<ADJ>:#0#(#0#:e|)(#0#:s|)#0#:t<Sup>:#0#<ADJ>:#0#<SUFF>:#0##0#:e#0#:n<NN>:#0#<SUFF>:#0#').sub(r'\1\2t-KAP-\t+en\t', s) # Superl w/o umlaut.
   debug('13 Ba5\t' + s, 2)
 
   # still some superlatives left
