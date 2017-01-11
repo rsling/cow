@@ -1107,7 +1107,7 @@ def main():
     # Start new word.
     if rr(u'^> ').match(l) or l == '>' or not l:
 
-      if len(c_analyses) > 0 and c_token and not rr(u'^[A-ZÄÖÜ]+$').match(c_token):
+      if len(c_analyses) > 0 and c_token:
 
           # Remove trailing inflection analysis and useless ORTH info.
           c_analyses = [rr(u'(<\+[^>]+>).*$').sub(r'\1', x).replace('<NEWORTH>','').replace('<OLDORTH>','') for x in c_analyses] 
@@ -1128,8 +1128,6 @@ def main():
             nounalyses = [e for e in nounalyses if len(e) > 0 and not e[0][-1] == 'Rinne' ]
 
           debug("S03\t" + "|".join(["_".join(na[0]) for na in nounalyses]), 3)
-
-#          debug("S03a\t" + "|".join(["_".join(na[0]) for na in nounalyses]), 3)
 
           # Remove "Nachstel-Lungen" etc.
           if len(nounalyses) > 0 and rr(u'.+llungen$').match(c_token):
