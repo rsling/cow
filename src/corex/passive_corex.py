@@ -146,20 +146,18 @@ def passive(doc):
 			verbose(v, ["\n\t\tfound no past participle in verbal complex","\n\t\t\t=====> NO PASSIVE\n"])
 
 	
-#	    line = words_to_string(s).strip()
-#	    line = line + "\t" + str(sent_passcounter)	
-#	    outfile.write(line + "\n")
 	    passcounter = passcounter + sent_passcounter
             verbose(v,["\t", str(sent_passcounter)])
 	    if sent_passcounter > 0:
 		s.set('crx_pass', 'yes')
 	    else:
 		s.set('crx_pass', 'no')
-	c_word = int(doc.get('crx_tokc'))
-	add_per(doc, 'crx_pass', passcounter, c_word, 1000)
 
-#	doc.set('crx_pass', str(passcounter))
-	#sys.stderr.write("\nPassives in doc: " + str(passcounter) + "\n")	
+	c_simpx = int(doc.get('crx_simpx'))
+	c_psimpx = int(doc.get('crx_rsimpx'))
+	c_rsimpx = int(doc.get('crx_psimpx'))
+
+        add_per(doc, 'crx_pass', passcounter, c_simpx + c_psimpx + c_rsimpx, 1)
 
 
 

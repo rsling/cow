@@ -151,10 +151,9 @@ def main():
 		# check for perfect auxiliaries:
 						if llemmas[0] in ['haben', 'sein'] and ppos[0].startswith('VA'):
 							sent_perfcounter += 1
-#							
+
 		else:
 		# Ersatzinfinitiv: no participle at all in the verb cluster; instead infinitive of a modal verb: 
-			#if 'VMINF' in ppos:
 			if ppos[-1] == 'VMINF':
 		# Oberfeldumstellung: "weil er das hat essen müssen"
 				if llemmas[0] == 'haben':

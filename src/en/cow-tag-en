@@ -1,10 +1,10 @@
 #!/bin/bash
 
 OPTS="-token -lemma -sgml"
-MODEL="/home/rsling/usr/local/treetagger/lib/english-utf8.par"
+MODEL="/home/rsling/usr/local/treetagger/lib/english-par-linux-3.2-utf8.bin"
 
 OPTS2="-token -sgml -eps 0.00000001 -hyphen-heuristics -quiet"
-MODEL2="/home/rsling/usr/local/treetagger/lib/english-chunker-utf8.par"
+MODEL2="/home/rsling/usr/local/treetagger/lib/english-chunker-par-linux-3.2-utf8.bin"
 
 FILTER=/home/rsling/usr/local/treetagger/cmd/filter-chunker-output.perl
 

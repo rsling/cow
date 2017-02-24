@@ -84,9 +84,9 @@ def main():
           i = i +1
           ls = l.split('\t')[0]
           ps = p.split('\t')[0]
-          psx = ps.replace('[', '(')
-          psx = psx.replace(']', ')')
-          if ls == ps or ls == psx:
+          psx = ps.replace('[', '(').replace(']', ')')
+          lsx = ls.replace('[', '(').replace(']', ')')
+          if lsx == psx :
             fh_out.write(l.encode('utf-8') + '\n')
           else:
             mess = 'Inconsistent annotations in lines ' + str(i) + ',' + str(j) + ':' + l.encode('utf-8') + ':' + p.encode('utf-8')

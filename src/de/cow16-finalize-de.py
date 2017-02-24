@@ -77,7 +77,11 @@ def get_next_document(h):
         l = re.sub(u'>$', r' forum="0">', l, re.UNICODE)
 
       # Host and tld extraction.
-      l = re.sub(r'( url="https{0,1}://)([^/]+)\.([a-z]{2,4})(|/|%)([^"]*")', r'\1\2.\3\4\5 host="\2.\3" tld="\3"', l)
+      l = re.sub(r'( url="https{0,1}://)([^/]+)\.([a-z]{2,4})(|/|%)([^"]*")', r'\1\2.\3\4\5 urldomain="\2.\3" tld="\3"', l)
+
+      # Fix some known problems in doc attr values.
+      l = re.sub(r'=" +"', r'="unknown"', l)          # fix: attr=" "
+      l = re.sub(r'="([^"]+)\\" ', r'="\1" ', l)   # fix: attr="val\"
 
       doc = [l]
     else:
@@ -126,7 +130,7 @@ def sentence_proc(doc, ngrams, blank):
       else:
 
         # NEW: Sentence is not boiler, so check for "sentence type".
-        tags = [x.split('\t')[1] for x in tokenstream]
+        tags = [x.split('\t')[8] for x in tokenstream]
         if set(tags).intersection(set(['VVFIN', 'VAFIN', 'VMFIN', 'VVIMP', 'VAIMP'])):
           attr_type = u' type="finite"'
         elif set(tags).intersection(set(['VVINF', 'VVIZU', 'VVPP', 'VAINF', 'VAPP', 'VMINF', 'VMPP'])):
@@ -139,15 +143,22 @@ def sentence_proc(doc, ngrams, blank):
         tokenstream_mat = [tok.split('\t') for tok in tokenstream]
         for j in [idx for idx in range(sentence_start, i) if not re.match(r'^<', doc[idx])]:
           this_line = doc[j].split('\t')
+
+          # First, fix incorrect '_' in column 13 from verb base lemma analysis.
+          if this_line[12] == u'_':
+            this_line[12] = u'|' 
+
           this_head = [lemma_strip(h[9])+'-'+this_line[4] for h in tokenstream_mat if h[2]==this_line[3]]
           this_deps = [lemma_strip(h[9])+'-'+h[4] for h in tokenstream_mat if h[3]==this_line[2]]
           this_head = '0-root' if len(this_head) < 1 else this_head[0]
           this_deps = '|' if len(this_deps) < 1 else '|' + '|'.join(this_deps) + '|'
-          doc[j] = doc[j] + '\t' + this_head + '\t' + this_deps
+
+          # Re-merge line and add dependency stuff.
+          doc[j] = '\t'.join(this_line) + '\t' + this_head + '\t' + this_deps
 
         # Add index to sentence tag (and sentence type info.
         doc[sentence_start] = '<s idx="' + str(counter) + '"' + attr_type + '>'
-        counter = counter + 1          i = i + 1
+        counter = counter + 1
         i = i + 1
 
     # Neither sentence end nor beginning.
@@ -212,7 +223,7 @@ def main():
       break
 
     # Create NoSkE columns.
-    noskify(doc)
+    noskify(doc, blank)
 
     # Process if doc was read.
     doc = sentence_proc(doc, ngrams, blank)

@@ -157,7 +157,7 @@ def annotate_basic(dom):
     c_def_article = len([a for a in posse_lemmas if a == 'die'])
     add_per(dom, 'crx_def', c_def_article, c_word, 1000)
     
-    c_indef_article = len([a for a in posse_lemmas if a == 'eine'])
+    c_indef_article = len([a for a in posse_lemmas if a in ['n', 'eine']])
     add_per(dom, 'crx_indef', c_indef_article, c_word, 1000)
    
     # NER-related counts.
@@ -196,17 +196,14 @@ def annotate_basic(dom):
    
     # Get past tense verbs:
     c_vpast = len([m for m in morphsets if 'past' in m])
-#   dom.attrib['crx_vpast'] = str(c_vpast)
     add_per(dom, 'crx_vpast', c_vpast, c_word, 1000)
 
     # Get present tense verbs:
     c_vpres = len([m for m in morphsets if 'pres' in m])
-#   dom.attrib['crx_vpres'] = str(c_vpres)
     add_per(dom, 'crx_vpres', c_vpres, c_word, 1000)
 
     # Get present tense, subjunctive mood verbs
     c_vpressubj = len([m for m in morphsets if 'pres' in m and 'subj' in m])
-#   dom.attrib['crx_vsubj'] = str(c_vsubj)
     add_per(dom, 'crx_vpressubj', c_vpressubj, c_word, 1000)
 
     # Get count for all verbs, subjunctive & past tense:
@@ -216,18 +213,14 @@ def annotate_basic(dom):
     # Get count for 'werden', subjunctive & past tense:
     wpast_subj =  [m for m in past_subj if firstlemma(m.findall('../lemma')[0].text) == 'werden']
     c_wpast_subj = len(wpast_subj)
-#    print([w.findall('../word')[0].text for w in wpast_subj])
     add_per(dom, 'crx_wpastsubj', c_wpast_subj, c_word, 1000)
+    
     # The difference is the count for non-'werden' subjunctive & past tense:
     add_per(dom, 'crx_vvpastsubj', (c_past_subj - c_wpast_subj), c_word, 1000)
 
 
-    # Get Marmot's POS:
-#    mposse = dom.findall('.//*mpos')
-    mposse = posse
-
     # Get Marmot's morphological annotation for personal pronouns:
-    mposse_pp_morphs = [parsemorphs(p.find('../morph').text) for p in mposse if p.text in ['PPER', 'PRF']]
+    mposse_pp_morphs = [parsemorphs(p.find('../morph').text) for p in posse if p.text in ['PPER', 'PRF']]
 
     # Get 1st person personal pronouns:
     c_pper_1st = len([m for m in mposse_pp_morphs if '1' in m])
@@ -243,25 +236,24 @@ def annotate_basic(dom):
 
     # Get proportion genitive NNs / all NNs
     # (use TreeTaggers POS-tags: has extended lexicon, should be more reliable)
-    posse_n_morphs = [parsemorphs(p.find('../morph').text) for p in mposse if p.text in ['NN', 'NE']]
+    posse_n_morphs = [parsemorphs(p.find('../morph').text) for p in posse if p.text in ['NN', 'NE']]
     c_gen = len([m for m in posse_n_morphs if 'gen' in m])
     add_per(dom, 'crx_gen', c_gen, float(len( posse_n_morphs )), 1000)
 
 
     # Counts related to topological fields.
-       
+   
     # Get clauses:
     c_simpx = len(dom.findall('.//simpx'))
-#   dom.attrib['crx_simpxc'] = str(c_simpx)
-    add_per(dom, 'crx_simpx', c_simpx, c_word, 1000)
+    add_per(dom, 'crx_simpx', c_simpx, c_sentences, 1)
 
     # Get coordinated clauses:
     c_psimpx = len(dom.findall('.//psimpx'))
-    add_per(dom, 'crx_psimpx', c_psimpx, c_word, 1000)
+    add_per(dom, 'crx_psimpx', c_psimpx, c_sentences, 1)
 
     # Get relative clauses:
     c_rsimpx = len(dom.findall('.//rsimpx'))
-    add_per(dom, 'crx_rsimpx', c_rsimpx, c_word, 1000)
+    add_per(dom, 'crx_rsimpx', c_rsimpx, c_sentences, 1)
  
 
     # Get prefields: 
@@ -269,13 +261,11 @@ def annotate_basic(dom):
 
     # Get verb-second sentences:
     c_vf = len(vfs)
-#   dom.attrib['crx_vfc'] = str(c_vf)
-    add_per(dom, 'crx_v2', c_vf, c_word, 1000)
+    add_per(dom, 'crx_v2', c_vf, c_sentences, 1)
 
     # Get verb-last sentences:
     c_c = len(dom.findall('.//c'))
-#   dom.attrib['crx_cc'] = str(c_c)
-    add_per(dom, 'crx_vlast', c_c, c_word, 1000)
+    add_per(dom, 'crx_vlast', c_c, c_sentences, 1)
 
 
     # Get text in the prefield:
@@ -330,17 +320,3 @@ def annotate_basic(dom):
 
     c_sapos = len([t for t in tokens if t == "'s"])
     add_per(dom, 'crx_sapos', c_sapos,  c_word, 1000)
-
-
- 
-
-
-
-
-
-	
-
- 
-     
-     
-

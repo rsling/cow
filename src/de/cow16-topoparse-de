@@ -22,19 +22,24 @@ topoclean="${prefix}_topoclean.gz"
 topoxml="${prefix}_topo.xml.gz"
 
 # Make one sentence per line from TOKEN infile.
+echo ${ospl}
 python ${RESOURCES}/cow16-ospl.py ${2} ${ospl} --erase
 
 # Run the topological field parser on one sentence per line file.
+echo ${topo}
 gunzip -c ${ospl} | java -Xmx7g -jar ${PARSERHOME}/berkeleyParser.jar -gr ${PARSERHOME}/tuebadz_topf_no_edge.gr | gzip -c > ${topo}
 
+echo ${topoclean}
 python $RESOURCES/cow16-topoparser-fix.py ${ospl} ${topo} ${topoclean} --erase
 \rm ${ospl}
 \rm ${topo}
 
 # Make xml form parser output.
+echo ${topoxml}
 python $RESOURCES/cow16-topoparser-makexml.py ${topoclean} ${topoxml} --erase
 \rm ${topoclean}
 
 # Merge xml files.
+echo ${3}
 python $RESOURCES/cow16-join-topo.py ${1} ${topoxml} ${3} --erase
 \rm ${topoxml}

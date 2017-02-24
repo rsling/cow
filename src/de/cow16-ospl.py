@@ -59,6 +59,7 @@ def main():
 
     l = l.decode('utf-8')
     l = l.strip()
+
     if not l:
       if len(c_sent) > 0:
         ofh.write(cleanup(" ".join(c_sent)).encode('utf-8') + '\n')

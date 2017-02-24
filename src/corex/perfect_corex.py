@@ -302,10 +302,6 @@ def perfect(doc): #
 	    ofu = oberfeld_re.findall(ttttpos_string)
 	    verbose(v,["\n\tOberfeldumstellung, sequence: ", ", ".join(ofu)], logfile)
 
-	
-#	    line = words_to_string(s).strip()
-#	    line = line + "\t" + str(sent_perfcounter) + "\t" + str(sent_pluperfcounter)	
-#	    outfile.write(line + "\n")
             verbose(v,["\n", 'Total perfect in this sentence:\t\t', str(sent_perfcounter)], logfile)
 	    verbose(v,["\n", 'Total plu-perfect in this sentence:\t', str(sent_pluperfcounter), '\n'], logfile)
 	
@@ -321,13 +317,12 @@ def perfect(doc): #
 	    perfcounter = perfcounter + sent_perfcounter
 	    pluperfcounter = pluperfcounter + sent_pluperfcounter
 
-#	return((str(perfcounter), str(pluperfcounter)))
-	c_word = int(doc.get('crx_tokc'))
-	add_per(doc, 'crx_perf', perfcounter, c_word, 1000)
-	add_per(doc, 'crx_plu', pluperfcounter, c_word, 1000)
-
-#	doc.set('crx_perf', str(perfcounter))
-#	doc.set('crx_plu', str(pluperfcounter))	
+	c_simpx = int(doc.get('crx_simpx'))
+	c_psimpx = int(doc.get('crx_rsimpx'))
+	c_rsimpx = int(doc.get('crx_psimpx'))
+	
+        add_per(doc, 'crx_perf', perfcounter, c_simpx + c_psimpx + c_rsimpx, 1)
+	add_per(doc, 'crx_plu', pluperfcounter, c_simpx + c_psimpx + c_rsimpx, 1)
 
 
 def main():
@@ -372,22 +367,11 @@ def main():
     corpus_in = CX(fn_in, annos=annos)
 
     # open output file:
-#    outfile = codecs.open(fn_out, 'w', 'utf-8')
     outfile = open(fn_out, 'w')
 
-    # open log file (debugging only; remove later):
-    #logfile = codecs.open('perfect_logfile.txt', 'w', 'utf-8')
-   
     for doc in corpus_in:
-#	(perfectcount, pluperfectcount) = perfect(doc,outfile,logfile)
-#	perfect(doc,outfile)
 	perfect(doc)
-#	doc.set('crx_perf', perfectcount)
-#	doc.set('crx_plu', pluperfectcount)	
 	outfile.write(outify(doc) + "\n")
 
-
-
-	   
 if __name__ == "__main__":
     main()
