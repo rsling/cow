@@ -1,13 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# This tool reads a COW-XML corpus and runs the COReX feature
-# extraxction "algorithm". Output is an annotated COW XML
-# corpus.
-
-# If test.xml is a DECOW14A (sample) file, try calling:
-# python corex.py test.xml test_out.xml --annotations "word,pos,lemma,ne,morph"
-
 import argparse
 import os.path
 import sys
@@ -17,147 +10,147 @@ import codecs
 
 
 def words_to_string(parent):
-	b = []
-	for word in parent.findall('.//*word'):
-		b.append(word.text)
-	line = " ".join(b) #+ "\n"
-	return(line)
+    b = []
+    for word in parent.findall('.//*word'):
+        b.append(word.text)
+    line = " ".join(b) #+ "\n"
+    return(line)
 
 def get_dominating_simpx(element):
-	while True:
-		parent = element.getparent()
-		if parent is not None:
-			if parent.tag in ['simpx', 'rsimpx']: # 'fkonj' is experimental
-				break
-			elif parent.tag == '<s>':
-				break
-			else:
-				element = parent
-		else:
-			parent = None
-			break
-#        sys.stderr.write("\nDominating element: " + parent.tag + "\n") # debug
-	return(parent)
+    while True:
+        parent = element.getparent()
+        if parent is not None:
+            if parent.tag in ['simpx', 'rsimpx']: # 'fkonj' is experimental
+                break
+            elif parent.tag == '<s>':
+                break
+            else:
+                element = parent
+        else:
+            parent = None
+            break
+    return(parent)
 
 
 
 def get_dominating_lk2(v,vcparent):
-	verbose(v,['\n\t\tclause: ', "'", words_to_string(vcparent), "'"])
-		# check if we have a non-verb-final structure (left bracket in verb-final clauses is "c", not "lk"):
-#	lks =  vcparent.findall('.//lk') #
-	lks = vcparent.findall('lk')
-	if lks == []:
-		fkoords =  vcparent.findall('fkoord')
-	  	if len(fkoords) > 0:
-	   		fkonjs = []
-			for fkoord in fkoords:
-				fkonjs = fkonjs + fkoord.findall('fkonj')
-				if len(fkonjs) > 0:
-					for fkonj in fkonjs:
-						lks = lks + fkonj.findall('lk')
-	if lks == []:
-		verbose(v,['\n\t\tverb-final clause','\n\t\t\t\t=====> NO PASSIVE'])
-	verbose(v,["\n\tNumber of LK found: ", str(len(lks))])
+    verbose(v,['\n\t\tclause: ', "'", words_to_string(vcparent), "'"])
 
-	return(lks)
+    # check if we have a non-verb-final structure (left bracket in verb-final clauses is "c", not "lk"):
+    lks = vcparent.findall('lk')
+    if lks == []:
+        fkoords =  vcparent.findall('fkoord')
+        if len(fkoords) > 0:
+            fkonjs = []
+            for fkoord in fkoords:
+                fkonjs = fkonjs + fkoord.findall('fkonj')
+                if len(fkonjs) > 0:
+                    for fkonj in fkonjs:
+                        lks = lks + fkonj.findall('lk')
+    if lks == []:
+        verbose(v,['\n\t\tverb-final clause','\n\t\t\t\t=====> NO PASSIVE'])
+    verbose(v,["\n\tNumber of LK found: ", str(len(lks))])
 
+    return(lks)
+
+
+# selects the first lemma from a string denoting a "set" of lemmas,
 def firstlemma(lemmastring):
-	# selects the first lemma from a string denoting a "set" of lemmas,
-        # e.g. |bla|blub|
-	lemmastring = lemmastring.strip("|")
-	lemmalist = lemmastring.split("|")
-	return(lemmalist[0])
+    lemmastring = lemmastring.strip("|")
+    lemmalist = lemmastring.split("|")
+    return(lemmalist[0])
 
-	
+    
 def get_wpl(enclosing_element):
-	words = enclosing_element.findall('.//*word')			
-	pos =  enclosing_element.findall('.//*ttpos')
-	lemmas =  enclosing_element.findall('.//*lemma')
-	wwords = [w.text for w in words]
-	ppos = [p.text for p in pos]
-	lemmasetstrings =  [l.text for l in lemmas]
-  	llemmas = [firstlemma(l) for l in lemmasetstrings]
-	return(wwords,ppos,llemmas)
+    words = enclosing_element.findall('.//*word')            
+    pos =  enclosing_element.findall('.//*ttpos')
+    lemmas =  enclosing_element.findall('.//*lemma')
+    wwords = [w.text for w in words]
+    ppos = [p.text for p in pos]
+    lemmasetstrings =  [l.text for l in lemmas]
+    llemmas = [firstlemma(l) for l in lemmasetstrings]
+    return(wwords,ppos,llemmas)
 
 
 def verbose(verbosearg,sentencelist):
-	if verbosearg == True:
-		for s in sentencelist:
-			sys.stderr.write(s.encode('utf-8')) 
+    if verbosearg == True:
+        for s in sentencelist:
+            sys.stderr.write(s.encode('utf-8')) 
 
 
 
 def passive(doc):
-	v = False
-    	passcounter = 0
-	for s in doc.iter('s'):
-	    verbose(v,["\n=========\n", words_to_string(s)])
-	    sent_passcounter = 0
-	    sent_perfcounter = 0
-            for vc in s.findall('.//vc'): # vc is not always a direct child of simpx (e.g. in coordination)
-		verbose(v,["\n\tVC: ", "'", words_to_string(vc),"'"])
-		(wwords,ppos,llemmas) = get_wpl(vc)
-		verbose(v,["\n\tWords: ", ", ".join(wwords)])
-		verbose(v,["\n\tTags: ", ", ".join(ppos)])
-		verbose(v,["\n\tLemmas: ", ", ".join(llemmas)]) 
-		# most general case: verbal complex contains a participle (could be perfekt or passive)
-		participles = [word for word in ppos if word == 'VVPP']
-		verbose(v,["\n\tParticiples: ", ", ".join(participles)]) # debug
-        	if len(participles) > 0:
-		#	print(participles)
-			has_passive = False
-			verbose(v,['\n\t\tpast participle found'])
-		# check if verbal complex ends in a passive auxiliary:
-#		    	if llemmas[-1] == "werden" and ppos[-1].startswith('VA'):
-				# werden doesn't have to be the last word in the complex
-                                # ("dass die Eizelle befructet werden kann")
-			for participle in participles:
-				if "werden" in llemmas:
-					for i in range(0,len(llemmas)):
-						if llemmas[i] == "werden" and ppos[i].startswith('VA') and llemmas[i-1] != 'sein': # experimental: "sein" must not occur before werden ("dass der Schaden auch bei rechtzeitiger Leistung eingetreten sein würde")
-							has_passive = True 
-							sent_passcounter += 1
-							verbose(v,['\n\t\tpassive aux found in verbal complex','\n\t\t\t=====> PASSIVE'])
-							break
-				break # oct: was soll das hier? müsste einen weiter eingerückt sein
-     		# get the left bracket of the immediately dominating <simplex>-element:
-			if has_passive == False:
-					verbose(v,['\n\t\tno passive aux found in verbal complex'])
-					for participle in participles:
-					    vcparent = get_dominating_simpx(vc)
-					    if vcparent is not None:
-						lks = get_dominating_lk2(v,vcparent)
-                                                if lks == []:
-							verbose(v,['\n\t\t\tno left bracket filled with a verb in this clause',' \n\t\t\t=====> NO PASSIVE'])
-						else:
-							for lk in lks:
-								(wwords,ppos,llemmas) = get_wpl(lk)
-								verbose(v,['\n\t\t\tleft bracket: ', "'" , " ".join(wwords) , "'"])
-	
-		# check for passive axuiliary:
-								if llemmas[0] == 'werden' and ppos[0].startswith('VA'):
-									verbose(v,["\n\t\t\tfound finite form: '", wwords[0] , "'", "\n\t\t\t\t=====> PASSIVE"])
-									sent_passcounter += 1	
-																		
-								else:
-									verbose(v, ["\n\t\t\tfound no finite form of 'werden'", "\n\t\t\t\t=====> NO PASSIVE"])
-			
-		else:
-			verbose(v, ["\n\t\tfound no past participle in verbal complex","\n\t\t\t=====> NO PASSIVE\n"])
+    v = False
+    passcounter = 0
 
-	
-	    passcounter = passcounter + sent_passcounter
-            verbose(v,["\t", str(sent_passcounter)])
-	    if sent_passcounter > 0:
-		s.set('crx_pass', 'yes')
-	    else:
-		s.set('crx_pass', 'no')
+    for s in doc.iter('s'):
+        verbose(v,["\n=========\n", words_to_string(s)])
+        sent_passcounter = 0
+        sent_perfcounter = 0
+        
+        for vc in s.findall('.//vc'): # vc is not always a direct child of simpx (e.g. in coordination)
 
-	c_simpx = int(doc.get('crx_simpx'))
-	c_psimpx = int(doc.get('crx_rsimpx'))
-	c_rsimpx = int(doc.get('crx_psimpx'))
+            verbose(v,["\n\tVC: ", "'", words_to_string(vc),"'"])
+            (wwords,ppos,llemmas) = get_wpl(vc)
+            verbose(v,["\n\tWords: ", ", ".join(wwords)])
+            verbose(v,["\n\tTags: ", ", ".join(ppos)])
+            verbose(v,["\n\tLemmas: ", ", ".join(llemmas)]) 
 
-        add_per(doc, 'crx_pass', passcounter, c_simpx + c_psimpx + c_rsimpx, 1)
+            # most general case: verbal complex contains a participle (could be perfekt or passive)
+            participles = [word for word in ppos if word == 'VVPP']
+            verbose(v,["\n\tParticiples: ", ", ".join(participles)]) # debug
+            if len(participles) > 0:
+                has_passive = False
+                verbose(v,['\n\t\tpast participle found'])
+
+                for participle in participles:
+                    if "werden" in llemmas:
+                        for i in range(0,len(llemmas)):
+                            if llemmas[i] == "werden" and ppos[i].startswith('VA') and llemmas[i-1] != 'sein': # experimental: "sein" must not occur before werden ("dass der Schaden auch bei rechtzeitiger Leistung eingetreten sein würde")
+                                has_passive = True 
+                                sent_passcounter += 1
+                                verbose(v,['\n\t\tpassive aux found in verbal complex','\n\t\t\t=====> PASSIVE'])
+                                break
+                    break # TODO oct: was soll das hier? müsste einen weiter eingerückt sein
+
+                # get the left bracket of the immediately dominating <simplex>-element:
+                if has_passive == False:
+                     verbose(v,['\n\t\tno passive aux found in verbal complex'])
+                     for participle in participles:
+                         vcparent = get_dominating_simpx(vc)
+
+                         if vcparent is not None:
+                            lks = get_dominating_lk2(v,vcparent)
+                            if lks == []:
+                                verbose(v,['\n\t\t\tno left bracket filled with a verb in this clause',' \n\t\t\t=====> NO PASSIVE'])
+
+                         else:
+                             for lk in lks:
+                                 (wwords,ppos,llemmas) = get_wpl(lk)
+                                 verbose(v,['\n\t\t\tleft bracket: ', "'" , " ".join(wwords) , "'"])
+    
+                                 # check for passive axuiliary:
+                                 if llemmas[0] == 'werden' and ppos[0].startswith('VA'):
+                                     verbose(v,["\n\t\t\tfound finite form: '", wwords[0] , "'", "\n\t\t\t\t=====> PASSIVE"])
+                                     sent_passcounter += 1    
+                                 else:
+                                     verbose(v, ["\n\t\t\tfound no finite form of 'werden'", "\n\t\t\t\t=====> NO PASSIVE"])
+                
+            else:
+                verbose(v, ["\n\t\tfound no past participle in verbal complex","\n\t\t\t=====> NO PASSIVE\n"])
+
+        passcounter = passcounter + sent_passcounter
+        verbose(v,["\t", str(sent_passcounter)])
+        if sent_passcounter > 0:
+            s.set('crx_pass', '1')
+        else:
+            s.set('crx_pass', '0')
+
+    c_simpx = len(doc.findall('.//simpx'))
+    c_psimpx = len(doc.findall('.//psimpx'))
+    c_rsimpx = len(doc.findall('.//rsimpx'))
+
+    add_per(doc, 'crx_pass', passcounter, c_simpx + c_psimpx + c_rsimpx, 1)
 
 
 
@@ -207,8 +200,8 @@ def main():
  
    
     for doc in corpus_in:
-	passive(doc)
+        passive(doc)
 
-	   
+       
 if __name__ == "__main__":
     main()
