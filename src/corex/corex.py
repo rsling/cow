@@ -12,14 +12,14 @@ import argparse
 import os.path
 import sys
 import gzip
-
+import logging
 
 from lxml import etree as ET
 from corexreader import outify, CORexReader as CX
 from gncat import GNCategorizer as GN
 from corex_basic import annotate_basic#, annotate_lexicon
-from passive_corex import passive	
-from perfect_corex import perfect
+from passive_corex import passive, passive_enable_color
+from perfect_corex import perfect, perfect_enable_color
 
 
 def main():
@@ -30,8 +30,19 @@ def main():
     parser.add_argument('--annotations', type=str, help='comma-separated names for token annotations')
     parser.add_argument("--minlength", type=int, default=-1, help="minimal token length of documents")
     parser.add_argument("--germanet", type=str, help="directory path to GermaNet XML files")
+    parser.add_argument("--nopassive", action="store_true", help="skip passive detection/counting")
+    parser.add_argument("--noperfect", action="store_true", help="skip perfect detection/counting")
+    parser.add_argument("--verbose", action="store_true", help="emit debug messages")
+    parser.add_argument("--color", action="store_true", help="use TTY colors for verbose mode")
 
     args = parser.parse_args()
+
+    if args.verbose:
+        logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.DEBUG)
+        if args.color:
+          perfect_enable_color()
+          passive_enable_color()
+
 
     fn_out = args.outfile
     fn_in = args.infile
@@ -60,7 +71,6 @@ def main():
         annos = args.annotations.split(',')
 
     # Open out file.
-#    outf = open(fn_out, 'w')
     outf = gzip.open(fn_out, 'w')
 
     # Create corpus iterator. 
@@ -81,13 +91,12 @@ def main():
         annotate_basic(doc)
 
         # count passives:
-	passive(doc)
+        if not args.nopassive:
+	    passive(doc)
 
 	# count perfect and pluperfect:
-	perfect(doc)
-
-        # Count non-standard contracted forms of verbs and prepositions:
- #       annotate_lexicon(doc)
+        if not args.noperfect:
+	    perfect(doc)
 
         # Do the GermaNet semantic classes annotation.
         if args.germanet:
