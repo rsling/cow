@@ -1,0 +1,89 @@
+#!/bin/bash
+
+#export LC_ALL="de_DE.utf8"
+
+TOKCONFIG="/home/felix/NLP/cow/src/de/tokconfig-de-cow"
+
+# remove leading spaces
+  sed 's/^ *//g' | \
+# remove trailing spaces
+  sed 's/ *$//g' | \
+# in tag lines (<) replace spaces by _~_ for ucto
+  sed '/^</ s/ \+/_~_/g' | \
+# any non-word character that is repeated more often than thrice, reduce to three
+  sed '/^[^<]/ s/\(\W\)\1\{3,\}/\1\1\1/g' | \
+# make entities ucto-compatible: insert blanks around, make literal ' and "
+  sed 's/ *\&amp; */ \&amp; /g' | \
+  sed 's/\&apos;\&apos;/"/g' | \
+  sed "s/\\\&apos;/'/g"|  \
+  sed "s/\&apos;/'/g" | \
+  sed 's/&quot;/"/g' | \
+  sed 's/ *\&gt; */ \&gt; /g' | \
+  sed 's/ *\&lt; */ \&lt; /g' | \
+# insert blanks to make Ucto tokenize x-to-y hyphen constructs correctly
+  sed '/^[^<]/ s/\(^\|[^a-zäöüßA-ZÄÖÜ]\)\([0-9.]\+\)\(\s*\)-\(\s*\)\([0-9.]\+\)\([^a-zäöüßA-ZÄÖÜ]\|$\)/\1\2 - \5\6/g' | \
+  sed '/^[^<]/ s/\(^\|[^a-zäöüßA-ZÄÖÜ]\)\([0-9.]\+\)\.\(\s*\)-\(\s*\)\([0-9.]\+\)\([^a-zäöüßA-ZÄÖÜ]\|$\)/\1\2FÜCKÜCTÖ - \5\6/g' | \
+# kep the %$&§*-iest tokenizer in the world from not s-splitting numbers and dates
+  sed '/^[^<]/ s/\([0-9]\)\.\s*\([^A-ZÄÖÜ0-9]\)/\1FÜCKÜCTÖ \2/g' | \
+  sed '/^[^<]/ s/\([1-9]\|[0-2][0-9]\|3[01]\)\.\s*\(Januar\|Jänner\|Jan\|Februar\|Feber\|Feb\|März\|Mär\|Mar\|April\|Apr\|Mai\|Juni\|Jun\|Juli\|Jul\|August\|Aug\|September\|Sep\|Sept\|Oktober\|Okt\|November\|Nov\|Dezember\|Dez\)\(\s\)/\1FÜCKÜCTÖ\2\3/g' | \
+# ucto tokenize
+  ucto -n -m -P -c $TOKCONFIG | \
+# undo do-not-s-tokenize-dates hack
+  sed 's/ FÜCKÜCTÖ/. /g' | \
+# put tags on separate lines (do this here, or else sentences starting or ending with a-<div> tag will not be enclosed <s>-tags); FB
+  sed 's/</\n</g; s/>/>\n/g' | \
+# remove leading and trailing whitespace:
+  sed 's/^ \+//; s/ \+$//' |\
+# sentences with opening ( followed by sentences with closing ) are merged (see sed N command!)
+# changed /^.*( \([^)]\+\|\)$/ to /^.*( \([^)]\+\)$/ (F.B.)
+  sed '/^[^<]/ { /^.*( \([^)]\+\|\)$/ {N; /\n[^(]* )/ s/\n/ /; } }' | \
+# after sentences ending in [?!], if the next sentence starts with '" .': correct sentence boundary (F.B.)
+  sed '/^[^<]/ { /[!?]$/ {N; s/\n" \. */ " .\n/; } }' |\
+# any line without ANY < or > is a sentence, insert <s></s> (still in ONE LINE!) # somehow doesn't work if the sentence contains a umlaut
+  sed '/^[^<>]\+$/ s/^\(.\+\)$/<s> \1 <\/s>/'| \
+# non-XML-tag material AFTER a tag in a line which does not end in a tag is a sent, insert <s>
+  sed 's/> \([^<>]\+\)$/>\n<s> \1 <\/s>/' | \
+# sed  lines which contain [.!?] in the middle followed by lowercase OR DIGITS are mostly non-detected sentence boundaries, split (F.B.)
+  sed '/^<s>.\+ [.?!] \([[:lower:]]\|[0-9]\).\+<\/s>$/ s/ \([.?!]\) \([[:lower:]]\|[0-9]\)/ \1 <\/s>\n<s> \2/g ' |\
+# "usw." or "etc." followd by upper-case letter is usually an undetected sentence boundary.
+  sed '/^<s>/ s/\(usw\.\|usf\.\|pp\.\|etc\.\|a\.a\.O\.\|u\.v\.a\.m\.\|u\.v\.m\.\|[uUoO]\.[Ää]\.\) \([A-ZÄÖÜ]\)/\1<\/s>\n<s>\2/g' | \
+# sentences longer than 400 chars are un-sentenced (remove <s></s>)
+# sed '/^<s>.\{400,\}<\/s>$/ s/^<s>\(.\+\)<\/s>$/\1/' | \
+  sed '/^<s>.\{400,\}<\/s>$/ s/^<s>\(.\+\)<\/s>$/<s type="pseudo">\1<\/s>/' | \
+# sentences shorter than 15 chars are un-sentenced
+#  sed '/^<s>.\{,15\}<\/s>$/ s/^<s> *\(.\+\)<\/s> *$/<s type="pseudo">\1/' | \
+  sed '/^<s>.\{,15\}<\/s>$/ s/^<s> *\(.\+\)<\/s> *$/<s type="pseudo">\1<\/s>/' | \
+# sentences shorter than 3 tokens are un-sentenced
+#  sed 's/^<s> \([^ ]\+\( [^ ]\+\)\{0,2\}\) <\/s>$/\1/' | \
+  sed 's/^<s> \([^ ]\+\( [^ ]\+\)\{0,2\}\) <\/s>$/<s type="pseudo">\1<\/s>/' | \
+# sentences with boilerplate potential are un-sentenced
+#  sed 's/^<s> \(.*\(©\|[cC]opyright\|vBulletin\|[aA]ll [rR]ights\|Du bist hier :\|weiterlesen \.\.\.\|mehr \.\.\.\|\[mehr\]\|\[weiter\]\|\[weiterlesen\]\| [Tt]el \| [Ff]on \| [Pp]hone \).*\) <\/s>$/\1/' | \
+# potential English sentences are un-sentenced
+#  sed 's/^<s> \(\(.* \|\)\([Aa]nd\|[Ii]t\|[Ii]s\|[Hh]as\|[Hh]ave\|[Tt]he\|[Tt]at\|[Tt]his\|[Oo]n\|[Oo]r\|[Tt]hen\|[Ii]f\|[Yy]ou\|[Aa]s\) .\+ \(and\|it\|is\|has\|have\|the\|that\|this\|on\|[Oo]r\|[Tt]hen\|[Ii]f\|[Yy]ou\|[Aa]s\) .*\) <\/s>$/\1/' | \
+# sentences with many uriblanks are un-sentenced
+#  sed 's/^<s> \(\(.*uriblank.*\)\{2\}\) <\/s>/\1/' | \
+# sentences that have orphaned ( or ) are un-sentenced
+#  sed 's/^<s> \(([^)]*\|.\+ ([^)]*\) <\/s>/\1/' | \
+#  sed 's/^<s> \(\(\|[^(]* \)).*\|)\) <\/s>/\1/' | \
+  sed 's/^<s> \(([^)]*\|.\+ ([^)]*\) <\/s>/<s type="pseudo">\1<\/s>/' | \
+  sed 's/^<s> \(\(\|[^(]* \)).*\|)\) <\/s>/<s type="pseudo">\1<\/s>/' | \
+# make sure that tags are in single lines (<s></s> is now no longer in single line with actual sentences)
+  sed 's/</\n</g; s/>/>\n/g' | \
+# turn all 'non-pseudo' s-tags into <s type="reg">
+  sed 's/<s>/<s type="reg">/' |\
+# restore quotes
+  sed '/^[^<]/ s/"/\&quot;/g' | \
+  sed "/^[^<]/ s/'/\&apos;/g" | \
+# in non-XML-tag lines, make one token per line format
+  sed '/^[^<]/ s/ /\n/g' | \
+# in XML tags, turn _~_ into spaces (revert line 19)
+  sed '/^</ s/_~_/ /g' | \
+# delete empty lines
+  sed '/^ *$/d' | \
+# remove double " from <doc> tags (occured with some Last-Modified)
+  sed '/^<doc url/ s/"" /" /g' | \
+  sed '/^<doc url/ s/ ""/ "/g' | \
+#  fix even more lines fucked up by ucto
+  sed '/^< doc _ ~ _/ { s/ //g; s/_~_/ /g; }'
+	# disable noiseblanking (or postpone until after topological parsing; targets are difficult to detect in ospl format
+  # sed '/^</! {/^.\{35,\}/ { /^\([^-0-9]\{2,\}-\)\{2,\}/! {s/^.*$/noiseblank/} } }'
