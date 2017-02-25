@@ -172,8 +172,8 @@ def ersatzinfinitives_candidates(wwords, ttttpos, llemmas):
 
 
 def perfect(doc):
-  perfcounter = 0
-  pluperfcounter = 0
+  doc_perfcounter = 0
+  doc_pluperfcounter = 0
 
   for s in doc.iter('s'):
     logging.debug('')
@@ -342,14 +342,14 @@ def perfect(doc):
     s.set('perfects', str(sent_perfcounter))
     s.set('pluperfects', str(sent_pluperfcounter))
 
-    perfcounter = perfcounter + sent_perfcounter
-    pluperfcounter = pluperfcounter + sent_pluperfcounter
+    doc_perfcounter = perfcounter + sent_perfcounter
+    pluperfcounter = doc_pluperfcounter + sent_pluperfcounter
 
+  # Unit of reference is 1 simpx (including subtypes of simpx).
   c_simpx = len(doc.findall('.//simpx'))
   c_psimpx = len(doc.findall('.//psimpx'))
   c_rsimpx = len(doc.findall('.//rsimpx'))
-
-  add_per(doc, 'crx_perf', perfcounter, c_simpx + c_psimpx + c_rsimpx, 1)
-  add_per(doc, 'crx_plu', pluperfcounter, c_simpx + c_psimpx + c_rsimpx, 1)
+  add_per(doc, 'crx_perf', doc_perfcounter, c_simpx + c_psimpx + c_rsimpx, 1)
+  add_per(doc, 'crx_plu', doc_pluperfcounter, c_simpx + c_psimpx + c_rsimpx, 1)
 
 

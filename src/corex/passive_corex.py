@@ -92,7 +92,7 @@ def get_wpl(enclosing_element):
 
 
 def passive(doc):
-  passcounter = 0
+  doc_passcounter = 0
 
   for s in doc.iter('s'):
     logging.debug('')
@@ -159,14 +159,14 @@ def passive(doc):
         logging.debug('\t\tFound no past participle in verbal complex.')
         logging.debug('\t\t\t' + tty_red + '=> NO PASSIVE' + tty_reset)
 
-    passcounter = passcounter + sent_passcounter
+    doc_passcounter = doc_passcounter + sent_passcounter
     logging.debug(tty_yellow + 'Total passive count: ' + str(sent_passcounter) + tty_reset)
-    s.set('passives', str(passcounter))
+    s.set('passives', str(sent_passcounter))
 
+  # Unit of reference is 1 simpx (including subtypes of simpx).
   c_simpx = len(doc.findall('.//simpx'))
   c_psimpx = len(doc.findall('.//psimpx'))
   c_rsimpx = len(doc.findall('.//rsimpx'))
-
-  add_per(doc, 'crx_pass', passcounter, c_simpx + c_psimpx + c_rsimpx, 1)
+  add_per(doc, 'crx_pass', doc_passcounter, c_simpx + c_psimpx + c_rsimpx, 1)
 
 
