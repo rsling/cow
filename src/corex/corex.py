@@ -30,8 +30,10 @@ def main():
     parser.add_argument('--annotations', type=str, help='comma-separated names for token annotations')
     parser.add_argument("--minlength", type=int, default=-1, help="minimal token length of documents")
     parser.add_argument("--germanet", type=str, help="directory path to GermaNet XML files")
+    parser.add_argument("--nobasic", action="store_true", help="skip basic COReX feature counting")
     parser.add_argument("--nopassive", action="store_true", help="skip passive detection/counting")
     parser.add_argument("--noperfect", action="store_true", help="skip perfect detection/counting")
+    parser.add_argument("--nogermanet", action="store_true", help="skip germanet annotation (cenvenience option)")
     parser.add_argument("--verbose", action="store_true", help="emit debug messages")
     parser.add_argument("--color", action="store_true", help="use TTY colors for verbose mode")
 
@@ -77,7 +79,7 @@ def main():
     corpus_in = CX(fn_in, annos=annos)
 
     # Create the annotator classes.
-    if args.germanet:
+    if args.germanet and not args.nogermanet:
         Gn = GN(args.germanet)
 
     # Annotate the documents.
@@ -88,20 +90,20 @@ def main():
             continue
         
         # All simple counts and more.
-        annotate_basic(doc)
+        if not args.nobasic:
+          annotate_basic(doc)
 
-        # count passives:
+        # Count passives.
         if not args.nopassive:
 	    passive(doc)
 
-	# count perfect and pluperfect:
+	# Count perfect and pluperfect.
         if not args.noperfect:
 	    perfect(doc)
 
         # Do the GermaNet semantic classes annotation.
-        if args.germanet:
+        if args.germanet and not args.nogermanet:
             Gn.annotate(doc)
-
 
         # Save the (potentially modified) DOM.
         flat = outify(doc)
