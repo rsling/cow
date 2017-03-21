@@ -29,3 +29,5 @@ for l in sys.stdin:
   else:
     print(lastl)
     lastl = l
+
+print(lastl)
