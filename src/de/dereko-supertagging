@@ -46,8 +46,6 @@ paste <(cut -f 1 ${lexf}_tmp) <(cut -f 2- ${lexf}_tmp | sed '/-/ s/"//g'| sed "/
 #cow16-lexcompactor < ${tmpprefix}_4 > ${lexf}
 
 
-
-
 # 3. Final run with additional lexicon.
 gunzip -c ${1} | cut -f 1 |
 # Preserve sentence endings.
