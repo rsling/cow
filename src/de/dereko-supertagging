@@ -14,9 +14,9 @@ set -u
 #origlc=$(echo $LC_ALL)
 #export LC_ALL=C # Felix: set this or sort will not work as expected (reset at the end)
 
-TT_MODEL_DE="$HOME/NLP/TT/lib/german-utf8.par"
+TT_MODEL_DE="$HOME/NLP/TT/lib/german-dereko-utf8.par"
 TT_LEXIC_DE="$HOME/NLP/cow/src/de/lexicon"
-TT_TMP="$HOME/tmp.supertagging"
+TT_TMP="/work/workspace/scratch/ma_fbildhau-corpus-0/04-tagged/tmpfiles"
 TT_FILTER="$HOME/NLP/TT/cmd/filter-german-tags"
 
 
@@ -26,7 +26,7 @@ OPTS="-token -lemma -sgml -cap-heuristics -hyphen-heuristics -quiet"
 rnd=${RANDOM}
 lexf="${TT_TMP}/$(basename ${1})_${rnd}_nnlexicon"
 tmpf="${TT_TMP}/$(basename ${2})_${rnd}_tmp.gz"
-tmpprefix="${TT_TMP}/$(basename ${2})_${rnd}_tmp"
+#tmpprefix="${TT_TMP}/$(basename ${2})_${rnd}_tmp"
 
 
 # 1. Generate unknown list for pretagging.
@@ -52,10 +52,6 @@ gunzip -c ${1} | cut -f 1 |
   sed 's/^$/\n<SÄTZÄNDÖ>\n/' |
   tree-tagger $OPTS -lex <(cat ${lexf} ${TT_LEXIC_DE}) $TT_MODEL_DE |
   ${TT_FILTER} |
-# Restore sentence ending blank lines.
-  sed 's/^<SÄTZÄNDÖ>$//' |
-# fix dupblank etc. annotation
-  sed 's/^\(dupblank\|uriblank\|emailblank\|hashtagblank\|noiseblank\)	.\+$/\1	XY	(blank)/' |
 # fix annotation of major smileys
   sed 's/^\([:;8=|\[][-o]\{0,1\}[][(){}OoKSsDPp]\+\)	.\+$/\1	XY	(smiley)/' |
   sed 's/^\&lt;3	.\+$/\&lt;3	XY	(smiley)/' |
@@ -66,8 +62,8 @@ gunzip -c ${1} | cut -f 1 |
   sed 's/<unknown>$/(unknown)/' |
   sed 's/<UNKNOWN>$/(unknown)/' | gzip -c > ${2}
 
-#\rm ${tmpf}
+\rm ${tmpf}
 #\rm ${lexf}
-#\rm ${lexf}_tmp
+\rm ${lexf}_tmp
 
 #export LC_ALL=$origlc
