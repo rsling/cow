@@ -35,8 +35,8 @@ gunzip -c ${1} | cut -f 1 | tree-tagger $OPTS -lex ${TT_LEXIC_DE} $TT_MODEL_DE |
 # 2. Get SMOR analyses for unknowns.
 gunzip -c ${tmpf} | grep '	<unknown>' | cut -f 1 | smor-lemmatizer | sed 's/	\([A-Z]\+\|$\.\)\.[^	 ]\+/	\1/' | grep 'ADJ.\|NN\|NE' | sort -u | cow16-lexcompactor > ${lexf}_tmp
 
-# 2a. Normalize lemmas that contain quotes ("Pseudo"-Wissenschaft --> Pseudo-Wissenschaft)
-paste <(cut -f 1 ${lexf}_tmp) <(cut -f 2- ${lexf}_tmp | sed '/-/ s/"//g'| sed "/-/ s/'//g") > ${lexf}
+# 2a. Normalize lemmas that contain quotes ("Pseudo"-Wissenschaft --> Pseudo-Wissenschaft) and initial hyphens (-Inszenierung --> Inszenierung):
+paste <(cut -f 1 ${lexf}_tmp) <(cut -f 2- ${lexf}_tmp | sed '/-/ s/"//g'| sed "/-/ s/'//g" |sed 's/	-/	/') > ${lexf}
 
 #gunzip -c ${tmpf} | grep '	<unknown>' | cut -f 1 > ${tmpprefix}_0
 #smor-lemmatizer < ${tmpprefix}_0 > ${tmpprefix}_1
