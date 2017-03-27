@@ -11,8 +11,8 @@
 set -e
 set -u
 
-#origlc=$(echo $LC_ALL)
-#export LC_ALL=C # Felix: set this or sort will not work as expected (reset at the end)
+
+export LC_ALL=C # Felix: set this or sort will not work as expected (reset at the end)
 
 TT_MODEL_DE="$HOME/NLP/TT/lib/german-utf8.par"
 TT_LEXIC_DE="$HOME/NLP/cow/src/de/lexicon"
@@ -72,4 +72,3 @@ gunzip -c ${1} | cut -f 1 |
 #\rm ${lexf}
 #\rm ${lexf}_tmp
 
-#export LC_ALL=$origlc
