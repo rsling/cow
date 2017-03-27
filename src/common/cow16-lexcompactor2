@@ -1,0 +1,51 @@
+#!/usr/bin/python
+#! -*- coding: utf-8 -*-
+#
+# This is a "re-implementation" of cow16-lexcompactor.
+# It removes entries ending with "e" if there is an identical
+# entry that does not end with "e".
+# Motivation: SMOR frequently (and sometimes erroneously) yields "NN.Masc.Dat.Sg"
+# for tokens ending with "e", plus the corresponding lemma ("Beckstein-Akt", "Euro-Kris").
+# These are virtually never correct analyses.
+#  
+
+import codecs
+import sys
+
+UTF8Reader = codecs.getreader('utf8')
+sys.stdin = UTF8Reader(sys.stdin)
+
+UTF8Writer = codecs.getwriter('utf8')
+sys.stdout = UTF8Writer(sys.stdout)
+
+
+token = ""
+
+b = []
+c = 0
+for l in sys.stdin:
+    l = l.strip()
+    c += 1
+
+ 
+    token_annos = l.split("\t")
+
+    if not token:
+        token = token_annos[0]
+   
+
+    if token_annos[0] == token: 
+        b.append(token_annos[1])
+
+    else:
+        b = set(b)
+        bclean = [anno for anno in b if not anno + "e" in b]
+        unified_entry = "\t".join([token,"\t".join(bclean)])
+        print(unified_entry)
+        token = token_annos[0]
+        b = [token_annos[1]]
+
+b = set(b)
+unified_entry = "\t".join([token,"\t".join(b)])
+print(unified_entry)
+

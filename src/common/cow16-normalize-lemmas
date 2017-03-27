@@ -1,0 +1,40 @@
+#!/usr/bin/python
+#! -*- coding: utf-8 -*-
+#
+# This normalizes annotations from the smor-lemmatizer.
+# Make sure the input has been formatted and filtered with 
+# sed 's/	\([A-Z]\+\|$\.\)\.[^	 ]\+/	\1/' | grep 'ADJ.\|NN\|NE'
+# (as in dereko-supertagging)
+#
+
+import codecs
+import sys
+
+UTF8Reader = codecs.getreader('utf8')
+sys.stdin = UTF8Reader(sys.stdin)
+
+UTF8Writer = codecs.getwriter('utf8')
+sys.stdout = UTF8Writer(sys.stdout)
+
+
+for l in sys.stdin:
+    l = l.strip()
+    tokenpos_lemma = l.split(" ")
+    lemma = tokenpos_lemma[1].strip()
+    tokenpos = tokenpos_lemma[0].strip()
+
+    # single and double quotes in lemmas that contain a hyphen ("Pseudo"-Wissenschaft --> Pseudo-Wissenschaft)
+    if "-" in lemma:
+        lemma = lemma.replace("'", "").replace('"','')
+
+    # remove leading hyphens from lemmas (mostly tokenization errors: -Inszenierung --> Inszenierung)
+    lemma = lemma.lstrip("-")
+
+    # normalize camel case, only lemmas without a hyphen (bug in SMOR will yield "ApfelsinensaftTüte", "BadheizKörper" etc.)
+    if not "-" in lemma:
+        first = lemma[0]
+        rest = lemma[1:].lower()
+        lemma = first + rest
+    l = " ".join([tokenpos, lemma])
+    print(l)
+
