@@ -1,0 +1,33 @@
+#!/bin/bash
+
+set -e
+set -u
+
+sed '/^<doc / { s/last-modified/last_modified/ }' |
+  sed '/^<doc / { s/_unk_/unknown/g }' |
+  sed '/^<doc / { s/" \+"/"unknown"/g }' |
+  sed '/^<doc / { s/\\"\|\/"/"/g }' |
+
+  sed '/^[^<]/ { s/	|	/	_	/g}' |
+  sed '/^[^<]/ { s/	|	/	_	/g}' |
+  sed '/^[^<]/ { s/	|\([^	]\+\)|	/	\1	/g }' |
+  sed '/^[^<]/ { s/	|\([^	]\+\)|	/	\1	/g }' |
+  
+  sed 's/&gt;/>/g' |
+  sed 's/&lt;/</g' |
+  sed 's/&quot;/"/g' |
+  sed "s/&apos;/'/g" |
+  sed 's/&amp;/\&/g' |
+
+  grep -v '^<dup\|<\/dup\|^dupblank' |
+  sed '/^<title>/,/^<\/title>/d' |
+  sed '/^<keywords>/,/^<\/keywords>/d' |
+  grep -v '^<meta ' | 
+
+  sed '/^<doc / s/ \(sourcedoctype\|sourcecharset\|nbc\|nbcprop\|nbd\|nbdprop\|avgbpc\|avgbpd\|date\|region\|city\)="[^"]\+"//g' |
+
+  sed '/^<doc / s/ last_modified="[^"]*\(19\|20\)\([901][0-9]\)[^"]*"/ last_modified="\1\2"/' |
+  sed '/^<doc / s/ last_modified="[^"]*1970[^"]*"/ last_modified="unknown"/' |
+  sed '/^<doc / s/ last_modified="[^u12][^"]*"/ last_modified="unknown"/' 
+
+
