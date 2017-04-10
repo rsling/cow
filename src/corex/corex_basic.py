@@ -81,52 +81,68 @@ def annotate_basic(dom):
     # Get POS counts (modal verbs etc.).
     posse = dom.findall('.//*ttpos')
 
+    # Number of modal verbs.
     c_modals = len([p for p in posse if p.text[:2] == 'VM'])
     add_per(dom, 'crx_mod', c_modals, c_word, 1000)
 
+    # Number of full verbs.
     c_verbs = len([p for p in posse if p.text[:2] == 'VV'])
     add_per(dom, 'crx_vv', c_verbs, c_word, 1000)
 
+    # Numer of auxiliaries.
     c_aux = len([p for p in posse if p.text[:2] == 'VA'])
     add_per(dom, 'crx_vaux', c_aux, c_word, 1000)
 
+    # Number of finite verbs.
     vfin = [p for p in posse if p.text in ['VAFIN', 'VMFIN', 'VVFIN']]
     c_vfin = len(vfin)
     add_per(dom, 'crx_vfin', c_vfin, c_word, 1000)
 
+    # Number of common nouns.
     c_commonnouns = len([p for p in posse if p.text == 'NN'])
     add_per(dom, 'crx_cn', c_commonnouns, c_word, 1000)
     
+    # Number of prepositions.
     c_prepositions = len([p for p in posse if p.text[:2] == 'AP'])
     add_per(dom, 'crx_prep', c_prepositions, c_word, 1000)
-    
+
+    # Number of infinitives.
     c_infinitives = len([p for p in posse if p.text in ['VAINF', 'VMINF', 'VVINF']])
     add_per(dom, 'crx_inf', c_infinitives, c_word, 1000)
 
+    # Number of imperatives.
     c_imperatives = len([p for p in posse if p.text in ['VAIMP', 'VMIMP', 'VVIMP']])
     add_per(dom, 'crx_imp', c_imperatives, c_word, 1000)
 
+    # Number of adverbs.
     c_adverbs = len([p for p in posse if p.text == 'ADV'])
     add_per(dom, 'crx_adv', c_adverbs, c_word, 1000)
     
+    # Number of adjectives.
     c_adjectives = len([p for p in posse if p.text[:3] == 'ADJ'])
     add_per(dom, 'crx_adj', c_adjectives, c_word, 1000)
  
+    # Number of subordinators.
     c_subjunctions_w_sentence = len([p for p in posse if p.text == 'KOUS'])
     add_per(dom, 'crx_subjs', c_subjunctions_w_sentence, c_word, 1000)
 
+    # Number of infinitive-embedders.
     c_subjunctions_w_infinitive = len([p for p in posse if p.text == 'KOUI'])
     add_per(dom, 'crx_subji', c_subjunctions_w_infinitive, c_word, 1000)
 
+    # Number of coordinators.
     c_conjunctions = len([p for p in posse if p.text == 'KON'])
     add_per(dom, 'crx_conj', c_conjunctions, c_word, 1000)
 
+    # Number of wh pronouns.
     c_wh = len([p for p in posse if p.text[:2] == 'PW'])
     add_per(dom, 'crx_wh', c_wh, c_word, 1000)
 
+    # Demonstratives.
     c_dem = len([p for p in posse if p.text[:2] == 'PD'])
     add_per(dom, 'crx_dem', c_dem, c_word, 1000)
- 
+
+    # Possessives.
     c_poss =  len([p for p in posse if p.text[:4] == 'PPOS'])
     add_per(dom, 'crx_poss', c_poss, c_word, 1000)
 

@@ -50,7 +50,7 @@ class GNCategorizer:
                 semcat =  pos.upper() + '_' + classs
                 if not semcat in self.sem_anno_zero:
                     self.sem_anno_zero[semcat] = 0
-	
+
     def query(self, lemma, pos):
         query = lemma.lower() + '_' + pos.lower()
         if query in self.gn_mapping:

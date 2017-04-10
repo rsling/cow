@@ -1,23 +1,23 @@
-#!/usr/bin/python
+#!/bin/bash
 
-import codecs
-import sys
+set -e
+set -u
 
-UTF8Reader = codecs.getreader('utf8')
-sys.stdin = UTF8Reader(sys.stdin)
+#export PYTHONPATH=${HOME}/usr/local/lib64/python2.6/site-packages/
+#export MANATEE_REGISTRY=/var/lib/manatee/registry
 
-UTF8Writer = codecs.getwriter('utf8')
-sys.stdout = UTF8Writer(sys.stdout)
+#gunzip -c /var/lib/manatee/incoming/encow16a/encow16a01.xml.gz |
+  sed '/^<doc / { s/last-modified/last_modified/ }' |
+  sed '/^<doc / { s/_unk_/unknown/g }' |
+  sed 's/&gt;/>/g' |
+  sed 's/&lt;/</g' |
+  sed 's/&quot;/"/g' |
+  sed "s/&apos;/'/g" |
+  sed 's/&amp;/\&/g' |
+  grep -v '^<dup\|<\/dup\|^dupblank' |
+  sed '/^<title>/,/^<\/title>/d' |
+  sed '/^<keywords>/,/^<\/keywords>/d' |
+  grep -v '^<meta ' | 
+  cut -f1,2,3,4,6,11,12,13,14 # > /mnt/disk1/encow16a01.xml
 
-for l in sys.stdin:
-  l = l.strip()
-
-  if not l or re.match('^<meta ', l):
-    continue
-
-  if not lastl:
-    lastl = l
-    continue
-
-  fs = l.split('\t')
-
+#  compilecorp --no-ske encow16a
