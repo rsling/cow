@@ -1,0 +1,174 @@
+*FREQLISTATTRS word ner morph tag lemma baselemma compnonheads boundelements lc lemma_lc lempos head
+
+=Deutschland
+  doc
+  country="DE" & tld="de"
+
+=Österreich
+  doc
+  country="AT" & tld="at"
+
+=Schweiz
+  doc
+  country="CH" & tld="ch"
+
+=Forum
+  doc
+  forum="1"
+
+=Nicht-Forum
+  doc
+  forum="0"
+
+=Standard
+  doc
+  corex_clitindef="0.0" & corex_short="0.0" & forum="0" & bdc="[a-e]" & wordcount>="200"
+
+=Deutschland-Standard
+  doc
+  country="DE" & tld="de" & corex_clitindef="0.0" & corex_short="0.0" & forum="0" & bdc="[a-e]" & wordcount>="200"
+
+=Quasispontan
+  doc
+  corex_clitindef>="10" & corex_short>="0.1" & corex_emo>="0.5"
+
+=Quasispontan-Extrem
+  doc
+  corex_clitindef>="15" & corex_short>="1" & corex_emo>="5"
+
+=Quasispontan-Extremst
+  doc
+  corex_clitindef>="20" & corex_short>="5" & corex_emo>="10"
+
+=Passivsätze
+  -CQL-
+  <s passives!="0" & type="finite" /> within <doc bdc="[a-e]" & wordcount>="150" />
+
+=Aktivsätze
+  -CQL-
+  <s passives="0" & type="finite" /> within <doc bdc="[a-e]" & wordcount>="150" />
+
+
+
+={16th-01}
+  doc
+  id="^0.+"
+
+={16th-02}
+  doc
+  id="^1.+"
+
+={16th-03}
+  doc
+  id="^2.+"
+
+={16th-04}
+  doc
+  id="^3.+"
+
+={16th-05}
+  doc
+  id="^4.+"
+
+={16th-06}
+  doc
+  id="^5.+"
+
+={16th-07}
+  doc
+  id="^6.+"
+
+={16th-08}
+  doc
+  id="^7.+"
+
+={16th-09}
+  doc
+  id="^8.+"
+
+={16th-10}
+  doc
+  id="^9.+"
+
+={16th-11}
+  doc
+  id="^a.+"
+
+={16th-12}
+  doc
+  id="^b.+"
+
+={16th-13}
+  doc
+  id="^c.+"
+
+={16th-14}
+  doc
+  id="^d.+"
+
+={16th-15}
+  doc
+  id="^e.+"
+
+={16th-16}
+  doc
+  id="^f.+"
+
+
+={8th-1}
+  doc
+  id="^[01].+"
+
+={8th-2}
+  doc
+  id="^[23].+"
+
+={8th-3}
+  doc
+  id="^[45].+"
+
+={8th-4}
+  doc
+  id="^[67].+"
+
+={8th-5}
+  doc
+  id="^[89].+"
+
+={8th-6}
+  doc
+  id="^[ab].+"
+
+={8th-7}
+  doc
+  id="^[cd].+"
+
+={8th-8}
+  doc
+  id="^[ef].+"
+
+
+={4th-1}
+  doc
+  id="^[0123].+"
+
+={4th-2}
+  doc
+  id="^[4567].+"
+
+={4th-3}
+  doc
+  id="^[89ab].+"
+
+={4th-4}
+  doc
+  id="^[cdef].+"
+
+
+={2th-1}
+  doc
+  id="^[0134567].+"
+
+={2th-2}
+  doc
+  id="^[89abcdef].+"

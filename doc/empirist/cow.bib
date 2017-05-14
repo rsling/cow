@@ -2,15 +2,6 @@
 % Encoding: UTF-8
 
 
-@InProceedings{Schaefer2016a,
-  Title                    = {{CommonCOW}: massively huge web corpora from {CommonCrawl} data and a method to distribute them freely under restrictive {EU} copyright laws},
-  Author                   = {Roland Schäfer},
-  Booktitle                = {Proceedings of the Tenth International Conference on Language Resources and Evaluation {(LREC '16)}},
-  Year                     = {2016, to appear},
-
-  Crossref                 = {LREC2016}
-}
-
 @InProceedings{GaoAbou2007,
   Title                    = {{GenieKnows} Web Page Cleaning System},
   Author                   = {Weizheng Gao and Tony Abou-Assaleh},
@@ -985,15 +976,18 @@
   Volume                   = {400}
 }
 
-@Unpublished{Schaefer2016c,
+@Article{Schaefer2016b,
   Title                    = {Accurate and efficient general-purpose boilerplate detection for crawled web corpora},
   Author                   = {Roland Schäfer},
-  Note                     = {Accepted with revisions by Language Resources and Evaluation Journal},
-  Year                     = {submitted},
+  Journal                  = {Language Resources and Evaluation},
+  Year                     = {2016},
+  Note                     = {online first},
 
-  Owner                    = {user},
-  Timestamp                = {2013.09.15},
-  Url                      = {http://www.rolandschaefer.net/}
+  Abstract                 = {Removal of boilerplate is one of the essential tasks in web corpus construction and web indexing. Boilerplate (redundant and automatically inserted material like menus, copyright notices, navigational elements, etc.) is usually considered to be linguistically unattractive for inclusion in a web corpus. Also, search engines should not index such material because it can lead to spurious results for search terms if these terms appear in boilerplate regions of the web page. The size of large web corpora necessitates the use of efficient algorithms while a high accuracy directly improves the quality of the final corpus. In this paper, I present and evaluate a supervised machine learning approach to general-purpose boilerplate detection for languages based on Latin alphabets which is both very efficient and very accurate. Using a Multilayer Perceptron and a high number of carefully engineered features, I achieve between 95% and 99% correct classifications (depending on the input language) with precision and recall over 0.95. Since the perceptrons are trained on language-specific data, I also evaluate how well perceptrons trained on one language perform on other languages. The single features are also evaluated for the merit they contribute to the classification. I show that the accuracy of the Multilayer Perceptron is on a par with that of other classifiers such as Support Vector Machines.
+I conclude that the quality of general-purpose boilerplate detectors depends mainly on the availability of many well-engineered features and which are highly language-independent.
+The method has been implemented in the open-source texrex web page cleaning software, and large corpora constructed using it are available from the COW initiative, including the CommonCOW corpora created from CommonCrawl data sets.},
+  Doi                      = {10.1007/s10579-016-9359-2},
+  Url                      = {http://link.springer.com/article/10.1007/s10579-016-9359-2}
 }
 
 @Article{Dunning1993,
@@ -1255,6 +1249,24 @@
   Publisher                = {Presses universitaires de Louvain}
 }
 
+@InProceedings{SchaeferBildhauer2012full,
+  Title                    = {Building Large Corpora from the Web Using a New Efficient Tool Chain},
+  Author                   = {Roland Schäfer and Felix Bildhauer},
+  Booktitle                = {Proceedings of the Eight International Conference on Language Resources and Evaluation (LREC'12)},
+  Year                     = {2012},
+
+  Address                  = {Istanbul, Turkey},
+  Editor                   = {Nicoletta Calzolari (Conference Chair) and Khalid Choukri and Thierry Declerck and Mehmet Uğur Doğan and Bente Maegaard and Joseph Mariani and Asuncion Moreno and Jan Odijk and Stelios Piperidis},
+  Pages                    = {486--493},
+  Publisher                = {European Language Resources Association (ELRA)},
+
+  Abstract                 = {Over the last decade, methods of web corpus construction and the evaluation of web corpora have been actively researched. Prominently, the WaCky initiative has provided both theoretical results and a set of web corpora for selected European languages. We present a software toolkit for web corpus construction and a set of siginificantly larger corpora (up to over 9 billion tokens) built using this software. First, we discuss how the data should be collected to ensure that it is not biased towards certain hosts. Then, we describe our software toolkit which performs basic cleanups as well as boilerplate removal, simple connected text detection as well as shingling to remove duplicates from the corpora. We finally report evaluation results of the corpora built so far, for example w. r. t. the amount of duplication contained and the text type/genre distribution. Where applicable, we compare our corpora to the WaCky corpora, since it is inappropriate, in our view, to compare web corpora to traditional or balanced corpora. While we use some methods applied by the WaCky initiative, we can show that we have introduced incremental improvements.},
+  Date                     = {23-25},
+  ISBN                     = {978-2-9517408-7-7},
+  Language                 = {english},
+  Url                      = {http://rolandschaefer.net/?p=70}
+}
+
 @InProceedings{Schaefer-Bildhauer2012short,
   Title                    = {Building Large Corpora from the Web Using a New Efficient Tool Chain},
   Author                   = {Roland Schäfer and Felix Bildhauer},
@@ -1362,6 +1374,23 @@
   Address                  = {Oxford, UK, UK},
   ISSN                     = {0306-4379},
   Publisher                = {Elsevier Science Ltd.}
+}
+
+@InProceedings{Schaefer2016a,
+  Title                    = {CommonCOW: Massively Huge Web Corpora from CommonCrawl Data and a Method to Distribute them Freely under Restrictive EU Copyright Laws},
+  Author                   = {Roland Schäfer},
+  Booktitle                = {Proceedings of the Tenth International Conference on Language Resources and Evaluation (LREC 2016)},
+  Year                     = {2016},
+
+  Address                  = {Portorož, Slovenia},
+  Editor                   = {Nicoletta Calzolari (Conference Chair) and Khalid Choukri and Thierry Declerck and Marko Grobelnik and Bente Maegaard and Joseph Mariani and Asuncion Moreno and Jan Odijk and Stelios Piperidis},
+  Pages                    = {4500--4504},
+  Publisher                = {European Language Resources Association (ELRA)},
+
+  Abstract                 = {In this paper, I describe a method of creating massively huge web corpora from the CommonCrawl data sets and redistributing the resulting annotations in a stand-off format. Current EU (and especially German) copyright legislation categorically forbids the redistribution of downloaded material without express prior permission by the authors. Therefore, stand-off annotations or other derivates are the only format in which European researchers (like myself) are allowed to re-distribute the respective corpora. In order to make the full corpora available to the public despite such restrictions, the stand-off format presented here allows anybody to locally reconstruct the full corpora with the least possible computational effort.},
+  Date                     = {23-28},
+  ISBN                     = {978-2-9517408-9-1},
+  Language                 = {english}
 }
 
 @Article{Kilgarriff2001,
@@ -1753,8 +1782,10 @@
 @Book{Biber1995,
   Title                    = {Dimensions of Register Variation},
   Author                   = {Douglas Biber},
-  Publisher                = {Cambridge},
+  Publisher                = {Cambridge University Press},
   Year                     = {1995},
+
+  Address                  = {Cambridge},
 
   Owner                    = {user},
   Timestamp                = {2014.01.06}
@@ -2044,7 +2075,10 @@
   Address                  = {Stroudsburg},
   Editor                   = {Felix Bildhauer and Roland Schäfer},
   Pages                    = {9--15},
-  Publisher                = {Association for Computational Linguistics}
+  Publisher                = {Association for Computational Linguistics},
+
+  Abstract                 = {In web corpus construction, crawling is a necessary step, and it is probably the most costly of all, because it requires expensive bandwidth usage, and excess crawling increases storage requirements. Excess crawling results from the fact that the web contains a lot of redundant content (duplicates and near-duplicates), as well as other material not suitable or desirable for inclusion in web corpora or web indexes (for example, pages with little text or virtually no text at all). An optimized crawler for web corpus construction would ideally avoid crawling such content in the first place, saving bandwidth, storage, and post-processing costs. In this paper, we show in three experiments that two simple scores are suitable to improve the ratio between corpus size and crawling effort for web corpus construction. The first score is related to overall text quality of the page containing the link, the other one is related to the likelihood that the local block enclosing a link is boilerplate.},
+  Url                      = {http://rolandschaefer.net/?p=84}
 }
 
 @InCollection{Scott2000,
@@ -2096,7 +2130,10 @@
   Title                    = {From genitive inflective to possessive marker? -- The development of German possessive -s with personal names},
   Author                   = {Tanja Ackermann},
   Booktitle                = {Germanic Genitives},
+  Publisher                = {Benjamins},
   Year                     = {to appear},
+
+  Address                  = {Amsterdam},
   Editor                   = {Tanja Ackermann and Horst Simon and Christian Zimmer}
 }
 
@@ -2910,6 +2947,28 @@
   Booktitle                = {EMNLP}
 }
 
+@Proceedings{WAC9,
+  Title                    = {Proceedings of the 9th Web as Corpus Workshop (WAC-9)},
+  Year                     = {2014},
+
+  Address                  = {Stroudsburg},
+  Editor                   = {Felix Bildhauer and Roland Schäfer},
+  Publisher                = {Association for Computational Linguistics},
+
+  ISBN                     = {978-1-937284-83-1},
+  Url                      = {http://aclweb.org/anthology/W14-0400}
+}
+
+@Proceedings{LREC12,
+  Title                    = {Proceedings of the Eighth International Conference on Language Resources and Evaluation {(LREC '12)}},
+  Year                     = {2012},
+
+  Address                  = {Istanbul},
+  Editor                   = {Nicoletta Calzolari and Khalid Choukri and Thierry Declerck and Mehmet U\u{g}ur Do\u{g}an and Bente Maegaard and Joseph Mariani and Jan Odijk and Stelios Piperidis},
+  Publisher                = {ELRA},
+
+  Booktitle                = {Proceedings of the Eight International Conference on Language Resources and Evaluation (LREC'12)}
+}
 
 @Proceedings{WAC5,
   Title                    = {Proceedings of the Fifth {Web as Corpus} Workshop},
@@ -2929,9 +2988,10 @@
   Address                  = {Lancaster},
   Editor                   = {Piotr Bański and Hanno Biber and Evelyn Breiteneder and Marc Kupietz and Harald Lüngen and Andreas Witt},
   Organization             = {UCREL},
+  Publisher                = {IDS},
 
-  Owner                    = {user},
-  Timestamp                = {2015.04.11}
+  Abstract                 = {In this paper, I present the COW14 tool chain, which comprises a web corpus creation tools called texrex, wrappers for existing linguistic annotation tools as well as an online query software called Colibri2 . By detailed descriptions of the implementation and systematic evaluations of the performance of the software on different types of systems, I show that the COW14 architecture is capable of handling the creation of corpora of up to at least 100 billion tokens. I also introduce our running demo system which currently serves corpora of up to roughly 20 billion tokens in Dutch, Englisch, French, German, Spanish, and Swedish.},
+  Url                      = {http://rolandschaefer.net/?p=749}
 }
 
 @Book{Zeldes2012,
@@ -3127,7 +3187,9 @@
   Year                     = {2013},
   Number                   = {2},
   Pages                    = {23--60},
-  Volume                   = {28}
+  Volume                   = {28},
+
+  Abstract                 = {In this article, we give an overview about the necessary steps to construct high-quality corpora from web texts. We first focus on web crawling and the pros and cons of the existing crawling strategies. Then, we describe how the crawled data can be linguistically pre-processed in a parallelized way that allows the processing of web-scale input data. As we are working with web data, controlling the quality of the resulting corpus is an important issue, which we address by showing how corpus statistics and a linguistic evaluation can be used to assess the quality of corpora. Finally, we show how the availability of extremely large, high-quality corpora opens up new directions for research in various fields of linguistics, computational linguistics, and natural language processing.}
 }
 
 @Article{BarabasiBonabeau2003,
@@ -3474,7 +3536,10 @@
   Address                  = {Lancaster},
   Editor                   = {Stefan Evert and Egon Stemle and Paul Rayson},
   Pages                    = {7--15},
-  Publisher                = {SIGWAC}
+  Publisher                = {SIGWAC},
+
+  Abstract                 = {In this paper, we examine notions of text quality in the context of web corpus construction. Web documents often contain material which disqualifies them from inclusion in a corpus (tag clouds, lists of names or nouns, etc.). First, we look at the agreement between coders (especially corpus designers) given the task of rating text quality. Then, we evaluate a simple and fully unsupervised method of text quality assessment based on short and very frequent words. Finally, we describe our general approach to the construction of carefully cleansed and non-destructively normalized web corpora. Under this approach, we annotate documents with quality metrics instead of actually removing those documents classified as being of low quality.},
+  Url                      = {http://rolandschaefer.net/?p=78}
 }
 
 @Article{GriesHilbert2008,
@@ -3762,7 +3827,11 @@
   Year                     = {2013},
 
   Address                  = {San Francisco},
-  Series                   = {Synthesis Lectures on Human Language Technologies}
+  Series                   = {Synthesis Lectures on Human Language Technologies},
+
+  Abstract                 = {The World Wide Web constitutes the largest existing source of texts written in a great variety of languages. A feasible and sound way of exploiting this data for linguistic research is to compile a static corpus for a given language. There are several adavantages of this approach: (i) Working with such corpora obviates the problems encountered when using Internet search engines in quantitative linguistic research (such as non-transparent ranking algorithms). (ii) Creating a corpus from web data is virtually free. (iii) The size of corpora compiled from the WWW may exceed by several orders of magnitudes the size of language resources offered elsewhere. (iv) The data is locally available to the user, and it can be linguistically post-processed and queried with the tools preferred by her/him. This book addresses the main practical tasks in the creation of web corpora up to giga-token size. Among these tasks are the sampling process (i.e., web crawling) and the usual cleanups including boilerplate removal and removal of duplicated content. Linguistic processing and problems with linguistic processing coming from the different kinds of noise in web corpora are also covered. Finally, the authors show how web corpora can be evaluated and compared to other corpora (such as traditionally compiled corpora).},
+  Doi                      = {10.2200/S00508ED1V01Y201305HLT022},
+  Url                      = {http://www.morganclaypool.com/doi/abs/10.2200/S00508ED1V01Y201305HLT022}
 }
 
 @Book{SchaeferBildhauer2013de,
@@ -3942,13 +4011,3 @@
   Booktitle                = {Proceedings of the 4th {Web as Corpus} Workshop}
 }
 
-@Proceedings{LREC12,
-  Title                    = {Proceedings of the Eighth International Conference on Language Resources and Evaluation {(LREC '12)}},
-  Year                     = {2012},
-
-  Address                  = {Istanbul},
-  Editor                   = {Nicoletta Calzolari and Khalid Choukri and Thierry Declerck and Mehmet U\u{g}ur Do\u{g}an and Bente Maegaard and Joseph Mariani and Jan Odijk and Stelios Piperidis},
-  Publisher                = {ELRA},
-
-  Booktitle                = {Proceedings of the Eight International Conference on Language Resources and Evaluation (LREC'12)}
-}
