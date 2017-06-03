@@ -96,22 +96,27 @@ def cow_query(query, corpus = DEFAULT_CORPUS,
 
 
 # Format a Manatee region as raw concordance line.
-def cow_region_to_conc(region):
-  conc = isplit(region, ['strc', 'attr'])
-  conc = [[x.split('\t') for x in subconc] for subconc in conc]
-  conc = [flatten(x) for x in conc]
-  conc = filter(lambda x: x not in [['strc'], ['attr']], conc)
-  conc = [filter(None, filter(lambda x: x != '{}', x)) for x in conc]
+def cow_region_to_conc(region, attrs = True):
+  if not attrs:
+    conc = filter(lambda x: x not in ['strc', 'attr', '{}'], region)
+    conc = [[words] for segments in conc for words in segments.split()]
+  else:
+    conc = isplit(region, ['strc', 'attr'])
+    conc = [[x.split('\t') for x in subconc] for subconc in conc]
+    conc = [flatten(x) for x in conc]
+    conc = filter(lambda x: x not in [['strc'], ['attr']], conc)
+    conc = [filter(None, filter(lambda x: x != '{}', x)) for x in conc]
   return conc
 
 
 # Convert a raw query result to a flat format (not dependencies etc.).
-def cow_raw_to_flat(raw_conc):
-  return [ { 'match_offset' : r['match_offset'], 'match_length' : r['match_length'], 'meta' : r['meta'], 'line' : cow_region_to_conc(r['region']) } for r in raw_conc]
+def cow_raw_to_flat(raw_conc, attrs):
+  return [ { 'match_offset' : r['match_offset'], 'match_length' : r['match_length'], 'meta' : r['meta'], 'line' : cow_region_to_conc(r['region'], attrs) } for r in raw_conc]
 
 
 def cow_print_query(query, file = None, matchmark_left = '', matchmark_right = ''):
-  conc = cow_raw_to_flat(query['concordance'])
+  attrs_flag = True if len(query['attributes']) > 1 else False
+  conc = cow_raw_to_flat(query['concordance'], attrs_flag)
 
   handle = open(file, 'w') if file is not None else sys.stdout
 
