@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# pass: input file, output path, props file, custom classpath
+
+set -e
+set -u
+
+java -cp "${4}/*" -Xmx3g edu.stanford.nlp.pipeline.StanfordCoreNLP -file <(python /home/rsling/usr/local/cow/src/common/cow16-pre-stanford.py ${1}) -outputFormat conll -props ${3} -outputDirectory ${2} -outputExtension "___$(basename ${1} .gz)"
+
+mv ${2}/*___$(basename ${1} .gz) ${2}/$(basename ${1} .gz)
+gzip ${2}/$(basename ${1} .gz)
