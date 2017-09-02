@@ -1,0 +1,9 @@
+#!/bin/bash
+
+sed '/^<doc / { s/last-modified/last_modified/ }' |
+  sed '/^<doc / { s/_unk_/unknown/g }' |
+  sed 's/&gt;/>/g' |
+  sed 's/&lt;/</g' |
+  sed 's/&quot;/"/g' |
+  sed "s/&apos;/'/g" |
+  sed 's/&amp;/\&/g' 

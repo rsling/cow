@@ -1,0 +1,90 @@
+=== first split ===
+
+for f in $(ls /scratch/rsling/decow16/00ims/*.gz); do sbatch ../../slurm/split.sh ${f} /scratch/rsling/decow16/01split/$(basename ${f} .xml.gz); done;
+
+(run gzip.sh to compress)
+
+=== clean IMS version ===
+
+for f in $(ls /scratch/rsling/decow16/01split/*); do sbatch ../../slurm/de16-prep.sh ${f} /scratch/rsling/decow16/02prep/; done;
+
+=== s-language cleaner ===
+
+for f in $(ls /scratch/rsling/decow16/02prep/*); do sbatch ../../slurm/de16-langfilt.sh ${f} /scratch/rsling/decow16/03slang/; done;
+
+=== xsplit, divide, rename, sort into subfolders  ===
+
+for f in $(ls $SCR_DE/03slang/*); do sbatch ../../slurm/xsplit.sh ${f} $SCR_DE/04xsplit $SCR_DE/05divide 0; done;
+
+=== ner, marmot ===
+
+sbatch --array=1-1000 ../../slurm/de16-ner-marmot.sh /scratch/rsling/decow16/ /scratch/rsling/decow16/files 0
+etc. (trailing 0 is offset in file list; increase by 1000s)
+
+=== tagging ===
+
+for f in $(find /scratch/rsling/decow16/05divide/* -type d); do sbatch ../../slurm/de16-tag ${f} ${SCR_DE}08tag; done;
+
+=== smor ===
+
+for f in $(find /scratch/rsling/decow16/05divide/* -type d); do sbatch ../../slurm/de16-smor ${f} ${SCR_DE}09smor; done;
+
+# NEW -- WITH LONGER PROCESSING > 30min
+sbatch --array=1-1 ../../slurm/de16-smor.sh $SCR_DE $SCR_DE/files 0
+
+=== create base lemma ===
+
+batch --array=1-1 ../../slurm/de16-baselemma.sh $SCR_DE $SCR_DE/files 0
+
+=== zip all ===
+
+for d in $(find ${SCR_DE}/04xsplit/* -type d); do b=$(basename ${d}); sbatch ../../slurm/de16-join-noparams.sh ${b}; done;
+
+=== topoparse ===
+
+sbatch --array=1-1000 ../../slurm/de16-topo.sh /scratch/rsling/decow16/ /scratch/rsling/decow16/files 0
+
+=== finalize ===
+
+OLD! as single jobs:
+for d in $(find ${SCR_DE}/11join/* -type d); do echo ../slurm/de16-finalize.sh ${d} ${SCR_DE}/12finalized; done;
+
+NEW! as array job:
+sbatch --array=1-27 ../../slurm/de16-finalize.sh $SCR_DE/files.finfinfin $SCR_DE/12topo $SCR_DE/13final 0
+
+
+=== corex ===
+
+sbatch --array=1-10 ../../slurm/corex.sh /scratch/rsling/decow16/ /scratch/rsling/decow16/files.final 0
+
+
+Extract data (LITERAL TAB!):
+gunzip -c 30slices/decow16a01.xml.gz | grep '^<doc ' | sed 's/^<doc //; s/">$//' | sed 's/[^= "]\+="//g' | sed 's/" /	/g'
+
+=== coreco ===
+
+for f in $(ls -1 /$SCR_DE/14slices/decow16*.xml.gz); do sbatch ../../slurm/coreco-vectorize.sh ${f} $SCR_DE/21coreco; done;
+
+
+=== put stuff together ===
+
+
+
+=== shuffle ===
+
+for i in $(seq -w 1 20); do sbatch ../slurm/xnumber.sh $SCR_DE/99shuf/decow16ax${i}.xml.gz $SCR_DE/100shufinal/decow16ax${i}.xml.gz ${i}; done;
+
+
+
+
+
+
+=== ngrams ===
+
+for f in $(find 05divide/* -type f | shuf | head -n 1000); do cow16-trigram-simple ${f} > trigrams/$(basename ${f}); done;
+sort -m trigrams/* | uniq -c > trigrams_counted
+grep -v '^ \+[^ ]\{1,3\} ' trigrams_counted | sort -nr > trigrams_final
+
+
+
+

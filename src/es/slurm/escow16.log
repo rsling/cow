@@ -1,0 +1,18 @@
+
+=== xsplit, divide, rename, sort into subfolders  ===
+
+for f in $(ls $SCR_ES/01input/*); do sbatch ../slurm/xsplit.sh ${f} $SCR_ES/02xsplit $SCR_ES/03divide 0,1,2; done;
+
+=== Stanford ===
+sbatch --array=1-3000 ../../slurm/es16-stanford.sh /scratch/rsling/escow16/files.lst /scratch/rsling/escow16/04stanford/ 1
+
+
+=== Join/finalize ===
+for f in $(ls -1 $SCR_ES/files/* | tail -n +2); do sbatch ../slurm/es16-join-finalize.sh ${f} ${SCR_ES}02xsplit ${SCR_ES}04stanford ${SCR_ES}05join/; done;
+
+
+== Shuffle ===
+
+for i in $(seq 1 7); do sbatch cow16-shuf-es ${SCR_ES}/06slices/escow16a0${i}.xml.gz ${SCR_ES}/10shuf/escow16ax0${i}.xml.gz; done;
+
+for i in $(seq 1 7); do sbatch ../slurm/xnumber.sh ${SCR_ES}/10shuf/escow16ax0${i}.xml.gz ${SCR_ES}/11shufinal/escow16ax0${i}.xml.gz ${i}; done;
