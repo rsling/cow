@@ -1,0 +1,9 @@
+This repairs run-together words/sentences.
+
+The dictionary (es_rtw_dict.txt) was compiled from es freeling dictionary
+plus ESCOW2012 word types with a minimum frequency of 30.
+Some manual cleaning was applied: national top-level domains removed
+(de, es, pt etc.), as well ascommon file name extensions (ppt, doc etc.)
+
+Usage:
+cat CORPUSFILE |java -Xmx1g -jar runTogetherWords.jar es_rtw_dict.txt
