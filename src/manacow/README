@@ -1,0 +1,65 @@
+  ManaCOW.py
+  Convenience query functions for Manatee.
+
+
+cow_query()
+  Make a query and return a raw dict containing all information
+  and the Manatee regions.
+ARGUMENTS:
+  query                           CQL query string (no restrictions)
+  corpus = DEFAULT_CORPUS         corpus name (lowercase)
+  container = 's'                 the structure to be exported
+  max_hits = -1                   limit query to this number of hits; <0 is off
+  random_subset = -1              use only random subset of hits; proportion in [0..1]; <0 is off
+  deduping = False                use slow and memory-inefficient perfect duplicate removal
+  context_left = 0                left context in container units
+  context_right = 0               right context in container units
+  attributes = DEFAULT_ATTRS      list of attributes to export
+  structures = DEFAULT_STRUCTURES list of structures to export
+  references = DEFAULT_REFS       list of structure attributes to export
+RESULT — a dict containing:
+  query, corpus, container, hits,
+  max_hits, random_subset,
+  context_left, context_right,
+  attributes, structures,
+  references, deduping            values specified when function was called
+  datetime                        date and time at query termination
+  elapsed                         number of seconds taken for query
+  duplicates                      number of duplicates removed
+  concordance                     a dict containing raw concordance lines
+     match_offset                 offset of the match in the TOKEN sublist of region (cf. below)
+     match_length                 length of the match in the TOKEN sublist of region (cf. below)
+     meta                         per-hit 'references' list as requested in function call (same order)
+     region                       the raw Manatee region (list)
+
+
+cow_region_to_conc()
+  Format a single raw Manatee region as COW Python concordance line.
+ARGUMENTS:
+  region                          region to be formatted                 
+RESULT                            a list holding the tokens/structs of concordance line
+
+
+cow_raw_to_flat()
+  Convert a single concordance line from cow_query() to flat COW concordance format.
+ARGUMENTS:
+  raw_conc                        convert a single 
+RESULT — a dict containing:
+  match_offset                    see cow_query() => RESULT => concordance
+  match_length                    see cow_query() => RESULT => concordance
+  meta                            see cow_query() => RESULT => concordance
+  line                            COW concordance line (list), cf. cow_region_to_conc()
+
+
+cow_print_query()
+  Print a COW conordance to stdout or file. Output contains all meta information
+  as headers (# lines). The concordance follows as TSV with headers. The match is
+  in a separate column. Attributes are separated by |.
+ARGUMENTS:
+  query                           the query object returned by cow_query
+  file = None                     file name; stdout if None
+  matchmark_left = ''             additional marker left of match
+  matchmark_right = ''            additional marker right of match
+RESULT                            None
+
+

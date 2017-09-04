@@ -16,8 +16,8 @@ export LC_ALL=C # Felix: set this or sort will not work as expected (reset at th
 
 TT_MODEL_DE="$HOME/NLP/TT/lib/german-dereko-utf8.par"
 TT_LEXIC_DE="$HOME/NLP/cow/src/de/lexicon"
-#TT_TMP="/work/workspace/scratch/ma_fbildhau-corpus-0/04-tagged/tmpfiles"
-TT_TMP="/media/sf_linux-shared/dereko2noske"
+TT_TMP="/work/workspace/scratch/ma_fbildhau-corpus-0/UK-Rest/04-tagged/tmpfiles"
+#TT_TMP="/media/sf_linux-shared/dereko2noske"
 TT_FILTER="$HOME/NLP/TT/cmd/filter-german-tags"
 
 
@@ -27,7 +27,7 @@ OPTS="-token -lemma -sgml -cap-heuristics -hyphen-heuristics -quiet"
 rnd=${RANDOM}
 lexf="${TT_TMP}/$(basename ${1})_${rnd}_nnlexicon"
 tmpf="${TT_TMP}/$(basename ${2})_${rnd}_tmp.gz"
-tmpprefix="${TT_TMP}/$(basename ${2})_${rnd}_tmp"
+#tmpprefix="${TT_TMP}/$(basename ${2})_${rnd}_tmp"
 
 
 # 1. Generate unknown list for pretagging.
@@ -60,9 +60,14 @@ gunzip -c ${1} | cut -f 1 |
   sed 's/^\(\*[a-zäöüßA-ZÄÖÜ0-9-]\+\*\)	.\+$/\1	XY	(asteriskative)/' |
 # replace XML-unfriendly <unknown>
   sed 's/<unknown>$/(unknown)/' |
-  sed 's/<UNKNOWN>$/(unknown)/' | gzip -c > ${2}
+  sed 's/<UNKNOWN>$/(unknown)/' |
+# delete all annotations outside of sentences:
+  sed '/<s type="reg">/,/<\/s>/! {/^</! s/	[^	]\+/	_/g}'|
+# replace " ' with entity references:
+  sed '/^</! s/"/&quot;/g'|
+  sed "/^</! s/'/&apos;/g"|
+  gzip -c > ${2}
 
 #\rm ${tmpf}
 #\rm ${lexf}
-#\rm ${lexf}_tmp
 
