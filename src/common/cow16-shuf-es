@@ -1,0 +1,58 @@
+#!/bin/bash
+
+#SBATCH --mem=16000M
+#SBATCH --time=1-12:00:00
+
+# Set $TEMP
+# Pass INFILE, OUTFILE
+
+set -e
+
+infile=$1
+outfile=$2
+
+infi=$(basename $outfile .xml.gz)
+sentences="${TEMP}/sent_${infi}.gz"   # Name of file with extracted sentences.
+deduped="${TEMP}/dedup_${infi}.gz"    # Name of file with deduped sentences.
+tmpsplit="${TEMP}/split_${infi}"      # prefix for the shuffle split
+tmpshuf="_shuf"                       # suffix for shuffled files
+shufsize=81920000                     # size of split for shuf (bytes must fit in RAM)
+
+cowinterleave -i $infile -s s |
+  grep 'bdc="[a-j]"' |
+  grep 'bpc="[a-f]"' |
+  sed 's/ \(host\|tld\|sourcecharset\|sourcedoctype\|region\|bdc\|ip\|nbc\|nbcprop\|nbd\|nbdprop\|avgbpc\|avgbpd\|date\|region\|city\|idx\)="[^"]\+"//g' |
+  sed 's/ last-modified="[^"]\+\(199[1-9]\|20[01][0-9]\)[^"]\+"/ last_modified="\1"/' | gzip -c > $sentences
+
+echo
+echo Sorting/deduping...
+sort -T $TEMP -u -t">" -k 2 <(gunzip -c $sentences) | gzip -c > $deduped
+\rm $sentences
+
+echo
+echo Splitting for shuf...
+split -a 10 -C $shufsize -d <(gunzip -c $deduped) $tmpsplit
+\rm $deduped
+
+echo
+echo Shuffling...
+for f in `ls -1 $tmpsplit*`
+do
+  echo "  $f"
+  shuf $f > $f$tmpshuf
+  \rm $f
+done
+
+echo
+echo Merging shuffled files and decoding interleave...
+sort -m $tmpsplit*$tmpshuf  |
+  sed 's/<ci_t \/>/	/g; s/<ci_l \/>/\n/g' |
+  sed 's/	|\([^	]\)/	\1/g' |
+  sed 's/\([^	]\)|\(	\|$\)/\1\2/g' |
+  sed '/^$/d' |
+  gzip -c > $outfile 
+\rm $tmpsplit*$tmpshuf
+
+echo
+echo Done.
+echo

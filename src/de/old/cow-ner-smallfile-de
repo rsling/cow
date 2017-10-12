@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# Pass: infile, outdir
+
+set -e
+set -u
+
+JAR="/home/rsling/usr/local/stanford-ner/stanford-ner.jar"
+MODEL="/home/rsling/usr/local/texrex/scripts/annotate/de/dewac_175m_600.crf.ser.gz"
+
+prep="${2}/$(basename ${1})_prep"
+ne="${2}/$(basename ${1})_ne"
+out="${2}/$(basename ${1})"
+
+echo
+echo " === Summary === "
+echo " In:        ${1}"
+echo " Outdir:    ${2}"
+echo " NE file:   $ne"
+echo " Out:       $out"
+echo
+
+# creat input for NER
+#gunzip -c ${1} | sed 's/^<.\+$/<> 0 0 0 0/' | sed '/^$/! s/^\([^	]\+\)	.\+$/\1 0 0 0 0/' > ${prep} 
+
+# NERize
+/home/rsling/usr/local/jre8/bin/java -cp $JAR -Xmx16g edu.stanford.nlp.ie.crf.CRFClassifier -loadClassifier $MODEL -testFile \
+	<(gunzip -c ${1} | sed 's/^<.\+$/<> 0 0 0 0/' | sed '/^$/! s/^\([^	]\+\)	.\+$/\1 0 0 0 0/') |
+	sed 's/^<>	.\+$//' | sed 's/^.\+	\([^	]\+\)$/\1/' > ${ne}
+
+# Put together
+paste <(gunzip -c ${1}) <(head -n -1 ${ne}) | gzip -c > $out
+
+\rm $ne

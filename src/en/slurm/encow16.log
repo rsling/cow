@@ -1,0 +1,44 @@
+=== split ===
+
+for f in $(ls /scratch/rsling/encow16/00old/*.gz); do sbatch ../slurm/split.sh ${f} /scratch/rsling/encow16/01split/$(basename ${f} .xml.gz); done;
+
+(run gzip.sh to compress)
+
+=== prep ===
+
+for f in /scratch/rsling/encow16/01split/*; do sbatch ../slurm/en16-prep.sh ${f} /scratch/rsling/encow16/02prep/; done;
+
+=== sentence language ===
+
+for f in $(ls /scratch/rsling/encow16/02prep/*); do sbatch ../slurm/en16-langfilt.sh ${f} /scratch/rsling/encow16/03slang/; done;
+
+=== xsplit, divide, rename, sort into subfolders  ===
+
+for f in $(ls $SCR_EN/03slang/*); do sbatch ../slurm/xsplit.sh ${f} $SCR_EN/04xsplit $SCR_EN/05divide 0,1,2; done;
+
+=== marmot, ner, parse ===
+
+sbatch --array=1-1000 ../slurm/en16-ner-marmot-malt.sh /scratch/rsling/encow16/ /scratch/rsling/encow16/files 0
+etc. (trailing 0 is offset in file list; increase by 1000s)
+
+=== zip ===
+
+for f in $(find /scratch/rsling/encow16/04xsplit/* -type d); do sbatch ../slurm/en16-zip ${f} ${SCR_EN}09zip; done;
+
+=== finalize ===
+
+for d in $(find ${SCR_EN}/09zip/* -type d); do sbatch ../slurm/en16-finalize.sh ${d} ${SCR_EN}/10finalized; done;
+
+=== make slices ===
+
+(after XML check)
+
+find 09zip/ -type f | shuf > files.done
+for i in $(seq 1 15); do s=$(echo "${i}*885-884"|bc); e=$(echo "${s}+884"|bc); sed -n ${s},${e}p files.done > encow16a$(printf "%02d" ${i}).lst; done;
+tail -n 4 files.done >> encow16a15.lst
+mkdir 10final
+for f in $(ls encow16a0?.lst); do gunzip -c $(cat ${f}) | gzip -c > 10final/$(basename ${f} .lst).xml.gz; done;
+
+=== shuffle ===
+
+for i in $(seq -w 1 15); do sbatch cow16-shuf-en ${SCR_EN}11slices/encow16a${i}.xml.gz ${SCR_EN}99shuf/encow16a${i}.xml.gz; done;

@@ -1,0 +1,46 @@
+#!/bin/bash
+
+JAR="/home/rsling/usr/local/stanford-ner/stanford-ner.jar"
+MODEL="/home/rsling/usr/local/texrex/scripts/annotate/de/dewac_175m_600.crf.ser.gz"
+
+tmp=`echo $(basename $1) | md5sum | grep -o '[0-9a-f]\+'`
+prep=$tmp"_prep"
+splat=$tmp"_split_"
+ne=$tmp"_ne"
+out=$(basename $2 .gz)
+
+echo
+echo " === Summary === "
+echo " In:        $1"
+echo " Temp:      $tmp"
+echo " Prep:      $prep"
+echo " Split:     $splat"
+echo " NE master: $ne"
+echo " Out:       $out"
+echo
+
+# creat input for NER
+gunzip -c $1 > $tmp
+cat $tmp | sed 's/^<.\+$/<> 0 0 0 0/' | sed '/^$/! s/^\([^	]\+\)	.\+$/\1 0 0 0 0/' > $prep
+
+# split input for NER, productive is 50MB
+split -a 10 -C 2MB -d $prep $splat
+\rm $prep
+
+# make sure there is no previous NE file, because we >> into it
+\rm $ne
+
+# NERize the splut files
+for f in `ls -1 $splat*`
+do
+	java -cp $JAR -Xmx16g edu.stanford.nlp.ie.crf.CRFClassifier -loadClassifier $MODEL -testFile $f | sed 's/^<>	.\+$//' | sed 's/^.\+	\([^	]\+\)$/\1/' > $f"_ner"
+	head -n -1 $f"_ner" >> $ne
+	\rm $f
+	\rm $f"_ner"
+done
+
+paste $tmp $ne > $out
+#gzip $out
+
+\rm $tmp
+\rm $ne

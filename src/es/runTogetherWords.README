@@ -1,0 +1,11 @@
+es_rtw_dict.txt is the Spanish dictionary file for use
+with runTogetherWords.jar (which repairs run-together words/sentences).
+
+It was compiled from the Spanish FreeLing dictionary
+(http://nlp.lsi.upc.edu/freeling/) plus ESCOW2012 word types,
+with a minimum frequency of 30 for the latter.
+Some manual cleaning was applied: national top-level domains removed
+(de, es, pt etc.), as well ascommon file name extensions (ppt, doc etc.)
+
+Usage:
+cat CORPUSFILE |java -Xmx1g -jar runTogetherWords.jar es_rtw_dict.txt

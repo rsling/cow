@@ -1,0 +1,10 @@
+# URL=(?i:https?|ftps?|nfs|sshfs|gopher|smb)://[\p{L}\p{N}]+(?:[[:punct:]]+[\p{L}\p{N}]+)+i
+#URL=(?:https?|ftps?)://[\p{L}\p{N}[:punct:]=&]+[^.]
+
+# F.B. URL should not end with double quotes (2016-10-17):
+URL=(?:https?|ftps?)://[\p{L}\p{N}[:punct:]=&]+[^."]
+
+URL-WWW=www\.[\p{L}\p{N}]+(?:[[:punct:]]+[\p{L}\p{N}]+)+
+URL-DOMAIN=^[\p{L}\p{N}]+(?:\.[\p{L}\p{N}-]+)*\.(?:com|org|net|edu|mil|eu|nl|be|fr|de|uk|es|it|pt|dk|se|no|fi|ch|at|hr|bg|ro|br|ru|cn|in|id|eu|edu|ly|to|tk|za|ko|jp)
+URL-AT=@[\p{L}\p{N}-]+
+URL-RAW=^[\p{L}\p{N}-]+\.(?:com|org|net|edu|mil|eu|nl|be|fr|de|uk|es|it|pt|dk|se|no|fi|ch|at|hr|bg|ro|br|ru|cn|in|id|eu|edu|ly|to|tk|za|ko|jp)

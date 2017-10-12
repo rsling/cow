@@ -1,0 +1,202 @@
+*FREQLISTATTRS word tag lemma lc lemma_lc
+
+=Espana
+  doc
+  country="ES" & tld="es"
+
+=Chile
+  doc
+  country="CL" & tld="cl"
+
+=Argentinia
+  doc
+  country="AR" & tld="ar"
+
+=Mexico
+  doc
+  country="MX" & tld="mx"
+
+=Cuba
+  doc
+  country="CU" & tld="cu"
+
+=Colombia
+  doc
+  country="CO" & tld="co"
+
+=Peru
+  doc
+  country="PE" & tld="pe"
+
+=Venezuela
+  doc
+  country="VE" & tld="ve"
+
+=Uruguay
+  doc
+  country="UY" & tld="uy"
+
+=CostaRica
+  doc
+  country="CR" & tld="cr"
+
+=Ecuador
+  doc
+  country="EC" & tld="ec"
+
+=Paraguay
+  doc
+  country="PY" & tld="py"
+
+=Guatemala
+  doc
+  country="GT" & tld="gt"
+
+=Bolivia
+  doc
+  country="BO" & tld="bo"
+
+=RepublicaDominicana
+  doc
+  country="DO" & tld="do"
+
+=Honduras
+  doc
+  country="HN" & tld="hn"
+
+=Panama
+  doc
+  country="PA" & tld="pa"
+
+=Andorra
+  doc
+  country="AD" & tld="ad"
+
+=PuertoRico
+  doc
+  country="PR" & tld="pr"
+
+
+={16th-01}
+  doc
+  id="^0.+"
+
+={16th-02}
+  doc
+  id="^1.+"
+
+={16th-03}
+  doc
+  id="^2.+"
+
+={16th-04}
+  doc
+  id="^3.+"
+
+={16th-05}
+  doc
+  id="^4.+"
+
+={16th-06}
+  doc
+  id="^5.+"
+
+={16th-07}
+  doc
+  id="^6.+"
+
+={16th-08}
+  doc
+  id="^7.+"
+
+={16th-09}
+  doc
+  id="^8.+"
+
+={16th-10}
+  doc
+  id="^9.+"
+
+={16th-11}
+  doc
+  id="^a.+"
+
+={16th-12}
+  doc
+  id="^b.+"
+
+={16th-13}
+  doc
+  id="^c.+"
+
+={16th-14}
+  doc
+  id="^d.+"
+
+={16th-15}
+  doc
+  id="^e.+"
+
+={16th-16}
+  doc
+  id="^f.+"
+
+
+={8th-1}
+  doc
+  id="^[01].+"
+
+={8th-2}
+  doc
+  id="^[23].+"
+
+={8th-3}
+  doc
+  id="^[45].+"
+
+={8th-4}
+  doc
+  id="^[67].+"
+
+={8th-5}
+  doc
+  id="^[89].+"
+
+={8th-6}
+  doc
+  id="^[ab].+"
+
+={8th-7}
+  doc
+  id="^[cd].+"
+
+={8th-8}
+  doc
+  id="^[ef].+"
+
+
+={4th-1}
+  doc
+  id="^[0123].+"
+
+={4th-2}
+  doc
+  id="^[4567].+"
+
+={4th-3}
+  doc
+  id="^[89ab].+"
+
+={4th-4}
+  doc
+  id="^[cdef].+"
+
+
+={2th-1}
+  doc
+  id="^[0134567].+"
+
+={2th-2}
+  doc
+  id="^[89abcdef].+"
+

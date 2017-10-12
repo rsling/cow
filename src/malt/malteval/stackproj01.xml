@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<experiment>
+	<optioncontainer>
+		<optiongroup groupname="config">
+			<option name="flowchart" value="learn"/>
+		</optiongroup>
+		<optiongroup groupname="singlemalt">
+			<option name="parsing_algorithm" value="stackproj"/>
+		</optiongroup>
+	</optioncontainer>
+</experiment>

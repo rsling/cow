@@ -1,0 +1,13 @@
+aspell-morfette-demonette-frcow11_50.lexicon.txt is the French 
+dictionary file for use with runTogetherWords.jar
+(which repairs run-together words/sentences).
+
+It combines word lists obtained from:
+
++ GNU Aspell (ftp://ftp.gnu.org/gnu/aspell/dict/0index.html)
++ Morfette (https://sites.google.com/site/morfetteweb/)
++ Demonette (http://redac.univ-tlse2.fr/lexiques/demonette_en.html)
++ an early, experimental French COW corpus (minimum type frequency 50)
+
+Usage:
+cat CORPUSFILE |java -Xmx1g -jar runTogetherWords.jar aspell-morfette-demonette-frcow11_50.lexicon.txt

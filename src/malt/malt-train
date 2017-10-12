@@ -1,0 +1,54 @@
+#!/bin/bash
+
+set -e
+set -u
+
+# ========== INT OPTIONS =============
+
+# Switch to new Java minor and then MALT 1.8 soon!
+MALT="java -jar /home/rsling/usr/local/maltparser-1.7.2/maltparser-1.7.2.jar"
+TURL="http://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/TIGERCorpus/download/tigercorpus-2.2.conll09.tar.gz"
+TFILE="tigercorpus-2.2.conll09.tar.gz"
+TRAIN="tigercow.conll"
+CONF="tigercow.xml"
+
+# =========== DOWNLOAD ==============
+
+# The -l option says that the Tiger input is already there locally.
+
+if ! $(getopts :l opt)
+then
+    echo
+    echo "Getting fresh Tiger Treebank, Dependency version."
+    echo
+    wget $TURL
+    gunzip $TFILE
+    tar -xvf $(basename $TFILE .gz)
+fi
+
+# ========= PREPROCESS ===========
+
+echo
+echo "Preprocessing training data to $TRAIN"
+
+# Remove the sentence counter from ID column and rearrange columns.
+sed 's/^[0-9]\+_//' tiger_release_* |
+    cut -f1,2,3,5,9,11 |
+    sed 's/^\([^	]\+\)	\([^	]\+\)	\([^	]\+\)	\([^	]\+\)	\([^	]\+\)	\([^	]\+\)$/\1	\2	\3	_	\4	_	\5	\6	_	_/' |
+    sed 's/	0	--	/	0	ROOT	/' |
+    sed 's/	\([0-9]\+\)	--	/	\1	PUNC	/' |
+    sed '/	PUNC	/ { s/	\([^	]\+\)	--	/	\1	\1	/ }' |
+    sed 's/	--	/	(unknown)	/' > $TRAIN
+
+# ============== TRAIN ============
+
+# The -p option says that we only want preprocessing.
+
+#if $(getopts :p opt)
+#then
+#    echo
+#    echo "Not training parser because -p option was set."
+#    exit
+#fi
+
+#$MALT -f $CONF -i $TRAIN -m learn

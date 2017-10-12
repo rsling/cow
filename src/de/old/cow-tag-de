@@ -1,0 +1,54 @@
+#!/bin/bash
+
+TT="/Users/felix/NLP/TreeTagger"
+LEX="/Users/felix/NLP/cow/src/de/lexicon"
+
+OPTS="-token -lemma -sgml -lex $LEX"
+MODEL="/Users/felix/NLP/TreeTagger/lib/german-utf8.par"
+
+OPTS2="-token -sgml -eps 0.00000001 -hyphen-heuristics -quiet"
+MODEL2="/Users/felix/NLP/TreeTagger/lib/german-chunker-utf8.par"
+
+FILTER="/Users/felix/NLP/TreeTagger/cmd/filter-chunker-output-german.perl"
+
+OPTS3="-token -lemma -sgml -cap-heuristics -hyphen-heuristics -lex $LEX"
+
+sed 's/</\n</; s/>/>\n/' | \
+  sed '/^</ s/ /_~_/g' | \
+  sed '/^</! { s/\&quot;/"/g; s/\&apos;/'"'"'/g; s/\&amp;/\&/g; }' | \
+#  tree-tagger $OPTS $MODEL | \#
+#  perl -nae 'if ($#F==0){print}else{print "$F[0]-$F[1]\n"}' | \
+# this forces TT to close all chunks before XML
+#  sed 's/^</.-$.\n</' | \
+# TT stuff
+#  tree-tagger $MODEL2 $OPTS2 | \
+#  $FILTER | \
+# remove the trick material to force closed chunks before XML
+# the first one also removes non-trick material
+#  sed '/^\.	$\./N; s/^\.	$\.\n</</' | \
+#  sed '/^\.	$\./N; s/^\.	$\.\n\.	$\./\.	$./' | \
+# TT stuff
+  tree-tagger $OPTS3 $MODEL | \
+# restore entities with special treatment of &amp;
+  sed '/^</! { s/"/\&quot;/g; s/'"'"'/\&apos;/g; } ' | \
+  perl -ne 's/&(?!gt;|lt;|quot;|apos;|amp;)/&amp;/g; print;' | \
+# delete empty lines and remove annotations of XML
+  sed '/^$/d; s/>.\+$/>/' | \
+# restore blanks in XML
+  sed '/^</ s/_~_/ /g'  | \
+# make chunk names lower case IN SENTENCES
+#  sed '/<s>/,/<\/s>/ { s/<NC>/<nc>/; s/<\/NC>/<\/nc>/;  s/<VC>/<vc>/; s/<\/VC>/<\/vc>/; s/<PC>/<pc>/; s/<\/PC>/<\/pc>/; }' | \
+# remove chunks OUTSIDE OF SENTENCES (those not lower-cased)
+#  sed '/<NC>\|<\/NC>\|<PC>\|<\/PC>\|<VC>\|<\/VC>/d' | \
+# fix dupblank etc. annotation
+  sed 's/^\(dupblank\|uriblank\|emailblank\|hashtagblank\|noiseblank\)	.\+$/\1	XY	(blank)/' | \
+# fix annotation of major smileys
+# we intentionally let TT guess a tag (for surrounding tokens) and overwrite it later
+# TODO evaluate that
+  sed 's/^\([:;8=|\[][-o]\{0,1\}[][(){}OoKSsDPp]\+\)	.\+$/\1	XY	(smiley)/' | \
+  sed 's/^\&lt;3	.\+$/\&lt;3	XY	(smiley)/' | \
+  sed 's/^\&lt;\/3	.\+$/\&lt;\/3	XY	(smiley)/' | \
+  sed 's/^\(:[a-zäöüß]\+:\)	.\+$/\1	XY	(phpbbemo)/' | \
+  sed 's/^\(\*[a-zäöüßA-ZÄÖÜ0-9-]\+\*\)	.\+$/\1	XY	(asteriskative)/' | \
+# replace XML-unfriendly <unknown>
+  sed 's/<unknown>$/(unknown)/'

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Pass: inDIR, outdir-upper
+# ex.
+# en16-zip /scratch/rsling/encow16/05divide/fff322b4b50ba82e84c5176df2cda2c7/ /scratch/rsling/decow16/09zip
+
+#SBATCH --mem=512M
+#SBATCH --time=03:30:00
+
+set -e
+set -u
+
+odn="${2}/$(basename ${1})"
+echo "CREATE ${odn}"
+mkdir -p ${odn}
+
+for f in $(ls ${1}/*)
+do
+  ofn="${odn}/$(basename ${f})"
+
+  nerfn="$(dirname ${2})/06ner/$(basename ${1})/$(basename ${f})"
+  marmotfn="$(dirname ${2})/07marmot/$(basename ${1})/$(basename ${f})"
+  maltfn="$(dirname ${2})/08malt/$(basename ${1})/$(basename ${f})"
+
+  echo "ZIP ${f} => ${ofn}"
+  python /home/rsling/usr/local/cow/src/common/cow16-join-anno.py ${ofn} ${f} '\t_\t|\t_\t_\t|\t_\t_\t_\t_' ${nerfn} ${marmotfn} --malt=${maltfn} --erase
+done

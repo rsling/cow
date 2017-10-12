@@ -1,0 +1,3890 @@
+!!	$. !
+!!!	$. !
+!?	$. !?
+&gt;	$(	&gt;
+&lt;	$(	&lt;
+&amp;	KON &amp;
+&quot;	$( &quot;
+&apos;	$( &apos;
+---	$.	-
+..	$. ...
+...	$. ...
+...!	$. !
+...?	$. ?
+?!	$. !?
+??	$. ?
+???	$. ?
+ADHS	NN ADHS
+ADS	NN ADS
+ADSL	NN ADSL
+AJAX	NE AJAX
+ALG	NN ALG
+ALGs	NN ALG
+API	NN API
+APIs	NN API
+ATI	NE ATI
+ATIs	NE ATI
+AW:	NN Antwort
+AWO	NE AWO
+AZ	NN Aktenzeichen
+AZ.	NN Aktenzeichen
+Abb	NN Abbildung
+Abb.	NN Abbildung
+Abf.	NN Abf.
+Abg.	NN Abg.
+Abk	NN Abkürzung
+Abk.	NN Abkürzung
+Abo	NN Abo
+Abos	NN Abo
+Abs.	NN Absender
+Absenkung	NN Absenkung
+Absenkungen	NN Absenkung
+Abt	NN Abteil
+Abt.	NN Abteil
+Abzocke	NN Abzocke
+Abzocken	NN Abzocke
+Account	NN Account
+Accounts	NN Account
+Acer	NE Acer
+Acers	NE Acer
+Achja	ITJ achja
+Activision	NE Activision
+Activisions	NE Activision
+Add-On	NN Addon
+Add-Ons	NN Addon
+Add-on	NN Addon
+Add-ons	NN Addon
+Addon	NN Addon
+Addons	NN Addon
+Adipositas	NN Adipositas
+Admin	NN Admin
+Admins	NN Admin
+Adobe	NE Adobe
+Adobes	NE Adobe
+Adorno	NE Adorno
+Adornos	NE Adorno
+Adr	NN Adresse
+Adr.	NN Adresse
+Aducco	NE Aducco
+Aduccos	NE Aducco
+Adventure	NN Adventure
+Adventures	NN Adventure
+Aikido	NN Aikido
+Aikidos	NN Aikido
+Airways	NE Airways
+Ajax	NE Ajax	NN Ajax
+Akkulaufzeit	NN Akkulaufzeit
+Akkulaufzeiten	NN Akkulaufzeit
+Alfa	NE Alfa
+Alfas	NE Alfa
+Ali	NE Ali
+Alis	NE Ali
+Allah	NE Allah
+Allahs	NE Allah
+Allg	NN Allgemeine
+Allg.	NN Allgemeine
+Alumni	NN Alumnus
+Alumnus	NN Alumnus
+Alzheimer	NE Alzheimer	NN Alzheimer
+Alzheimers	NE Alzheimer	NN Alzheimer
+Amazon	NE Amazon
+Amazon.de	NE amazon.de
+Amazons	NE Amazon
+Amtsbl	NN Amtsblatt
+Amtsbl.	NN Amtsblatt
+Android	NE Android
+Anh	NN Anhang
+Anh.	NN Anhang
+Anime	NN Anime
+Animes	NN Anime
+Anl	NN Anlage
+Anl.	NN Anlage
+Anm	NN Anmerkung
+Anm.	NN Anmerkung
+Anmeldedatum	NN Anmeldedatum
+Anmeldungsdatum	NN Anmeldungsdatum
+Anmeldungsdatums	NN Anmeldungsdatum
+Anonymous	NE Anonymous
+App	NN App
+Application	NN Application
+Apps	NN App
+Apr	NN April
+Arbeitsagentur	NE Arbeitsagentur	NN Arbeitsagentur
+Arbeitsagenturen	NN Arbeitsagentur
+Arnheim	NE Arnheim
+Arnsberg	NE Arnsberg
+Arolsen	NE Arolsen
+Arolsens	NE Arolsen
+Artikelbeschreibung	NN Artikelbeschreibung
+Artikelbeschreibungen	NN Artikelbeschreibung
+Ashley	NE Ashley
+Ashleys	NE Ashley
+Aspire	NE Aspire	NN Aspire
+Aspires	NE Aspire	NN Aspire
+Association	NE Association
+Aston	NE Aston
+Astons	NE Aston
+Athlon	NE Athlon	NN Athlon
+Athlons	NE Athlon	NN Athlon
+Atlan	NE Atlan
+Atlans	NE Atlan
+Attachment	NN Attachment
+Attachments	NN Attachment
+Audio	NN Audio
+Audit	NN Audit
+Audits	NN Audit
+Aufl	NN Auflage
+Aufl.	NN Auflage
+Auftragsnummer	NN Auftragsnummer
+Auftragsnummern	NN Auftragsnummer
+Aug	NN August
+Avatar	NN Avatar
+Avatare	NN Avatar
+Avataren	NN Avatar
+Avatars	NN Avatar
+Aw	NN Awntwort
+Aw.	NN Antwort
+Aw:	NN Antwort
+Award	NN Award
+Awards	NN Award
+Ayurveda	NE Ayurveda
+Ayurvedas	NE Ayurveda
+Az	NN Aktenzeichen
+Az.	NN Aktenzeichen
+Azubi	NN Azubi
+Azubis	NN Azubi
+BA-Arbeit	NN BA-Arbeit
+BA-Arbeiten	NN BA-Arbeit
+BAföG	NE BAföG
+BAföGs	NE BAföG
+BIC	NN BIC
+BICs	NN BIC
+BIOS	NN BIOS
+BIOSe	NN BIOS
+BIOSen	NN BIOS
+BIOSes	NN BIOS
+BLA	ITJ bla
+BLABLA	ITJ blabla
+BLZ	NN BLZ
+BLZs	NN BLZ
+BMI	NN BMI
+BMIs	NN BMI
+BOA	ITJ boa
+BOAH	ITJ boa
+BTW	ADV btw
+BVerfGE	NE BVerfGE
+BWL	NN BWL
+BYE	ITJ bye
+Bachelor	NN Bachelor
+Bachelorarbeit	NN Bachelorarbeit
+Bachelorarbeiten	NN Bachelorarbeit
+Bachelors	NN Bachelor
+Backup	NN Backup
+Backups	NN Backup
+Ballack	NE Ballack
+Ballacks	NE Ballack
+Banking	NN Banking
+Bankings	NN Banking
+Barack	NE Barack
+Baracks	NE Barack
+Barrierefreiheit	NN Barrierefreiheit
+Batman	NE Batman
+Batmans	NE Batman
+Battle	NE Battle
+Battlefield	NE Battlefield
+Battlefields	NE Battlefield
+Battles	NE Battle
+Bd	NN Band
+Bd.	NN Band
+Beach	NE Beach
+Beachs	NE Beach
+Beat	NN Beat
+Beats	NN Beat
+Becky	NE Becky
+Beetle	NE Beetle	NN Beetle
+Beetles	NE Beetle	NN Beetle
+Belladonna	NE Belladonna
+Belladonnas	NE Belladonna
+Bentheim	NE Bentheim
+Bentheims	NE Bentheim
+Bentley	NE Bentley	NN Bentley
+Bentleys	NE Bentley	NN Bentley
+Benziner	NN Benziner
+Benzinern	NN Benziner
+Benziners	NN Benziner
+Bergisch	NE Bergisch
+Berlusconi	NE Berlusconi
+Berlusconis	NE Berlusconi
+Bestellwert	NN Bestellwert
+Bestellwerts	NN Bestellwert
+Betr	NN Betreff
+Betr.	NN Betreff
+Bez	NN Bez.
+Bez.	NN Bez.
+Bhf	NN Bahnhof
+Bhf.	NN Bahnhof
+Bierchen	NN Bierchen
+Bierchens	NN Bierchen
+Bildchen	NN Bildchen
+Bildchens	NN Bildchen
+Bildschirmschoner	NN Bildschirmschoner
+Bildschirmschoners	NN Bildschirmschoner
+Billie	NE Billie
+Billies	NE Billie
+Biodiversität	NN Biodiversität
+Biografie	NN Biografie
+Biografien	NN Biografie
+Bitch	NN Bitch
+Bitches	NN Bitch
+Bj	NN Baujahr
+Bj.	NN Baujahr
+Bla	ITJ bla
+Blabla	ITJ blabla	NN Blabla
+Blablas	NN Blabla
+BlackBerry	NE BlackBerry	NN BlackBerry
+BlackBerrys	NE BlackBerry	NN BlackBerry
+Blair	NE Blair
+Blairs	NE Blair
+Blitzer	NN Blitzer
+Blitzern	NN Blitzer
+Blitzers	NN Blitzer
+Blog	NN Blog
+Blog-Archiv	NN Blog-Archiv
+Blog-Archive	NN Blog-Archiv
+Blog-Archiven	NN Blog-Archiv
+Blog-Archives	NN Blog-Archiv
+Blog-Archivs	NN Blog-Archiv
+Blogger	NN Blogger
+Bloggern	NN Blogger
+Bloggers	NN Blogger
+Blogosphäre	NN Blogosphäre
+Blogosphären	NN Blogosphäre
+Blogroll	NN Blogroll
+Blogrolls	NN Blogroll
+Blogs	NN Blog
+Blu-Ray	NN Blu-Ray
+Blu-Rays	NN Blu-Ray
+Blu-ray	NN Blu-Ray
+Blu-rays	NN Blu-Ray
+Bluetooth	NN Bluetooth
+Bluray	NN Blu-Ray
+Blurays	NN Blu-Ray
+Boa	ITJ boa
+Boah	ITJ boa
+Board	NN Board
+Boards	NN Board
+Bollywood	NE Bollywood
+Bollywoods	NE Bollywood
+Bologna	NE Bologna
+Bolognas	NE Bologna
+Bond	NE Bond	NN Bond
+Bonds	NE Bond	NN Bond
+Booklet	NN Booklet
+Booklets	NN Booklet
+Bookmark	NN Bookmark
+Bookmarks	NN Bookmark
+Booster	NN Booster
+Boostern	NN Booster
+Boosters	NN Booster
+Borkum	NE Borkum
+Borkums	NE Borkum
+Brad	NE Brad
+Branding	NN Branding
+Brandings	NN Branding
+Bridget	NE Bridget
+Bridgets	NE Bridget
+Bringdienst	NN Bringdienst
+Bringdienste	NN Bringdienst
+Bringdiensten	NN Bringdienst
+Bringdienstes	NN Bringdienst
+Bringdiensts	NN Bringdienst
+Britney	NE Britney
+Britneys	NE Britney
+Broker	NN Broker
+Brokern	NN Broker
+Brokers	NN Broker
+Bronski	NE Bronski
+Bronskis	NE Bronski
+Brühl	NE Brühl
+Brühls	NE Brühl
+Bsp	NN Beispiel
+Bsp.	NN Beispiel
+Btw	ADV btw
+Buffy	NE Buffy
+Buffys	NE Buffy
+Bundesagentur	NN Bundesagentur
+Bundesagenturen	NN Bundesagentur
+Bundesnetzagentur	NN Bundesnetzagentur
+Bundesnetzagenturen	NN Bundesnetzagentur
+Burnout	NN Burnout
+Burnouts	NN Burnout
+Bye	ITJ bye
+Byte	NN Byte
+Bytes	NN Byte
+Bzw	ADV beziehungsweise
+Böll	NE Böll
+Bölls	NE Böll
+Büdingen	NE Büdingen
+Büdingens	NE Büdingen
+Bühl	NE Bühl
+Bühls	NE Bühl
+CIAO	ITJ ciao
+CPU	NN CPU
+CPUs	NN CPU
+CSS	NN CSS
+CU	ITJ cu
+Ca	ADV ca
+Cadenberge	NE Cadenberge
+Cadenberges	NE Cadenberge
+California	NE California
+Californias	NE California
+Cam	NN Cam
+Camcorder	NN Camcorder
+Camcordern	NN Camcorder
+Camcorders	NN Camcorder
+Cameron	NE Cameron
+Camerons	NE Cameron
+Cams	NN Cam
+Camus	NE Camus
+Canaria	NE Canaria
+Canarias	NE Canaria
+Canon	NE Canon
+Canons	NE Canon
+Capital	NE Capital
+Capitals	NE Capital
+Carter	NE Carter
+Cartman	NE Cartman
+Cartmans	NE Cartman
+Castor	NE Castor
+Catering	NN Catering
+Caterings	NN Catering
+Cats	NE Cats
+Charger	NE Charger	NN Charger
+Chargern	NN Charger
+Chargers	NE Charger	NN Charger
+Charmed	NE Charmed
+Charmeds	NE Charmed
+Chart	NN Chart
+Charts	NN Chart
+Chat	NN Chat
+Chats	NN Chat
+Cheat	NN Cheat
+Cheats	NN Cheat
+Chevrolet	NE Chevrolet	NN Chevrolet
+Chevrolets	NE Chevrolet	NN Chevrolet
+Chihuahua	NN Chihuahua
+Chihuahuas	NN Chihuahua
+Chipsatz	NN Chipsatz
+Chipsatzes	NN Chipsatz
+Chipsätze	NN Chipsatz
+Chipsätzen	NN Chipsatz
+Chr	NE Christus
+Chr.	NE Christus
+Chrome	NE Chrome
+Chromes	NE Chrome
+Chrysler	NE Chrysler	NN Chrysler
+Chryslern	NN Chrysler
+Chryslers	NE Chrysler	NN Chrysler
+Chur	NE Chur
+Churs	NE Chur
+Cialis	NE Cialis	NN Cialis
+Ciao	NE Ciao	ITJ ciao
+Cicero	NE Cicero
+Ciceros	NE Cicero
+Cisco	NE Cisco
+Ciscos	NE Cisco
+Citroen	NE Citroën	NN Citroën
+Citroens	NE Citroën	NN Citroën
+Citroën	NE Citroën	NN Citroën
+Citroëns	NE Citroën	NN Citroën
+Clash	NN Clash
+Clashs	NN Clash
+Cloppenburg	NE Cloppenburg
+Cloppenburgs	NE Cloppenburg
+Cloud	NN Cloud
+Clouds	NN Cloud
+Combat	NE Combat
+Combats	NE Combat
+Comment	NN Comment
+Comments	NN Comment
+Commons	NN	Commons
+Communities	NN Community
+Community	NN Community
+Communitys	NN Community
+Computing	NN Computing
+Computings	NN Computing
+Conan	NE Conan
+Conans	NE Conan
+Congstar	NE Congstar
+Congstars	NE Congstar
+Contest	NN Contest	NE Contest
+Contests	NN Contest	NE Contest
+Controller	NN Controller
+Controllern	NN Controller
+Controllers	NN Controller
+Converter	NN Converter
+Convertern	NN Converter
+Converters	NN Converter
+Cookie	NN Cookie
+Cookies	NN Cookie
+Cooper	NE Cooper	NN Cooper
+Coopern	NN Cooper
+Coopers	NE Cooper	NN Cooper
+Corporation	NE Corporation
+Corvette	NE Corvette	NN Corvette
+Corvetten	NN Corvette
+Corvettes	NN Corvette
+Counter	NN Counter
+Countern	NN Counter
+Counters	NN Counter
+County	NE County
+Countys	NE County
+Crawler	NN Crawler
+Crawlern	NN Crawler
+Crawlers	NN Crawler
+Creed	NE Creed
+Creeds	NE Creed
+Cry	NE Cry
+Crys	NE Cry
+Crysis	NE Crysis
+Cu	ITJ cu
+Cumulus	NN Cumulus
+DAT	NN DAT
+DATs	NN DAT
+DJ	NN DJ
+DJs	NN DJ
+DLRG	NE DLRG
+DNA	NN DNA
+DNAs	NN DNA
+DSDS	NE DSDS
+DSL	NN DSL
+DU	PPER du
+DVB-C	NN DVB-C
+DVB-S	NN DVB-S
+DVB-T	NN DVB-T
+DVD	NN DVD
+DVD-Player	NN DVD-Player
+DVD-Playern	NN DVD-Player
+DVD-Players	NN DVD-Player
+DVDs	NN DVD
+Dacia	NE Dacia	NN Dacia
+Dacias	NE Dacia	NN Dacia
+Dalai	NE Dalai
+Dalais	NE Dalai
+Darst	NN Darstellung
+Darst.	NN Darstellung
+Database	NN Database
+Dateianhanges	NN Dateianhang
+Dateianhangs	NN Dateianhang
+Dateianhänge	NN Dateianhang
+Dateianhängen	NN Dateianhang
+Dateigröße	NN Dateigröße
+Dateigrößen	NN Dateigröße
+Dateisystem	NN Dateisystem
+Dateisysteme	NN Dateisystem
+Dateisystemen	NN Dateisystem
+Dateisystemes	NN Dateisystem
+Dateisystems	NN Dateisystem
+Datenrettung	NN Datenrettung
+Datenrettungen	NN Datenrettung
+Datenschutzerklärung	NN Datenschutzerklärung
+Datenschutzerklärungen	NN Datenschutzerklärung
+Dating	NN Dating
+Datings	NN Dating
+Decoder	NN Decoder
+Decodern	NN Decoder
+Decoders	NN Decoder
+Dell	NE Dell
+Dells	NE Dell
+Demenz	NN Demenz
+Dermatologie	NN Dermatologie
+Dermatologien	NN Dermatologie
+Desktop	NN Desktop
+Desktops	NN Desktop
+Developer	NN Developer
+Developern	NN Developer
+Developers	NN Developer
+Device	NN Device
+Devices	NN Device
+Dez	NN Dezember
+Dhabi	NE Dhabi
+Dhabis	NE Dhabi
+Diablo	NE Diablo
+Diablos	NE Diablo
+Digg	NE Digg
+Diggs	NE Digg
+Digitalkamera	NN Digitalkamera
+Digitalkameras	NN Digitalkamera
+Dinslaken	NE Dinslaken
+Dinslakens	NE Dinslaken
+Dipl	NN Diplom
+Dipl.	NN Diplom
+Dipl.-Ing.	NN Diplomingenieur
+Dir	NN Dir.
+Dir.	NN Dir.
+DirectX	NE DirectX
+Directories	NN Directory
+Directory	NN Directory
+Directorys	NN Directory
+Disclaimer	NN Disclaimer
+Disclaimern	NN Disclaimer
+Disclaimers	NN Disclaimer
+Dithmarschen	NE Dithmarschen
+Dithmarschens	NE Dithmarschen
+Dodge	NE Dodge	NN Dodge
+Dodges	NE Dodge	NN Dodge
+Doku	NN Doku
+Dokus	NN Doku
+Domain	NN Domain
+Domains	NN Domain
+Doom	NE Doom
+Dooms	NE Doom
+Download	NN Download
+Downloads	NN Download
+Dr	NN Doktor
+Dr.	NN Doktor
+Dragonball	NE Dragonball
+Dragonballs	NE Dragonball
+Drehtor	NN Drehtor
+Drehtore	NN Drehtor
+Drehtoren	NN Drehtor
+Drehtores	NN Drehtor
+Drehtors	NN Drehtor
+Druckansicht	NN Druckansicht
+Druckansichten	NN Druckansicht
+Druckversion	NN Druckversion
+Druckversionen	NN Druckversion
+Druckvorschau	NN Druckvorschau
+Druckvorschauen	NN Druckvorschau
+Drum	NN Drum
+Drums	NN Drum
+Drupal	NE Drupal
+Drupals	NE Drupal
+Dt	NN Deutsch
+Dt.	NN Deutsch
+Dtzd	NN Dutzend
+Dtzd.	NN Dutzend
+Duden	NE Duden	NN Duden
+Dudens	NE Duden	NN Duden
+Dungeon	NE Dungeon	NN Dungeon
+Dungeons	NE Dungeon	NN Dungeon
+E	NN €
+E-Book	NN E-Book
+E-Books	NN E-Book
+E-Commerce	NN E-Commerce
+E-Commerces	NN E-Commerce
+E-Learning	NN E-Learning
+E-Mail	NN E-Mail
+E-Mail-Adresse	NN E-Mail-Adresse
+E-Mail-Adressen	NN E-Mail-Adresse
+E-Mails	NN E-Mail
+E-Paper	NN E-Paper
+E-Papern	NN E-Paper
+E-Papers	NN E-Paper
+E-mail	NN E-Mail
+E-mails	NN E-Mail
+EHEC	NE EHEC
+EHECs	NE EHEC
+ESC	NN ESC
+EUR	NN €
+Earth	NE Earth
+Earths	NE Earth
+Ebay	NE Ebay
+Ebays	NE Ebay
+Ebd	ADV ebenda
+Ebd.	ADV ebenda
+Ebook	NN Ebook
+Ebooks	NN Ebook
+Eclipse	NE Eclipse
+Eclipses	NE Eclipse
+Ego	NN Ego
+Egos	NN Ego
+Elearning	NN Elearning
+Elterngeld	NN Elterngeld
+Elterngeldes	NN Elterngeld
+Elterngelds	NN Elterngeld
+Elternzeit	NN Elternzeit
+Elternzeiten	NN Elternzeit
+Email	NN E-Mail
+Email-Adresse	NN E-Mail-Adresse
+Email-Adressen	NN E-Mail-Adresse
+Emails	NN E-Mail
+Empathie	NN Empathie
+Empathien	NN Empathie
+Engl	NN Englisch
+Engl.	NN Englisch
+Entertainment	NN Entertainment
+Entertainments	NN Entertainment
+Entscheider	NN Entscheider
+Entscheidern	NN Entscheider
+Entscheiders	NN Entscheider
+Ergebniss	NN Ergebniss
+Ergebnisse	NN Ergebniss
+Ergebnissen	NN Ergebniss
+Ergebnisses	NN Ergebniss
+Ericcson	NE Ericcson
+Ericcsons	NE Ericcson
+Erneuerbare	NN Erneuerbare
+Erneuerbaren	NN Erneuerbare
+Error	NN Error
+Errors	NN Error
+Erstellt	VVPP erstellen
+Erw	NN Erwachsene
+Erw.	NN Erwachsene
+Escort	NE Escort	NN Escort
+Escorts	NE Escort	NN Escort
+Esperanto	NE	Esperanto
+Esperantos	NE	Esperanto
+Eurofighter	NE Eurofighter	NN Eurofighter
+Eurofightern	NN Eurofighter
+Eurofighters	NE Eurofighter	NN Eurofighter
+Euronen	NN Euronen
+Eurozone	NN Eurozone
+Eurozonen	NN Eurozone
+Euskirchen	NE Euskirchen
+Euskirchens	NE Euskirchen
+Event	NN Event
+Events	NN Event
+Evtl	ADV eventuell
+Evtl.	ADV eventuell
+Exchange	NE Exchange
+Exchanges	NE Exchange
+Explorer	NE Explorer
+Explorers	NE Explorer
+FAQ	NN FAQ
+FAQs	NN FAQ
+FIFA	NE FIFA
+FPS	NN FPS
+FPÖ	NE FPÖ
+FSK	NN FSK
+Fa	NN Firma
+Fa.	NN Firma
+Facebook	NE Facebook
+Facebooks	NE Facebook
+Fake	NN Fake
+Fakes	NN Fake
+Falun	NE Falun
+Faluns	NE Falun
+Fam	NN Fam.
+Fam.	NN Fam.
+Fanpage	NN Fanpage
+Fanpages	NN Fanpage
+Fanshop	NN Fanshop
+Fanshops	NN Fanshop
+Fantasy	NN Fantasy
+Far	NE Far
+Fear	NE Fear
+Fears	NE Fear
+Feature	NN Feature
+Featuren	NN Feature
+Features	NN Feature
+Feb	NN Februar
+Feber	NN Feber
+Febers	NN Feber
+Feed	NN Feed
+Feeds	NN Feed
+Fehmarn	NE Fehmarn
+Fehmarns	NE Fehmarn
+Ffm	NE Frankfurt
+Ffm.	NE Frankfurt
+Fighter	NE Fighter
+Fighters	NE Fighter
+Filesharing	NN Filesharing
+Filesharings	NN Filesharing
+Financial	NE Financial
+Firefox	NE Firefox	NN Firefox
+Firefoxes	NE Firefox	NN Firefox
+Firewall	NN Firewall
+Firewalls	NN Firewall
+Firmware	NN Firmware
+Firmwaren	NN Firmware
+Firmwares	NN Firmware
+Flash	NE Flash
+Flashs	NE Flash
+Flat	NN Flat
+Flatrate	NN Flatrate
+Flatraten	NN Flatrate
+Flatrates	NN Flatrate
+Flats	NN Flat
+Flattr	NE Flattr
+Flattrs	NE Flattr
+Flex	NN Flex
+Flexe	NN Flex
+Flexen	NN Flex
+Flickr	NE Flickr
+Flickrs	NE Flickr
+Flyer	NN Flyer
+Flyern	NN Flyer
+Flyers	NN Flyer
+Follow	NN Follow
+Follows	NN Follow
+Football	NN Football
+Footballs	NN Football
+Footer	NN Footer
+Footern	NN Footer
+Footers	NN Footer
+Foren-Regel	NN Foren-Regel
+Foren-Regeln	NN Foren-Regel
+Foren-Übersicht	NN Foren-Übersicht
+Forenregel	NN Forenregel
+Forenregeln	NN Forenregel
+Forex	NE Forex
+Formatvorlage	NN Formatvorlage
+Formatvorlagen	NN Formatvorlage
+Fotostrecke	NN Fotostrecke
+Fotostrecken	NN Fotostrecke
+Fotze	NN Fotze
+Fotzen	NN Fotze
+Foundation	NE Foundation
+Fox	NE Fox
+Foxes	NE Fox
+Fr	NN Frau
+Fr.	NN Frau
+Frame	NN Frame
+Frames	NN Frame
+Frank-Walter	NE Frank-Walter
+Frank-Walters	NE Frank-Walter
+Frankenthal	NE Frankenthal
+Frankenthals	NE Frankenthal
+Frauchen	NN Frauchen
+Frauchens	NN Frauchen
+Fraunhofer	NE Fraunhofer
+Fraunhofers	NE Fraunhofer
+Freak	NN Freak
+Freaks	NN Freak
+Freelancer	NN Freelancer
+Freelancern	NN Freelancer
+Freelancers	NN Freelancer
+Freeware	NN Freeware
+Fresse	NN Fresse
+Fressen	NN Fresse
+Frettchen	NN Frettchen
+Frettchens	NN Frettchen
+Frl	NN Fräulein
+Frl.	NN Fräulein
+Frontlader	NN Frontlader
+Frontladern	NN Frontlader
+Frontladers	NN Frontlader
+Fuji	NE Fuji
+Fujis	NE Fuji
+Fukushima	NE Fukushima
+Fukushimas	NE Fukushima
+Fundraising	NN Fundraising
+Fundraisings	NN Fundraising
+Funktionsumfang	NN Funktionsumfang
+Funktionsumfanges	NN Funktionsumfang
+Funktionsumfangs	NN Funktionsumfang
+Funktionsumfänge	NN Funktionsumfang
+Funktionsumfängen	NN Funktionsumfang
+GB	NN GB
+GEZ	NE GEZ
+GHz	NN GHz
+GPL	NN GPL
+GTA	NN GTA
+Gadget	NN Gadget
+Gadgets	NN Gadget
+Galaxie	NN Galaxie
+Galaxien	NN Galaxie
+Gallerie	NN Gallerie
+Gallerien	NN Gallerie
+Game	NN Game
+Gameplay	NN Gameplay
+Gameplays	NN Gameplay
+Games	NN Game
+Gardasee	NN Gardasee
+Gastroenterologie	NN Gastroenterologie
+Gastroenterologien	NN Gastroenterologie
+Gebr	NN Gebrüder
+Gebr.	NN Gebrüder
+Gehminute	NN Gehminute
+Gehminuten	NN Gehminute
+Gemeinnützigkeit	NN Gemeinnützigkeit
+Gender	NN Gender
+Geografie	NN Geografie
+Geophysik	NN Geophysik
+Geothermie	NN Geothermie
+Geowissenschaft	NN Geowissenschaft
+Geowissenschaften	NN Geowissenschaft
+Ges	NN Gesellschaft
+Ges.	NN Gesellschaft
+Geschrieben	VVPP schreiben	ADJD geschrieben
+Geschäftsmodell	NN Geschäftsmodell
+Geschäftsmodelle	NN Geschäftsmodell
+Geschäftsmodellen	NN Geschäftsmodell
+Geschäftsmodelles	NN Geschäftsmodell
+Geschäftsmodells	NN Geschäftsmodell
+Gigaset	NE Gigaset	NN Gigaset
+Gigasets	NE Gigaset	NN Gigaset
+Gilmore	NE Gilmore
+Girl	NE Girl	NN Girl
+Girls	NE Girl	NN Girl
+Gladbeck	NE Gladbeck
+Gladbecks	NE Gladbeck
+Globalisierung	NN Globalisierung
+Gmünd	NE Gmünd
+Gmünds	NE Gmünd
+Gomera	NE Gomera
+Gomeras	NE Gomera
+Gong	NE Gong
+Gongs	NE Gong
+Google	NE Google
+Google+	NE Google+
+Googles	NE Google
+Goslar	NE Goslar
+Goslars	NE Goslar
+Gospel	NN Gospel
+Gospeln	NN Gospel
+Gospels	NN Gospel
+Gotha	NE Gotha
+Gothas	NE Gotha
+Gr.	NN Gr.
+Graka	NN Graka
+Grakas	NN Graka
+Gramatneusiedl	NE Gramatneusiedl
+Gramatneusiedls	NE Gramatneusiedl
+Gran	NE Gran
+Greetz	ITJ greetz	NN Greetz
+Grimaldi	NE Grimaldi
+Grimaldis	NE Grimaldi
+Gruesse	NN Gruß
+Gruesze	NN Gruß
+Gruss	NN Gruß
+Grusz	NN Gruß
+Gruyter	NE Gruyter
+Gruyters	NE Gruyter
+Gummibärchen	NN Gummibärchen
+Gutscheincode	NN Gutscheincode
+Gutscheincodes	NN Gutscheincode
+Güstrow	NE Güstrow
+Güstrows	NE Güstrow
+HDMI	NN HDMI
+HI	ITJ hi
+HIHI	ITJ hihi
+HO	ITJ ho
+HQ	NN HQ
+HQs	NN HQ
+HSK	NE HSK
+HTML	NN HTML
+HTML-Code	NN HTML-Code
+HTML-Codes	NN HTML-Code
+HUHU	ITJ huhu
+Haarentfernung	NN Haarentfernung
+Haarentfernungen	NN Haarentfernung
+Hacker	NN Hacker
+Hackers	NN Hacker
+Haha	ITJ ha
+Hahnemann	NE Hahnemann
+Hahnemanns	NE Hahnemann
+Halberstadt	NE Halberstadt
+Halberstadts	NE Halberstadt
+Halle-Wittenberg	NE Halle-Wittenberg
+Halle-Wittenbergs	NE Halle-Wittenberg
+Halloween	NN Halloween
+Halloweens	NN Halloween
+Hama	NE Hama
+Hamas	NE Hama
+Hammas	NE Hammas
+Handy	NN	Handy
+Handys	NN	Handy
+Handies	NN	Handy
+Hardcore	NE Hardcore	NN Hardcore
+Hardcores	NE Hardcore	NN Hardcore
+Hardcover	NN Hardcover
+Hardcovern	NN Hardcover
+Hardcovers	NN Hardcover
+Hartz	NE Hartz
+Hattingen	NE Hattingen
+Hattingens	NE Hattingen
+Hauptnavigation	NN Hauptnavigation
+Hauptseite	NN Hauptseite
+Hauptseiten	NN Hauptseite
+Hauptseminararbeit	NN Hauptseminararbeit
+Hauptseminararbeiten	NN Hauptseminararbeit
+Hbf	NN Hauptbahnhof
+Hbf.	NN Hauptbahnhof
+Header	NN Header
+Headern	NN Header
+Headers	NN Header
+Headset	NN Headset
+Headsets	NN Headset
+Hehe	ITJ hehe
+Heidenau	NE Heidenau
+Heidenaus	NE Heidenau
+Helgoland	NE Helgoland
+Helgolands	NE Helgoland
+Helsing	NE Helsing
+Helsings	NE Helsing
+Hemer	NE Hemer
+Hemers	NE Hemer
+Heritrix	NE Heritrix
+Heritrixes	NE Heritrix
+Herne	NE Herne
+Hernes	NE Herne
+Herrchen	NN Herrchen
+Herrchens	NN Herrchen
+Hexer	NE Hexer	NN Hexer
+Hexern	NN Hexer
+Hexers	NE Hexer	NN Hexer
+Hg	NN Herausgeber
+Hg.	NN Herausgeber
+Hi	ITJ hi
+Hi-Fi	NN Hi-Fi
+Hi-fi	NN Hi-Fi
+Hifi	NN Hi-Fi
+Hihi	ITJ hihi
+Hilden	NE Hilden
+Hildens	NE Hilden
+Hill	NE Hill
+Hills	NE Hill
+Hilton	NE Hilton
+Hiltons	NE Hilton
+Hinrunde	NN Hinrunde
+Hinrunden	NN Hinrunde
+History	NN History
+Hm	ITJ hm
+Hmm	ITJ hm
+Hmmm	ITJ hm
+Ho	ITJ ho
+Hobbit	NE Hobbit
+Hobbits	NE Hobbit
+Hoeneß	NE Hoeneß
+Hoffenheim	NE Hoffenheim
+Hoffenheims	NE Hoffenheim
+Hoho	ITJ hoho
+Hollow	NE Hollow
+Holzminden	NE Holzminden
+Holzmindens	NE Holzminden
+Home	NN Home
+Homepage	NN Homepage
+Homepagen	NN Homepage
+Homepages	NN Homepage
+Homer	NE Homer
+Homers	NE Homer
+Homöopathie	NN Homöopathie
+Homöopathien	NN Homöopathie
+Hostel	NE Hostel	NN Hostel
+Hosteln	NN Hostel
+Hostels	NE Hostel	NN Hostel
+Hosting	NN Hosting
+Hostings	NN Hosting
+Hotfix	NN Hotfix
+Hotfixe	NN Hotfix
+Hotfixes	NN Hotfix
+House	NE House	NN House
+Houses	NE House	NN House
+Hptst	NN Hauptstadt
+Hptst.	NN Hauptstadt
+Hr	NN Herr
+Hr.	NN Herr
+Hrn	NN Herrn
+Hrn.	NN Herrn
+Hrsg	NN Herausgeber
+Hrsg.	NN Herausgeber
+Hrsgg.	NN Herausgeber
+Huhu	ITJ huhu
+Hulk	NE Hulk
+Hundeschule	NN Hundeschule
+Hundeschulen	NN Hundeschule
+Hungen	NE Hungen
+Hungens	NE Hungen
+Hunsrück	NE Hunsrück
+Hunsrücks	NE Hunsrück
+Hyperlink	NN Hyperlink
+Hyperlinks	NN Hyperlink
+Hypertonie	NN Hypertonie
+Hypertonien	NN Hypertonie
+Hyundai	NE Hyundai	NN Hyundai
+Hyundais	NE Hyundai	NN Hyundai
+Hä	ITJ hä
+Hö	ITJ hö
+Hölderlin	NE Hölderlin
+Hölderlins	NE Hölderlin
+Hörbuch	NN Hörbuch
+Hörbuches	NN Hörbuch
+Hörbuchs	NN Hörbuch
+Hörbücher	NN Hörbuch
+Hörbüchern	NN Hörbuch
+IBAN	NN IBAN
+IBANs	NN IBAN
+ICH	PPER ich
+ICQ	NE ICQ
+ICQs	NE ICQ
+IE	NE IE
+IEs	NE IE
+IKEA	NE Ikea
+IKEAs	NE Ikea
+IOS	NE iOS
+IP-Adresse	NN IP-Adresse
+IP-Adressen	NN IP-Adresse
+IPad	NN iPad
+IPads	NN iPad
+IPhone	NN iPhone
+IPhones	NN iPhone
+IQ	NN IQ
+IQs	NN IQ
+ISBN	NN	ISBN
+ISSN	NN ISSN
+ITunes	NE iTunes
+Ibbenbüren	NE Ibbenbüren
+Ibbenbürens	NE Ibbenbüren
+Icon	NN Icon
+Icons	NN Icon
+Ikea	NE Ikea
+Ikeas	NE Ikea
+Ilmenau	NE Ilmenau
+Ilmenaus	NE Ilmenau
+Ing	NN Ingenieur
+Ing.	NN Ingenieur
+Inh	NN Inhaber
+Inh.	NN Inhaber
+Internet	NN Internet
+Internetagentur	NN Internetagentur
+Internetagenturen	NN Internetagentur
+Internetangebot	NN Internetangebot
+Internetangebote	NN Internetangebot
+Internetangeboten	NN Internetangebot
+Internetangebotes	NN Internetangebot
+Internetangebots	NN Internetangebot
+Internetauftritt	NN Internetauftritt
+Internetauftrittes	NN Internetauftritt
+Internetauftritts	NN Internetauftritt
+Internetportal	NN Internetportal
+Internetportale	NN Internetportal
+Internetportalen	NN Internetportal
+Internetportales	NN Internetportal
+Internetportals	NN Internetportal
+Internetpräsenz	NN Internetpräsenz
+Internetpräsenzen	NN Internetpräsenz
+Internetrecht	NN Internetrecht
+Internetrechts	NN Internetrecht
+Internets	NN Internet
+Internetseite	NN Internetseite
+Internetseiten	NN Internetseite
+Internettelefonie	NN Internettelefonie
+Internetverbindung	NN Internetverbindung
+Internetverbindungen	NN Internetverbindung
+Ipad	NN iPad
+Ipads	NN iPad
+Iphone	NN iPhone
+Iphones	NN iPhone
+Islamist	NN Islamist
+Islamisten	NN Islamist
+Islamists	NN Islamist
+Israelit	NN Israelit
+Israeliten	NN Israelit
+Israelits	NN Israelit
+Istrien	NE Istrien
+Istriens	NE Istrien
+Italowestern	NN Italowestern
+Italowesterns	NN Italowestern
+Itunes	NE iTunes
+JAJA	ITJ jaja
+Jackie	NE Jackie
+Jackies	NE Jackie
+Jailbreak	NN Jailbreak
+Jailbreaks	NN Jailbreak
+Jaja	ITJ jaja
+Jamie	NE Jamie
+Jamies	NE Jamie
+Jan	NN Januar
+JavaScript	NE JavaScript
+Javascript	NE JavaScript
+Jedi	NE Jedi
+Jedis	NE Jedi
+Jehova	NE Jehova
+Jehovas	NE Jehova
+JelSoft	NE JelSoft
+JelSofts	NE JelSoft
+Jelsoft	NE JelSoft
+Jelsofts	NE JelSoft
+Jh	NN Jahrhundert
+Jh.	NN Jahrhundert
+Jobcenter	NE Jobcenter	NN Jobcenter
+Jobcentern	NN Jobcenter
+Jobcenters	NE Jobcenter	NN Jobcenter
+Josh	NE Josh
+Joshs	NE Josh
+Jr	NN Junior
+Jr.	NN Junior
+Jul	NN Juli
+Julchen	NE Julchen
+Julchens	NE Julchen
+Jun	NN Juni
+Jänner	NN Jänner
+Jänners	NN Jänner
+Jülich	NE Jülich
+Jülichs	NE Jülich
+KB	NN KB
+KDE	NN KDE
+KDEs	NN KDE
+Kanaren	NE Kanaren
+Kap	NN Kapitel
+Kap.	NN Kapitel
+Karma	NN Karma
+Karmas	NN Karma
+Kawasaki	NE Kawasaki	NN Kawasaki
+Kawasakis	NE Kawasaki	NN Kawasaki
+Kenny	NE Kenny
+Kennys	NE Kenny
+Kernel	NN Kernel
+Kerneln	NN Kernel
+Kernels	NN Kernel
+Keyword	NN Keyword
+Keywords	NN Keyword
+Kfm	NN Kaufmann
+Kfm.	NN Kaufmann
+Kiez	NN Kiez
+Kieze	NN Kiez
+Kiezen	NN Kiez
+Kiezes	NN Kiez
+Kindle	NE Kindle	NN Kindle
+Kindles	NE Kindle	NN Kindle
+Kita	NN Kita
+Kitas	NN Kita
+Kl	NN Klasse
+Kl.	NN Klasse
+Klick	NN Klick
+Klicks	NN Klick
+Klingelton	NN Klingelton
+Klingeltones	NN Klingelton
+Klingeltons	NN Klingelton
+Klingeltöne	NN Klingelton
+Klingeltönen	NN Klingelton
+Knigge	NE Knigge	NN Knigge
+Knigges	NE Knigge	NN Knigge
+Kolben	NN Kolben
+Kolbens	NN Kolben
+Kombi	NN Kombi
+Kombis	NN Kombi
+Konsolenspiel	NN Konsolenspiel
+Konsolenspiele	NN Konsolenspiel
+Konsolenspielen	NN Konsolenspiel
+Konsolenspieles	NN Konsolenspiel
+Konsolenspiels	NN Konsolenspiel
+Konsorten	NN Konsorten
+Konstrukt	NN Konstrukt
+Konstrukte	NN Konstrukt
+Konstrukten	NN Konstrukt
+Konstruktes	NN Konstrukt
+Konstrukts	NN Konstrukt
+Kontaktdaten	NN Kontaktdaten
+Kontaktformular	NN Kontaktformular
+Kontaktformulars	NN Kontaktformular
+Konter	NN Konter
+Kontern	NN Konter
+Konters	NN Konter
+Kreuznach	NE Kreuznach
+Kreuznachs	NE Kreuznach
+Kundenbewertung	NN Kundenbewertung
+Kundenbewertungen	NN Kundenbewertung
+Kyle	NE Kyle
+Kyles	NE Kyle
+Künast	NE Künast
+Künasts	NE Künast
+LCD	NN LCD
+LCDs	NN LCD
+LEGO	NE Lego	NN Lego
+LEGOs	NE Lego	NN Lego
+LG	ITJ lg
+LOL	ITJ lol
+LORELAI	NE Lorelai
+LORELAIS	NE Lorelai
+LTE	NN LTE
+LV	NN LV
+LVen	NN LV
+LVn	NN LV
+LVs	NN LV
+Lahn	NE Lahn
+Lahr	NE Lahr
+Lahrs	NE Lahr
+Lama	NE Lama
+Lamas	NE Lama
+Lamborghini	NE Lamborghini	NN Lamborghini
+Lamborghinis	NE Lamborghini	NN Lamborghini
+Laminat	NN Laminat
+Laminats	NN Laminat
+Lancia	NE Lancia	NN Lancia
+Lancias	NE Lancia	NN Lancia
+Landau	NE Landau
+Landaus	NE Landau
+Laptop	NN Laptop
+Laptops	NN Laptop
+Lat	NN Latein
+Lat.	NN Latein
+Lauren	NE Lauren
+Leerzeichen	NN Leerzeichen
+Leerzeichens	NN Leerzeichen
+Lego	NE Lego	NN Lego
+Legos	NE Lego	NN Lego
+Leica	NE Leica	NN Leica
+Leicas	NE Leica	NN Leica
+Leidersbach	NE Leidersbach
+Leidersbachs	NE Leidersbach
+Lemgo	NE Lemgo
+Lemgos	NE Lemgo
+Lemke	NE Lemke
+Lemkes	NE Lemke
+Lenovo	NE Lenovo
+Lenovos	NE Lenovo
+Letmate	NE Letmate
+Letmates	NE Letmate
+Level	NN Level
+Levels	NN Level
+Lexi	NN Lexus
+Lexus	NE Lexus	NN Lexus
+Lg	ITJ lg
+Lieferanschrift	NN Lieferanschrift
+Lieferanschriften	NN Lieferanschrift
+Lightroom	NE Lightroom
+Lightrooms	NE Lightroom
+Like	NN Like
+Likes	NN Like
+Lingen	NE Lingen
+Lingens	NE Lingen
+Link	NN Link
+Linkliste	NN Linkliste
+Linklisten	NN Linkliste
+Links	NN Link
+Linksammlung	NN Linksammlung
+Linksammlungen	NN Linksammlung
+Linksfraktion	NE Linksfraktion
+Lisdorf	NE Lisdorf
+Lisdorfs	NE Lisdorf
+Liteville	NE Liteville
+Litevilles	NE Liteville
+Live-Stream	NN Live-Stream
+Live-Streams	NN Live-Stream
+LoL	ITJ lol
+Logitech	NE Logitech
+Logitechs	NE Logitech
+Logo	NN Logo
+Logos	NN Logo
+Lol	ITJ lol
+Lorelai	NE Lorelai
+Lorelais	NE Lorelai
+Louisan	NE Louisan
+Louisans	NE Louisan
+Ludwigslust	NE Ludwigslust
+Ludwigslusts	NE Ludwigslust
+Luhmann	NE Luhmann
+Luhmanns	NE Luhmann
+Lumix	NE Lumix	NN Lumix
+Lvl	NN Level
+Lvls	NN Level
+Lyrics	NN Lyrics
+Lüdenscheid	NE Lüdenscheid
+Lüdenscheids	NE Lüdenscheid
+MA-Arbeit	NN MA-Arbeit
+MA-Arbeiten	NN MA-Arbeit
+MFG	ITJ mfg
+MMORPG	NN MMORPG
+MPEG	NE MPEG	NN MPEG
+MPI	NE MPI	NN MPI
+MPIs	NE MPI	NN MPI
+MSN	NE MSN
+MSNs	NE MSN
+MacBook	NE MacBook	NN MacBook
+MacBooks	NE MacBook	NN MacBook
+Macy	NE Macy
+Macys	NE Macy
+Mahlow	NE Mahlow
+Mahlows	NE Mahlow
+Mail	NN Mail
+Mailingliste	NN Mailingliste
+Mailinglisten	NN Mailingliste
+Mails	NN Mail
+Main-Spessart	NE Main-Spessart
+Main-Spessarts	NE Main-Spessart
+Mainboard	NN Mainboard
+Mainboards	NN Mainboard
+Make-Up	NN Make-Up
+Make-Ups	NN Make-Up
+Making-Of	NN Making-Of
+Making-Ofs	NN Making-Of
+Malware	NN Malware
+Manga	NN Manga
+Mangas	NN Manga
+Mappus	NE Mappus
+Maps	NE Maps
+Marienthal	NE Marienthal
+Marienthals	NE Marienthal
+Marzahn	NE Marzahn
+Marzahns	NE Marzahn
+Maserati	NE Maserati	NN Maserati
+Maseratis	NE Maserati	NN Maserati
+MasterCard	NE Mastercard	NN Mastercard
+MasterCards	NE Mastercard	NN Mastercard
+Masterarbeit	NN Masterarbeit
+Masterarbeiten	NN Masterarbeit
+Mastercard	NE Mastercard	NN Mastercard
+Mastercards	NE Mastercard	NN Mastercard
+Masterplan	NN Masterplan
+Masterplanes	NN Masterplan
+Masterplans	NN Masterplan
+Masterpläne	NN Masterplan
+Masterplänen	NN Masterplan
+Masterstudiengang	NN Masterstudiengang
+Masterstudienganges	NN Masterstudiengang
+Masterstudiengangs	NN Masterstudiengang
+Masterstudiengänge	NN Masterstudiengang
+Masterstudiengängen	NN Masterstudiengang
+Matze	NE Matze
+Matzes	NE Matze
+Mausklick	NN Mausklick
+Mausklicks	NN Mausklick
+Maustaste	NN Maustaste
+Maustasten	NN Maustaste
+Mbit	NN Mbit
+Mbits	NN Mbit
+Media	NN Medium
+Medias	NN Medium
+Mediathek	NN Mediathek
+Mediatheken	NN Mediathek
+Medion	NE Medion
+Medions	NE Medion
+Medium	NN Medium
+Mediums	NN Medium
+Megapixel	NN Megapixel
+Megapixeln	NN Megapixel
+Megapixels	NN Megapixel
+Melsungen	NE Melsungen
+Melsungens	NE Melsungen
+Member	NN Member
+Membern	NN Member
+Members	NN Member
+Menden	NE Menden
+Mendens	NE Menden
+Menu	NN Menu
+Menus	NN Menu
+Merkel	NE Merkel
+Merkels	NE Merkel
+Merkliste	NN Merkliste
+Merklisten	NN Merkliste
+Merz	NE Merz
+Metallica	NE Metallica
+Metallicas	NE Metallica
+Mettmann	NE Mettmann
+Mettmanns	NE Mettmann
+Mfg	ITJ mfg
+Migrantin	NN Migrantin
+Migrantinnen	NN Migrantin
+Migrationshintergrund	NN Migrationshintergrund
+Migrationshintergrundes	NN Migrationshintergrund
+Migrationshintergrunds	NN Migrationshintergrund
+Migrationshintergründe	NN Migrationshintergrund
+Migrationshintergründen	NN Migrationshintergrund
+Miller	NE Miller
+Millers	NE Miller
+Minden	NE Minden
+Mindens	NE Minden
+Mio	NN Million
+Mio.	NN Million
+Mitgliederbereich	NN Mitgliederbereich
+Mitgliederbereiche	NN Mitgliederbereich
+Mitgliederbereichen	NN Mitgliederbereich
+Mitgliederbereiches	NN Mitgliederbereich
+Mitgliederbereichs	NN Mitgliederbereich
+Mobbing	NN Mobbing
+Mobbings	NN Mobbing
+Mod	NN Mod
+Mods	NN Mod
+Moers	NE Moers
+Moin	ITJ moin
+Mondeo	NE Mondeo	NN Mondeo
+Mondeos	NE Mondeo	NN Mondeo
+Morbus	NE Morbus
+Mose	NE Mose
+Moses	NE Mose
+Move	NN Move
+Moves	NN Move
+Mozilla	NE Mozilla
+Mozillas	NE Mozilla
+Mr	NN Mister
+Mr.	NN Mister
+Mrd	NN Milliarden
+Mrd.	NN Milliarden
+Msp	NN Messerspitze
+Msp.	NN Messerspitze
+Multiplayer	NN Multiplayer
+Multiplayern	NN Multiplayer
+Multiplayers	NN Multiplayer
+Murphy	NE Murphy
+Murphys	NE Murphy
+Muslimen	NN Muslim
+MwSt	NN Mehrwertsteuer
+MwSt.	NN Mehrwertsteuer
+MyBB	NE MyBB
+MyBBs	NE MyBB
+MySpace	NE MySpace
+MySpaces	NE MySpace
+Myanmar	NE Myanmar
+Myanmars	NE Myanmar
+Mystery	NN Mystery
+Mängelexemplar	NN Mängelexemplar
+Mängelexemplare	NN Mängelexemplar
+Mängelexemplaren	NN Mängelexemplar
+Mängelexemplares	NN Mängelexemplar
+Mängelexemplars	NN Mängelexemplar
+Mär	NN März
+Märklin	NE Märklin
+Märklins	NE Märklin
+Möse	NN Möse
+Mösen	NN Möse
+Müntefering	NE Müntefering
+Münteferings	NE Müntefering
+Müritz	NE Müritz
+NABU	NE NABU
+NABUs	NE NABU
+NAS	NN NAS
+Nachhaltigkeit	NN Nachhaltigkeit
+Nachrichtenarchiv	NN Nachrichtenarchiv
+Nachrichtenarchive	NN Nachrichtenarchiv
+Nachrichtenarchiven	NN Nachrichtenarchiv
+Nachrichtenarchives	NN Nachrichtenarchiv
+Nachrichtenarchivs	NN Nachrichtenarchiv
+Naidoo	NE Naidoo
+Naidoos	NE Naidoo
+Naja	ITJ naja
+Nanotechnologie	NN Nanotechnologie
+Nanotechnologien	NN Nanotechnologie
+Naruto	NE Naruto
+Narutos	NE Naruto
+Nauheim	NE Nauheim
+Nauheims	NE Nauheim
+Navi	NN Navi
+Navis	NN Navi
+Nee	ITJ nee
+Neoliberalismus	NN Neoliberalismus
+Nero	NE Nero
+Neros	NE Nero
+Netbook	NN Netbook
+Netbooks	NN Netbook
+Network	NN Network
+Networks	NN Network
+Netzpolitik	NN Netzpolitik
+Neukölln	NE Neukölln
+Neuköllns	NE Neukölln
+Neuss	NE Neuss
+Newbie	NN Newbie
+Newbies	NN Newbie
+News	NN News
+News-Archiv	NN News-Archiv
+News-Archive	NN News-Archiv
+News-Archiven	NN News-Archiv
+News-Archives	NN News-Archiv
+News-Archivs	NN News-Archiv
+Newsarchiv	NN Newsarchiv
+Newsarchive	NN Newsarchiv
+Newsarchiven	NN Newsarchiv
+Newsarchives	NN Newsarchiv
+Newsarchivs	NN Newsarchiv
+Newsletter	NN Newsletter
+Newslettern	NN Newsletter
+Newsletters	NN Newsletter
+Nici	NE Nici
+Nicis	NE Nici
+Nidda	NE Nidda
+Niddas	NE Nidda
+Niemeyer	NE Niemeyer
+Niemeyers	NE Niemeyer
+Nike	NE Nike	NN Nike
+Nikes	NE Nike	NN Nike
+Nikon	NE Nikon	NN Nikon
+Nikons	NE Nikon	NN Nikon
+Nintendo	NE Nintendo	NN Nintendo
+Nintendos	NE Nintendo	NN Nintendo
+Nokia	NE Nokia	NN Nokia
+Nokias	NE Nokia	NN Nokia
+Norderney	NE Norderney
+Norderneys	NE Norderney
+Notebook	NN Notebook
+Notebooks	NN Notebook
+Nov	NN Dezember
+Novalis	NE Novalis
+Nr	NN Nummer
+Nr.	NN Nummer
+Nutzer	NN Nutzer
+Nutzern	NN Nutzer
+Nutzers	NN Nutzer
+Nutzungsbedingungen	NN Nutzungsbedingungen
+Nutzungsbestimmungen	NN Nutzungsbestimmungen
+Nvidia	NE Nvidia
+Nvidias	NE Nvidia
+Nö	ITJ nö
+Nürburgring	NE Nürburgring
+Nürburgrings	NE Nürburgring
+O.K.	ADJD okay	ADJD okay	ITJ okay
+OCH	ITJ och
+OK	ADJD okay	ADJD okay	ITJ okay
+OS	NN OS
+OSRAM	NE OSRAM
+OSRAMs	NE OSRAM
+OWL	NE OWL
+OWLs	NE OWL
+Obama	NE Obama
+Obamas	NE Obama
+Obb	NN Oberbayern
+Obb.	NN Oberbayern
+Object	NN Object
+Objects	NN Object
+Och	ITJ och
+Ok	ADJD okay	ADJD okay	ITJ okay
+Okt	NN Oktober
+Olpe	NE Olpe
+Olpes	NE Olpe
+Olympus	NE Olympus
+Online-Abo	NN Online-Abo
+Online-Abos	NN Online-Abo
+Online-Marketing	NN Online-Marketing
+Online-Marketings	NN Online-Marketing
+Online-Shop	NN Online-Shop
+Online-Shops	NN Online-Shop
+Onlineshop	NN Onlineshop
+Onlineshops	NN Onlineshop
+Onlinespiel	NN Onlinespiel
+Onlinespiele	NN Onlinespiel
+Onlinespielen	NN Onlinespiel
+Onlinespieles	NN Onlinespiel
+Onlinespiels	NN Onlinespiel
+Opladen	NE Opladen
+Opladens	NE Opladen
+Orbit	NN Orbit
+Orbits	NN Orbit
+Orig	NN Original
+Orig.	NN Original
+Ork	NN Ork
+Orks	NN Ork
+Osteopathie	NN Osteopathie
+Osteopathien	NN Osteopathie
+Outlook	NE Outlook
+Outlooks	NE Outlook
+Outsourcing	NN Outsourcing
+Outsourcings	NN Outsourcing
+Oxfam	NE Oxfam
+Oxfams	NE Oxfam
+PDA	NN PDA
+PDAs	NN PDA
+PDF	NN PDF
+PDF-Datei	NN PDF-Datei
+PDF-Dateien	NN PDF-Datei
+PDF-Format	NN PDF-Format
+PDF-Formats	NN PDF-Format
+PDFs	NN PDF
+PHP	NE PHP
+PHPs	NE PHP
+PIN	NN PIN
+PINs	NN PIN
+PLZ	NN PLZ
+PLZs	NN PLZ
+PUH	ITJ puh
+Panasonic	NE Panasonic
+Panasonics	NE Panasonic
+Pankow	NE Pankow
+Pankows	NE Pankow
+Paperback	NN Paperback
+Paperbacks	NN Paperback
+Parker	NE Parker
+Parkers	NE Parker
+Parkinson	NE Parkinson
+Parkinsons	NE Parkinson
+Parship	NE Parship
+Parships	NE Parship
+Partition	NN Partition
+Partitionen	NN Partition
+Paschold	NE Paschold
+Pascholds	NE Paschold
+Patch	NN Patch
+Patche	NN Patch
+Patchen	NN Patch
+Patches	NN Patch
+Patchs	NN Patch
+Paypal	NE Paypal
+Paypals	NE Paypal
+Pentax	NE Pentax	NN Pentax
+Permalink	NN Permalink
+Permalinks	NN Permalink
+Pers	NN Person
+Pers.	NN Person
+Pfd	NN Pfund
+Pfd.	NN Pfund
+Phone	NN Phone
+Phones	NN Phone
+Photoshop	NE Photoshop
+Photoshops	NE Photoshop
+Phuket	NE Phuket
+Phukets	NE Phuket
+Picard	NE Picard
+Picards	NE Picard
+Piercing	NN Piercing
+Piercings	NN Piercing
+Pilates	NE Pilates	NN Pilates
+Pils	NN Pils
+Pilse	NN Pils
+Pilsen	NN Pils
+Pilses	NN Pils
+Pimmel	NN Pimmel
+Pimmeln	NN Pimmel
+Pimmels	NN Pimmel
+Pingback	NN Pingback
+Pingbacks	NN Pingback
+Pink	NE Pink
+Pinks	NE Pink
+Piratenpartei	NE Piratenpartei
+Pirna	NE Pirna
+Pirnas	NE Pirna
+Pizarro	NE Pizarro
+Pizarros	NE Pizarro
+Pkt	NN Punkt
+Pkt.	NN Punkt
+Pl	NN Pl.
+Pl.	NN Pl.
+Platine	NN Platine
+Platinen	NN Platine
+PlayStation	NN PlayStation
+PlayStations	NN PlayStation
+Playlist	NN Playlist
+Playlisten	NN Playlist
+Playoff	NN Playoff
+Playoffs	NN Playoff
+Playstation	NN PlayStation
+Playstations	NN PlayStation
+Plugin	NN Plugin
+Plugins	NN Plugin
+Pluto	NE Pluto
+Plutos	NE Pluto
+Podcast	NN Podcast
+Podcasts	NN Podcast
+Podolski	NE Podolski
+Podolskis	NE Podolski
+Pokemon	NE Pokémon	NN Pokémon
+Pokémon	NE Pokémon	NN Pokémon
+Poloshirt	NN Poloshirt
+Poloshirts	NN Poloshirt
+Positionierung	NN Positionierung
+Positionierungen	NN Positionierung
+Post	NN Post
+Poster	NN Poster
+Postern	NN Poster
+Posters	NN Poster
+Posting	NN Posting
+Postings	NN Posting
+Posts	NN Post
+Potenzial	NN Potenzial
+Potenziale	NN Potenzial
+Potenzialen	NN Potenzial
+Potenzials	NN Potenzial
+Potter	NE Potter
+Potters	NE Potter
+Premium	ADJA premium	ADJD premium	NE Premium
+Presley	NE Presley
+Presleys	NE Presley
+Presse-Archiv	NN Presse-Archiv
+Presse-Archive	NN Presse-Archiv
+Presse-Archiven	NN Presse-Archiv
+Presse-Archives	NN Presse-Archiv
+Presse-Archivs	NN Presse-Archiv
+Preview	NN Preview
+Previews	NN Preview
+Prezlauer	NE Prezlauer
+Prezlauers	NE Prezlauer
+Printausgabe	NN Printausgabe
+Printausgaben	NN Printausgabe
+Printmedia	NN Printmedium
+Printmedien	NN Printmedium
+Printmedium	NN Printmedium
+Printmediums	NN Printmedium
+Proceedings	NN Proceedings
+Produktkategorie	NN Produktkategorie
+Produktkategorien	NN Produktkategorie
+Prof	NN Professor
+Prof.	NN Professor
+Promi	NN Promi
+Promis	NN Promi
+Protein	NN Protein
+Proteine	NN Protein
+Proteinen	NN Protein
+Proteines	NN Protein
+Proteins	NN Protein
+Provider	NN Provider
+Providern	NN Provider
+Providers	NN Provider
+Publizistik	NN Publizistik
+Puh	ITJ puh
+Putin	NE Putin
+Putins	NE Putin
+Pyrotechnik	NN Pyrotechnik
+Quake	NE Quake
+Quakes	NE Quake
+Quali	NN Quali
+Qualis	NN Quali
+Quest	NE Quest
+Quests	NE Quest
+RSS	NN RSS
+RSS-Feed	NN RSS-Feed
+RSS-Feeds	NN RSS-Feed
+RWTH	NE RWTH
+Radebeul	NE Radebeul
+Radebeuls	NE Radebeul
+Radeon	NE Radeon
+Radeons	NE Radeon
+Raider	NE Raider
+Raiders	NE Raider
+Ralley	NN Ralley
+Ralleys	NN Ralley
+Rally	NN Ralley
+Rallys	NN Ralley
+Receiver	NN Receiver
+Receivern	NN Receiver
+Receivers	NN Receiver
+Rechtsklick	NN Rechtsklick
+Rechtsklicks	NN Rechtsklick
+Reclam	NE Reclam
+Reclams	NE Reclam
+Red	NN Redaktion
+Red.	NN Redaktion
+Referendariat	NN Referendariat
+Referendariate	NN Referendariat
+Referendariaten	NN Referendariat
+Referendariates	NN Referendariat
+Referendariats	NN Referendariat
+Registriert	VVPP registrieren	ADJD registriert
+Registrierungsdatum	NN Registrierungsdatum
+Registrierungsdatums	NN Registrierungsdatum
+Reinickendorf	NE Reinickendorf
+Reinickendorfs	NE Reinickendorf
+Release	NN Release
+Releasen	NN Release
+Releases	NN Release
+Remake	NN Remake
+Remakes	NN Remake
+Replies	NN Reply
+Reply	NN Reply
+Replys	NN Reply
+Rhodos	NE Rhodos
+Rhön	NE Rhön
+Riester-Rente	NE Riester-Rente	NN Riester-Rente
+Riester-Renten	NE Riester-Rente	NN Riester-Rente
+Risikomanagement	NN Risikomanagement
+Risikomanagements	NN Risikomanagement
+Rocco	NE Rocco
+Roccos	NE Rocco
+Rosbach	NE Rosbach
+Rosbachs	NE Rosbach
+Rundmail	NN	Rundmail
+Rundmails	NN	Rundmail
+Rutesheim	NE Rutesheim
+Rutesheims	NE Rutesheim
+Ryanair	NE Ryanair
+Ryanairs	NE Ryanair
+Ryo	NE Ryo
+Ryos	NE Ryo
+Ryu	NE Ryu
+Ryus	NE Ryu
+Rösler	NE Rösler
+Röslers	NE Rösler
+Rücksendekosten	NN Rücksendekosten
+SEO	NN SEO
+SK	NN SK
+SMS	NN SMS
+SMSe	NN SMS
+SPÖ	NE SPÖ
+SRY	ITJ sry
+SWR	NE SWR
+SWRs	NE SWR
+Saab	NE Saab	NN Saab
+Saabs	NE Saab	NN Saab
+Samurai	NN Samurai
+Samurais	NN Samurai
+Sarkozy	NE Sarkozy
+Sarkozys	NE Sarkozy
+Sarrazin	NE Sarrazin
+Sarrazins	NE Sarrazin
+Schalker	NN Schalker
+Schalkern	NN Schalker
+Schalkers	NN Schalker
+Scheiss	NN Scheiß
+Scheiß	NN Scheiß
+Schiri	NN Schiri
+Schiris	NN Schiri
+Schotten	NE Schotten
+Schottens	NE Schotten
+Schuber	NN Schuber
+Schubern	NN Schuber
+Schubers	NN Schuber
+Schufa	NE Schufa
+Schuldenbremse	NN Schuldenbremse
+Schuldenbremsen	NN Schuldenbremse
+Schweingrippe	NN Schweingrippe
+Schweingrippen	NN Schweingrippe
+Schweiz-Osterzgebirge	NE Schweiz-Osterzgebirge
+Schweiz-Osterzgebirges	NE Schweiz-Osterzgebirge
+Schwenningen	NE Schwenningen
+Schwenningens	NE Schwenningen
+Schönefeld	NE Schönefeld
+Schönefelds	NE Schönefeld
+Schüßler-Salz	NN Schüßler-Salz
+Schüßler-Salze	NN Schüßler-Salz
+Schüßler-Salzen	NN Schüßler-Salz
+Schüßler-Salzes	NN Schüßler-Salz
+Schüßler-Salzs	NN Schüßler-Salz
+Scientology	NE Scientology
+Scooter	NE Scooter	NN Scooter
+Scooters	NE Scooter	NN Scooter
+Score	NN Score
+Scores	NN Score
+Screen	NN Screen
+Screenen	NN Screen
+Screens	NN Screen
+Screensaver	NN Screensaver
+Screensavern	NN Screensaver
+Screensavers	NN Screensaver
+Screenshot	NN Screenshot
+Screenshots	NN Screenshot
+Script	NN Script
+Scripten	NN Script
+Scripts	NN Script
+Scrolls	NE Scrolls
+Search	NN Search
+Searchs	NN Search
+Season	NN Season
+Seasons	NN Season
+Seat	NE Seat	NN Seat
+Seats	NE Seat	NN Seat
+Second	NE Second
+Segeberg	NE Segeberg
+Segebergs	NE Segeberg
+Seitenanfang	NN Seitenanfang
+Seitenanfanges	NN Seitenanfang
+Seitenanfangs	NN Seitenanfang
+Seitenanfänge	NN Seitenanfang
+Seitenanfängen	NN Seitenanfang
+Seiteninhalt	NN Seiteninhalt
+Seiteninhalte	NN Seiteninhalt
+Seiteninhalten	NN Seiteninhalt
+Seiteninhaltes	NN Seiteninhalt
+Seiteninhalts	NN Seiteninhalt
+Sep	NN September
+Sept	NN September
+Server	NN Server
+Servern	NN Server
+Servers	NN Server
+Session	NN Session
+Sessions	NN Session
+Setup	NN Setup
+Setups	NN Setup
+Seychellen	NE Seychellen
+Shannon	NE Shannon
+Shannons	NE Shannon
+Sherlock	NE Sherlock
+Sherlocks	NE Sherlock
+Shiatsu	NN Shiatsu
+Shiatsus	NN Shiatsu
+Shimano	NE Shimano
+Shimanos	NE Shimano
+Shooter	NN Shooter
+Shootern	NN Shooter
+Shooters	NN Shooter
+Shuttle	NN Shuttle
+Shuttlen	NN Shuttle
+Shuttles	NN Shuttle
+Siffredi	NE Siffredi
+Siffredis	NE Siffredi
+Simpsons	NE Simpsons
+Single	NN Single
+Singlebörse	NN Singlebörse
+Singlebörsen	NN Singlebörse
+Singlen	NN Single
+Singles	NN Single
+Site	NN Site
+Sitemap	NN Sitemap
+Sitemaps	NN Sitemap
+Sites	NN Site
+Skill	NN Skill
+Skills	NN Skill
+Skillung	NN Skillung
+Skillungen	NN Skillung
+Skin	NE Skin	NN Skin
+Skins	NE Skin	NN Skin
+Skript	NN Skript
+Skripte	NN Skript
+Skripts	NN Skript
+Sky	NE Sky
+Skype	NE Skype
+Skypes	NE Skype
+Skyrim	NE Skyrim
+Skyrims	NE Skyrim
+Skys	NE Sky
+Slot	NN Slot
+Slots	NN Slot
+Smartphone	NN Smartphone
+Smartphones	NN Smartphone
+Smiley	NN Smiley
+Smileys	NN Smiley
+Smily	NN Smiley
+Smilys	NN Smiley
+Snack	NN Snack
+Snacks	NN Snack
+Sofortüberweisung	NE Sofortüberweisung	NN Sofortüberweisung
+Softcover	NN Softcover
+Softcovern	NN Softcover
+Softcovers	NN Softcover
+Solarien	NN Solarium
+Solarium	NN Solarium
+Solariums	NN Solarium
+Sorry	ITJ sorry
+Sound	NN Sound
+Soundkarte	NN Soundkarte
+Soundkarten	NN Soundkarte
+Sounds	NN Sound
+Soundtrack	NN Soundtrack
+Soundtracks	NN Soundtrack
+Spa	NN Spa
+Spam	NN Spam
+Spambot	NN Spambot
+Spambots	NN Spambot
+Spams	NN Spam
+Spandau	NE Spandau
+Spandaus	NE Spandau
+Spas	NN Spa
+Spencer	NE Spencer
+Spencers	NE Spencer
+Spider	NE Spider	NN Spider
+Spidern	NN Spider
+Spiders	NE Spider	NN Spider
+Spielchen	NN Spielchen
+Spielchens	NN Spielchen
+Spoiler	NN Spoiler
+Spoilern	NN Spoiler
+Spoilers	NN Spoiler
+Sprungmarke	NN Sprungmarke
+Sprungmarken	NN Sprungmarke
+Spvgg.	NN Spielvereinigung
+Spyware	NN Spyware
+Sr.	NN Sr.
+Sry	ITJ sry
+St	NN Sankt	NN Stück
+St.	NN Sankt	NN Stück
+StGB	NE StGB
+StR.	NN Studienrat
+Stallbedarf	NN Stallbedarf
+Stallbedarfs	NN Stallbedarf
+Standarddesign	NN Standarddesign
+Standarddesigns	NN Standarddesign
+Star	NN Star
+Starbucks	NE Starbucks	NN Starbucks
+Stargate	NE Stargate
+Stars	NN Star
+Startelf	NN Startelf
+Startguthaben	NN Startguthaben
+Startguthabens	NN Startguthaben
+Startseite	NN Startseite
+Startseiten	NN Startseite
+States	NE States
+Std	NN Std.
+Std.	NN Std.
+Steam	NE Steam
+Steams	NE Steam
+Steinbrück	NE Steinbrück
+Steinbrücks	NE Steinbrück
+Steinmeier	NE Steinmeier
+Steinmeiers	NE Steinmeier
+Stick	NN Stick
+Sticks	NN Stick
+Stilllegung	NN Stilllegung
+Stilllegungen	NN Stilllegung
+Stolberg	NE Stolberg
+Stolbergs	NE Stolberg
+Stories	NN Story
+Story	NN Story
+Storys	NN Story
+Str.	NN Straße
+Stream	NN Stream
+Streams	NN Stream
+Strike	NE Strike
+Strikes	NE Strike
+Studi	NN Studi
+StudiVZ	NE StudiVZ
+StudiVZs	NE StudiVZ
+Studie	NN Studie
+Studies	NN Studie
+Studis	NN Studi
+Style	NN Style
+Styles	NN Style
+Subaru	NE Subaru	NN Subaru
+Subarus	NE Subaru	NN Subaru
+Substrat	NN Substrat
+Substrate	NN Substrat
+Substraten	NN Substrat
+Substrats	NN Substrat
+Subwoofer	NN Subwoofer
+Subwoofern	NN Subwoofer
+Subwoofers	NN Subwoofer
+Suchergebnis	NN Suchergebnis
+Suchergebniss	NN Suchergebnis
+Suchergebnisse	NN Suchergebnis
+Suchergebnissen	NN Suchergebnis
+Suchergebnisses	NN Suchergebnis
+Suchfunktion	NN Suchfunktion
+Suchmaschine	NN Suchmaschine
+Suchmaschinen	NN Suchmaschine
+Suchmaschinenoptimierung	NN Suchmaschinenoptimierung
+Suchmaschinenoptimierungen	NN Suchmaschinenoptimierung
+Suhl	NN Suhl
+Suite	NN Suite
+Suiten	NN Suite
+Symbian	NE Symbian
+Symbians	NE Symbian
+Systemsteuerung	NN Systemsteuerung
+Systemsteuerungen	NN Systemsteuerung
+São	NE São
+T-Mobile	NE T-Mobile
+T-Mobiles	NE T-Mobile
+THNX	ITJ thnx
+THX	ITJ thx	NE THX
+TYPO	NE TYPO
+TYPO3	NE TYPO3
+TYPO3s	NE TYPO3
+TYPOs	NE TYPO
+Tablet	NN Tablet
+Tablets	NN Tablet
+Tach	ITJ tach
+Tacho	NN Tacho
+Tachos	NN Tacho
+Taliban	NE Taliban	NN Taliban
+Talibanen	NN Taliban
+Talibans	NN Taliban
+Tattoo	NN Tattoo
+Tattoos	NN Tattoo
+Tel.	NN Telefon
+Telefonica	NE Telefónica
+Telefonie	NN Telefonie
+Telefónica	NE Telefónica
+Template	NN Template
+Templates	NN Template
+Tempomat	NN Tempomat
+Tempomats	NN Tempomat
+Testosteron	NN Testosteron
+Testosterone	NN Testosteron
+Testosteronen	NN Testosteron
+Testosterons	NN Testosteron
+Teuro	NN Teuro
+Teuronen	NN Teuronen
+Teuros	NN Teuro
+Theme	NN Theme
+Themenübersicht	NN Themenübersicht
+Themenübersichten	NN Themenübersicht
+Themes	NN Theme
+Thieme	NE Thieme
+Thiemes	NE Thieme
+Thread	NN Thread
+Threads	NN Thread
+Thunderbird	NE Thunderbird	NN Thunderbird
+Thunderbirds	NE Thunderbird	NN Thunderbird
+Ticker	NN Ticker
+Tickern	NN Ticker
+Tickers	NN Ticker
+Tillich	NE Tillich
+Tillichs	NE Tillich
+Tinnitus	NN Tinnitus
+Tippspiel	NN Tippspiel
+Tippspiele	NN Tippspiel
+Tippspielen	NN Tippspiel
+Tippspieles	NN Tippspiel
+Tippspiels	NN Tippspiel
+Tja	ITJ tja
+Tobi	NE Tobi
+Tobis	NE Tobi
+Tokyo	NE Tokyo
+Tokyos	NE Tokyo
+Tolkien	NE Tolkien
+Tolkiens	NE Tolkien
+Tomb	NE Tomb
+Tool	NN Tool
+Tools	NN Tool
+Topic	NN Topic
+Topics	NN Topic
+Topmodel	NN Topmodel
+Topmodeln	NN Topmodel
+Topmodels	NN Topmodel
+Topseller	NN Topseller
+Topsellern	NN Topseller
+Topsellers	NN Topseller
+Toshiba	NE Toshiba	NN Toshiba
+Toshibas	NE Toshiba	NN Toshiba
+Track	NN Track
+Trackback	NN Trackback
+Trackbacks	NN Trackback
+Tracker	NN Tracker
+Trackern	NN Tracker
+Trackers	NN Tracker
+Tracks	NN Track
+Tractatus	NE Tractatus
+Trade	NN Trade
+Trades	NN Trade
+Traffic	NN Traffic
+Traffics	NN Traffic
+Trailer	NN Trailer
+Trailern	NN Trailer
+Trailers	NN Trailer
+Trakl	NE Trakl
+Trakls	NE Trakl
+Transponder	NN Transponder
+Transpondern	NN Transponder
+Transponders	NN Transponder
+Trek	NE Trek
+Trekking	NN Trekking
+Trekkings	NN Trekking
+Treks	NE Trek
+Triathlon	NN Triathlon
+Triathlons	NN Triathlon
+Ts.	NE Taunus
+Tschechien	NE Tschechien
+Tschechiens	NE Tschechien
+TuS	NE TuS
+Tuner	NN Tuner
+Tunern	NN Tuner
+Tuners	NN Tuner
+Tuning	NN Tuning
+Tunings	NN Tuning
+Turismo	NE Turismo
+Turismos	NE Turismo
+Tutorial	NN Tutorial
+Tutorials	NN Tutorial
+Tweet	NN Tweet
+Tweets	NN Tweet
+Twilight	NE Twilight
+Twilights	NE Twilight
+Twitter	NE Twitter
+Twitters	NE Twitter
+Typografie	NN Typografie
+Typografien	NN Typografie
+UMTS	NN UMTS
+UPS	ITJ ups	NE UPS
+URL	NN URL
+URLs	NN URL
+USB	NN USB
+USB-Stick	NN USB-Stick
+USB-Sticks	NN USB-Stick
+USt.	NN Umsatzsteuer
+Ubisoft	NE Ubisoft
+Ubisofts	NE Ubisoft
+Ubuntu	NE Ubuntu
+Ubuntus	NE Ubuntu
+Uckermark	NE Uckermark
+Uelzen	NE Uelzen
+Uelzens	NE Uelzen
+Unna	NE Unna
+Unnas	NE Unna
+Unterbach	NE Unterbach
+Unterbachs	NE Unterbach
+Update	NN Update
+Updates	NN Update
+Upgrade	NN Upgrade
+Upgrades	NN Upgrade
+Upload	NN Upload
+Uploads	NN Upload
+Ups	ITJ ups
+Usability	NN Usability
+User	NN User
+Usern	NN User
+Users	NN User
+VBulletin	NE vBulletin
+VOX	NE Vox
+Vattenfall	NE Vattenfall
+Vattenfalls	NE Vattenfall
+Vbulletin	NE vBulletin
+Vegas	NE Vegas
+Verf.	NN Verfasser
+Verfasst	VVPP verfassen	ADJD verfasst
+Verl.	NN Verlag
+Verlinkung	NN Verlinkung
+Verlinkungen	NN Verlinkung
+Versandk	NN Versandkosten
+Versandk.	NN Versandkosten
+Versandpauschale	NN Versandpauschale
+Versandpauschalen	NN Versandpauschale
+Versatel	NE Versatel
+Versatels	NE Versatel
+Versmold	NE Versmold
+Versmolds	NE Versmold
+Vertragsabwicklung	NN Vertragsabwicklung
+Vertragsabwicklungen	NN Vertragsabwicklung
+Vettel	NE Vettel
+Vettels	NE Vettel
+VfL	NE VfL
+VfLs	NE VfL
+Viagra	NE Viagra	NN Viagra
+Viagras	NE Viagra	NN Viagra
+Viech	NN Viech
+Viecher	NN Viech
+Viechern	NN Viech
+Vieches	NN Viech
+Viechs	NN Viech
+Viersen	NE Viersen
+Viersens	NE Viersen
+Virtualisierung	NN Virtualisierung
+Virtualisierungen	NN Virtualisierung
+Vista	NE Vista
+Vistas	NE Vista
+Vlotho	NE Vlotho
+Vlothos	NE Vlotho
+VoIP	NN VoIP
+Vodafone	NE Vodafone
+Vodafones	NE Vodafone
+Vol	NN Volume
+Vol.	NN Volume
+Vollansicht	NN Vollansicht
+Vollansichten	NN Vollansicht
+Volltextsuche	NN Volltextsuche
+Volltextsuchen	NN Volltextsuche
+Voralberg	NE Voralberg
+Voralbergs	NE Voralberg
+Vorauskasse	NN Vorauskasse
+Vorauskassen	NN Vorauskasse
+Vorkasse	NN Vorkasse
+Vorkassen	NN Vorkasse
+Vorratsdatenspeicherung	NN Vorratsdatenspeicherung
+Vorraus	NN Voraus
+Vorspann	NN Vorspann
+Vorspanne	NN Vorspann
+Vorspannen	NN Vorspann
+Vorspannes	NN Vorspann
+Vorspanns	NN Vorspann
+Vorspänne	NN Vorspann
+Vorspännen	NN Vorspann
+Voting	NN Voting
+Votings	NN Voting
+Vox	NE Vox
+Voyager	NE Voyager
+Voyagers	NE Voyager
+Völklingen	NE Völklingen
+Völklingens	NE Völklingen
+WC	NN WC
+WCs	NN WC
+WLAN	NN WLAN
+WLANs	NN WLAN
+WOW	NE WoW	ITJ wow
+WWW	NN WWW
+Wallpaper	NN Wallpaper
+Wallpapern	NN Wallpaper
+Wallpapers	NN Wallpaper
+Warcraft	NE Warcraft
+Warfare	NE Warfare
+Warfares	NE Warfare
+Warhammer	NE Warhammer
+Warhammers	NE Warhammer
+Warnemünde	NE Warnemünde
+Warnemündes	NE Warnemünde
+Web	NN Web
+Webbrowser	NN Webbrowser
+Webbrowsern	NN Webbrowser
+Webbrowsers	NN Webbrowser
+Webcam	NN Webcam
+Webcams	NN Webcam
+Webdesign	NN Webdesign
+Webdesigner	NN Webdesigner
+Webdesignern	NN Webdesigner
+Webdesigners	NN Webdesigner
+Webdesigns	NN Webdesign
+Webhosting	NN Webhosting
+Webhostings	NN Webhosting
+Webkatalog	NN Webkatalog
+Webkataloge	NN Webkatalog
+Webkatalogen	NN Webkatalog
+Webkataloges	NN Webkatalog
+Webkatalogs	NN Webkatalog
+Weblink	NN	Weblink
+Weblinks	NN	Weblink
+Weblog	NN Weblog
+Weblogs	NN Weblog
+Webmail	NN Webmail
+Webmailer	NN Webmailer
+Webmailern	NN Webmailer
+Webmailers	NN Webmailer
+Webmaster	NN Webmaster
+Webmastern	NN Webmaster
+Webmasters	NN Webmaster
+Webs	NN Web
+Webseite	NN Webseite
+Webseiten	NN Webseite
+Webserver	NN Webserver
+Webservern	NN Webserver
+Webservers	NN Webserver
+Website	NN Website
+Websites	NN Website
+Webspace	NN Webspace
+Webspaces	NN Webspace
+Webverzeichnis	NN Webverzeichnis
+Webverzeichniss	NN Webverzeichnis
+Webverzeichnisse	NN Webverzeichnis
+Webverzeichnissen	NN Webverzeichnis
+Webverzeichnisses	NN Webverzeichnis
+Wedding	NE Wedding
+Weddings	NE Wedding
+Wehrda	NE Wehrda
+Wehrdas	NE Wehrda
+Weka	NE Weka
+Wekas	NE Weka
+Werbebanner	NN Werbebanner
+Werbebannern	NN Werbebanner
+Werbebanners	NN Werbebanner
+Wernigerode	NE Wernigerode
+Wernigerodes	NE Wernigerode
+Werter	NE Werter
+Werters	NE Werter
+Wesel	NE Wesel
+Wesels	NE Wesel
+Westerwelle	NE Westerwelle
+Westerwelles	NE Westerwelle
+Wetteraukreis	NE Wetteraukreis
+Whirlpool	NN Whirlpool
+Whirlpools	NN Whirlpool
+Widerrufsfolgen	NN Widerrufsfolgen
+Widget	NN Widget
+Widgets	NN Widget
+Wiesn	NE Wiesn
+Wii	NE Wii
+Wikileaks	NE Wikileaks
+Wikimedia	NE Wikimedia
+Wikimedias	NE Wikimedia
+Wikipedia	NE Wikipedia
+Wikipedias	NE Wikipedia
+Winnenden	NE Winnenden
+Winnendens	NE Winnenden
+Winsen	NE Winsen
+Winsens	NE Winsen
+Witten	NE Witten
+Wittens	NE Witten
+Wittgenstein	NE Wittgenstein
+Wittgensteins	NE Wittgenstein
+WoW	NE WoW
+WoWs	NE WoW
+Wolfenbüttel	NE Wolfenbüttel
+Wolfenbüttels	NE Wolfenbüttel
+Woody	NE Woody
+Woodys	NE Woody
+Word	NE Word
+WordPress	NE WordPress
+Wordpress.org	NE Wordpress.org
+Words	NE Word
+Workflow	NN Workflow
+Workflows	NN Workflow
+World	NE World
+Worms	NE Worms
+Wow	NE WoW	ITJ wow
+Wowereit	NE Wowereit
+Wowereits	NE Wowereit
+Wrestling	NN Wrestling
+Wrestlings	NN Wrestling
+Www	NN WWW
+Wähle	VVIMP wählen
+XHTML	NE XHTML
+XP	NE XP
+XboX	NE XboX	NN XboX
+Xbox	NE XboX	NN XboX
+Xeon	NN Xeon
+Xeons	NN Xeon
+Xing	NE Xing
+Xings	NE Xing
+Xperia	NE Xperia	NN Xperia
+Xperias	NE Xperia	NN Xperia
+Yahoo	NE Yahoo
+Yahoos	NE Yahoo
+YouTube	NE YouTube
+YouTubes	NE YouTube
+Youtube	NE YouTube
+Youtubes	NE YouTube
+Z.B.	ADV z.B.
+ZB	ADV z.B.
+ZB.	ADV z.B.
+Zalando	NE Zalando
+Zalandos	NE Zalando
+Zelda	NE Zelda
+Zeldas	NE Zelda
+Zentralverriegelung	NN Zentralverriegelung
+Zentralverriegelungen	NN Zentralverriegelung
+Ziff	NE Ziff
+Ziffs	NE Ziff
+Zion	NE Zion
+Zions	NE Zion
+Zittau	NE Zittau
+Zittaus	NE Zittau
+Zombie	NN Zombie
+Zombies	NN Zombie
+Zt.	NN Zeit
+Ztr.	NN Zentner
+Zugangsdaten	NN Zugangsdaten
+Zusendung	NN Zusendung
+Zusendungen	NN Zusendung
+a.D	ADV a.D.
+a.D.	ADV a.D.
+a.a.O.	ADV a.a.O.
+a.k.a.	APPR a.k.a.
+aD	ADV a.D.
+aD.	ADV a.D.
+aaO	ADV a.a.O.
+abfucke	VVFIN abfucken
+abfucken	VVINF abfucken	VVFIN abfucken
+abfuckst	VVFIN abfucken
+abfuckt	VVFIN abfucken
+abfuckte	VVFIN abfucken
+abfuckten	VVFIN abfucken
+abfucktest	VVFIN abfucken
+abfucktet	VVFIN abfucken
+abgefuckt	VVPP abfucken	ADJD abgefuckt
+abgefuckte	ADJA abgefuckt
+abgefucktem	ADJA abgefuckt
+abgefuckten	ADJA abgefuckt
+abgefuckter	ADJA abgefuckt
+abgefucktes	ADJA abgefuckt
+abzgl	APPR abzüglich
+abzgl.	APPR abzüglich
+achja	ITJ achja
+aka	APPR a.k.a.
+allg	ADJA allgemein	ADJD allgemein	ADV allgmein
+allg.	ADJA allgemein	ADJD allgemein	ADV allgmein
+anderst	ADJD anderst	ADJA anderst	ADV anderst
+anderste	ADJA anderst
+anderstem	ADJA anderst
+andersten	ADJA anderst
+anderster	ADJA anderst	ADV anderst
+anderstes	ADJA anderst
+atml	ADJD amtlich	ADJA amtlich
+atml.	ADJD amtlich	ADJA amtlich
+aufer	APPRART aufm
+aufm	APPRART aufm
+auser	APPRART ausm
+ausgew	ADJA ausgewählt
+ausgew.	ADJA ausgewählt
+ausm	APPRART ausm
+away	ADV away
+barriefrei	ADJA barriefrei	ADJD barriefreie
+barriefreie	ADJA barriefrei
+barriefreiem	ADJA barriefrei
+barriefreien	ADJA barriefrei
+barriefreier	ADJA barriefrei
+barriefreies	ADJA barriefrei
+beil	ADJA beiliegend	ADJD beiliegend
+beil.	ADJA beiliegend	ADJD beiliegend
+benutzerdefiniert	ADJD benutzerdefiniert
+benutzerdefinierte	ADJA benutzerdefiniert
+benutzerdefiniertem	ADJA benutzerdefiniert
+benutzerdefinierten	ADJA benutzerdefiniert
+benutzerdefinierter	ADJA benutzerdefiniert
+benutzerdefiniertes	ADJA benutzerdefiniert
+benötige	VVFIN benötigen
+benötigen	VVFIN benötigen	VVINF benötigen
+benötigest	VVFIN benötigen
+benötiget	VVFIN benötigen
+benötigst	VVFIN benötigen
+benötigt	VVFIN benötigen	VVPP benötigen	ADJD benötigt
+benötigte	VVFIN benötigen	ADJA benötigt
+benötigtem	ADJA benötigt
+benötigten	VVFIN benötigen	ADJA benötigt
+benötigter	ADJA benötigt
+benötigtes	ADJA benötigt
+benötigtest	VVFIN benötigen
+benötigtet	VVFIN benötigen
+bes	ADJA besonders
+bes.	ADJA besonders
+betr	VVFIN betrifft
+betr.	VVFIN betrifft
+bischen	ADV bißchen	PIAT bißchen	PIS bißchen
+bissel	ADV bissl	PIS bissl	PIAT bissl
+bisserl	ADV bisserl	PIS bisserl	PIAT bisserl
+bissl	ADV bissl	PIS bissl	PIAT bissl
+biste	VAFIN sein
+bla	ITJ bla
+blabla	ITJ blabla	NN Blabla
+blogge	VVFIN bloggen
+bloggen	VVINF bloggen	VVFIN bloggen
+bloggest	VVFIN bloggen
+blogget	VVFIN bloggen
+bloggst	VVFIN bloggen
+bloggt	VVFIN bloggen
+bloggte	VVFIN bloggen
+bloggten	VVFIN bloggen
+bloggtest	VVFIN bloggen
+bloggtet	VVFIN bloggen
+boa	ITJ boa
+boah	ITJ boa
+bookmarke	VVFIN bookmarken
+bookmarken	VVINF bookmarken	VVFIN bookmarken
+bookmarkest	VVFIN bookmarken
+bookmarket	VVFIN bookmarken
+bookmarkst	VVFIN bookmarken
+bookmarkt	VVFIN bookmarken
+bookmarkte	VVFIN bookmarken
+bookmarkten	VVFIN bookmarken
+bookmarktest	VVFIN bookmarken
+bookmarktet	VVFIN bookmarken
+bspw	ADV beispielsweise
+bspw.	ADV beispielsweise
+btw	ADV btw
+bye	ITJ bye
+bzw	ADV beziehungsweise
+bzw.	ADV beziehungsweise
+ca	ADV ca
+chatt	VVFIN chatten
+chatte	VVFIN chatten	VVIMP chatten
+chatten	VVFIN chatten	VVINF chatten
+chattend	ADJD chattend
+chattende	ADJA chattend
+chattendem	ADJA chattend
+chattenden	ADJA chattend
+chattender	ADJA chattend
+chattendes	ADJA chattend
+chattest	VVFIN chatten
+chattet	VVFIN chatten	VVIMP chatten
+chattete	VVFIN chatten
+chatteten	VVFIN chatten
+chattetest	VVFIN chatten
+chattetet	VVFIN chatten
+ciao	ITJ ciao
+cih	PPER ich
+cu	ITJ cu
+dB	NN dB
+dafuer	PAV dafür
+dat	ART dat	PDS dat	PRELS dat
+date	VVFIN daten
+daten	VVINF daten	VVFIN daten
+datest	VVFIN daten
+datet	VVFIN daten
+datete	VVFIN daten
+dateten	VVFIN daten
+datetest	VVFIN daten
+datetet	VVFIN daten
+dato	ADV dato
+datt	ART dat	PDS dat	PRELS dat	KOUS datt
+demografisch	ADJD demografisch
+demografische	ADJA demografisch
+demografischem	ADJA demografisch
+demografischen	ADJA demografisch
+demografischer	ADJA demografisch
+demografisches	ADJA demografisch
+dgl	PIS dergleichen
+dgl.	PIS dergleichen
+dm	NE dm
+down	ADJD down	PTKVZ down
+downgeloadet	VVPP downloaden	ADJD downgeloadet
+downgeloadete	ADJA downgeloadet
+downgeloadetem	ADJA downgeloadet
+downgeloadeten	ADJA downgeloadet
+downgeloadeter	ADJA downgeloadet
+downgeloadetes	ADJA downgeloadet
+downloade	VVFIN downloaden
+downloaden	VVINF downloaden	VVFIN downloaden
+downloadest	VVFIN downloaden
+downloadet	VVFIN downloaden
+downloadete	VVFIN downloaden
+downloadeten	VVFIN downloaden
+downloadetest	VVFIN downloaden
+downloadetet	VVFIN downloaden
+downloadst	VVFIN downloaden
+drann	PAV dran	PTKVZ dran
+dranne	PAV dran	PTKVZ dran
+drinn	PAV drin	PTKVZ drin
+drinne	PAV drin	PTKVZ drin
+dt	ADJA deutsch	ADJD deutsch
+dt.	ADJA deutsch	ADJD deutsch
+dtv	NE dtv
+e-Book	NN Ebook
+e-Books	NN Ebook
+e-mail	NN E-Mail
+e-maile	VVFIN emailen
+e-mailen	VVINF emailen	VVFIN emailen
+e-mailest	VVFIN emailen
+e-mailet	VVFIN emailen
+e-mails	NN E-Mail
+e-mailst	VVFIN emailen
+e-mailt	VVFIN emailen
+e-mailte	VVFIN emailen
+e-mailten	VVFIN emailen
+e-mailtest	VVFIN emailen
+e-mailtet	VVFIN emailen
+e.V	NN e.V.
+e.V.	NN e.V.
+eBay	NE Ebay
+eBays	NE Ebay
+eBook	NN Ebook
+eBooks	NN Ebook
+eDarling	NE eDarling
+eDarlings	NE eDarling
+eMail	NN E-Mail
+eMail-Adresse	NN E-Mail-Adresse
+eMail-Adressen	NN E-Mail-Adresse
+eMails	NN E-Mail
+eV	NN e.V.
+eV.	NN e.V.
+ebay	NE Ebay
+ebays	NE Ebay
+ebd	ADV ebenda
+ebd.	ADV ebenda
+ehem	ADJA ehemalig	ADJD ehemalig	ADV ehemals
+ehem.	ADJA ehemalig	ADJD ehemalig	ADV ehemals
+eig	ADV eigentlich
+eig.	ADV eigentlich
+eigendlich	ADV eigentlich
+eigtl	ADV eigentlich
+eigtl.	ADV eigentlich
+eindschl	APPR einschließlich
+eindschl.	APPR einschließlich
+einfühlsam	ADJD einfühlsam
+einfühlsame	ADJA einfühlsam
+einfühlsamem	ADJA einfühlsam
+einfühlsamen	ADJA einfühlsam
+einfühlsamer	ADJA einfühlsam
+einfühlsamere	ADJA einfühlsam
+einfühlsamerem	ADJA einfühlsam
+einfühlsameren	ADJA einfühlsam
+einfühlsamerer	ADJA einfühlsam
+einfühlsameres	ADJA einfühlsam
+einfühlsames	ADJA einfühlsam
+einfühlsamste	ADJA einfühlsam
+einfühlsamstem	ADJA einfühlsam
+einfühlsamsten	ADJA einfühlsam
+einfühlsamster	ADJA einfühlsam
+einfühlsamstes	ADJA einfühlsam
+einschl	APPR einschließlich
+einschl.	APPR einschließlich
+email	NN E-Mail
+emaile	VVFIN emailen
+emailen	VVINF emailen	VVFIN emailen
+emailest	VVFIN emailen
+emailet	VVFIN emailen
+emails	NN E-Mail
+emailst	VVFIN emailen
+emailt	VVFIN emailen
+emailte	VVFIN emailen
+emailten	VVFIN emailen
+emailtest	VVFIN emailen
+emailtet	VVFIN emailen
+engl	ADJA englisch	ADJD englisch
+engl.	ADJA englisch	ADJD englisch
+entspr	VVFIN entsprechen	APPR entsprechend
+entspr.	VVFIN entsprechen	APPR entsprechend
+erneuerbar	ADJD erneuerbar
+erneuerbare	ADJA erneuerbar
+erneuerbarem	ADJA erneuerbar
+erneuerbaren	ADJA erneuerbar
+erneuerbarer	ADJA erneuerbar
+erneuerbares	ADJA erneuerbar
+ers	PPER er
+erw	ADJD erwachsen	ADJA erwachsen
+erw.	ADJD erwachsen	ADJA erwachsen
+etc	ADV etc.
+etc.	ADV etc.
+ev	ADV eventuell
+ev.	ADV eventuell
+evtl.	ADV eventuell	ADJA eventuell
+evtl	ADV eventuell	ADJA eventuell
+exkl	APPR exklusive
+exkl.	APPR exklusive
+facebook	NE Facebook
+facebooks	NE Facebook
+fake	ADJD fake
+feuerverzinkt	ADJD feuerverzinkt
+feuerverzinkte	ADJA feuerverzinkt
+feuerverzinktem	ADJA feuerverzinkt
+feuerverzinkten	ADJA feuerverzinkt
+feuerverzinkter	ADJA feuerverzinkt
+feuerverzinktes	ADJA feuerverzinkt
+ff	ADV ff.
+ff.	ADV ff.
+find	VVFIN finden
+finds	VVFIN finden
+frag	VVFIN fragen
+fragg	VVIMP fraggen
+fragge	VVINF fraggen	VVIMP fraggen
+fraggen	VVINF fraggen	VVFIN fraggen
+fraggest	VVINF fraggen
+fragget	VVINF fraggen
+fraggst	VVINF fraggen
+fraggt	VVINF fraggen	VVIMP fraggen
+fraggte	VVINF fraggen
+fraggten	VVINF fraggen
+fraggtest	VVINF fraggen
+fraggtet	VVINF fraggen
+fristlos	ADJD fristlos
+fristlose	ADJA fristlos
+fristlosem	ADJA fristlos
+fristlosen	ADJA fristlos
+fristloser	ADJA fristlos
+fristloses	ADJA fristlos
+frz	ADJA französisch	ADJD französisch
+frz.	ADJA französisch	ADJD französisch
+fränkisch	ADJD fränkisch
+fränkische	ADJA fränkisch
+fränkischem	ADJA fränkisch
+fränkischen	ADJA fränkisch
+fränkischer	ADJA fränkisch
+fränkisches	ADJA fränkisch
+fuck	ITJ fuck	ADJA fuck	ADJD fuck	VVIMP fucken	VVFIN fucken
+fucke	VVFIN fucken	VVIMP fucken
+fuckst	VVFIN fucken
+fuckt	VVFIN fucken	VVIMP fucken
+fuckte	VVFIN fucken
+fuckten	VVFIN fucken
+fucktest	VVFIN fucken
+fucktet	VVFIN fucken
+fuer	APPR für
+funze	VVFIN funzen
+funzen	VVINF funzen	VVFIN funzen
+funzst	VVFIN funzen
+funzt	VVFIN funzen
+funzte	VVFIN funzen
+funzten	VVFIN funzen
+funztest	VVFIN funzen
+funztet	VVFIN funzen
+fänd	VVFIN finden
+füreinander	ADV füreinander
+fürn	APPRART fürn
+gGmbH	NE gGmbH	NN gGmbH
+gGmbHs	NN gGmbH
+gaaanz	ADV ganz
+gabs	VVFIN geben
+ganztags	ADV ganztags
+garnicht	PTKNEG garnicht
+gay	ADJD gay	ADJA gay
+geb	ADJA geboren	ADJD geboren
+geb.	ADJA geboren	ADJD geboren	VVIMP geben	VVFIN geben
+gebloggt	VVPP bloggen	ADJD gebloggt
+gebloggte	ADJA gebloggt
+gebloggtem	ADJA gebloggt
+gebloggten	ADJA gebloggt
+gebloggter	ADJA gebloggt
+gebloggtes	ADJA gebloggt
+gebookmarkt	VVPP bookmarken	ADJD gebookmarkt
+gebookmarkte	ADJA gebookmarkt
+gebookmarktem	ADJA gebookmarkt
+gebookmarkten	ADJA gebookmarkt
+gebookmarkter	ADJA gebookmarkt
+gebookmarktes	ADJA gebookmarkt
+gechattet	VVPP chatten
+gedatet	VVPP daten	ADJD gedatet
+gedatete	ADJA gedatet
+gedatetem	ADJA gedatet
+gedateten	ADJA gedatet
+gedateter	ADJA gedatet
+gedatetes	ADJA gedatet
+gedownloadet	VVPP downloaden	ADJD gedownloadet
+gedownloadete	ADJA gedownloadet
+gedownloadetem	ADJA gedownloadet
+gedownloadeten	ADJA gedownloadet
+gedownloadeter	ADJA gedownloadet
+gedownloadetes	ADJA gedownloadet
+gedr	VVPP drucken	ADJA gedruckt	ADJD gedruckt
+gedr.	VVPP drucken	ADJA gedruckt	ADJD gedruckt
+gee-mailt	VVPP emailen	ADJD geemailt
+gee-mailte	ADJA geemailt
+gee-mailtem	ADJA geemailt
+gee-mailten	ADJA geemailt
+gee-mailter	ADJA geemailt
+gee-mailtes	ADJA geemailt
+geemailt	VVPP emailen	ADJD geemailt
+geemailte	ADJA geemailt
+geemailtem	ADJA geemailt
+geemailten	ADJA geemailt
+geemailter	ADJA geemailt
+geemailtes	ADJA geemailt
+gefraggt	VVPP fraggen	ADJD gefraggt
+gefraggte	ADJA gefraggt
+gefraggtem	ADJA gefraggt
+gefraggten	ADJA gefraggt
+gefraggter	ADJA gefraggt
+gefraggtes	ADJA gefraggt
+gefunzt	VVPP funzen
+gegr	VVPP gründen	ADJA gegründet	ADJD gegründet
+gegr.	VVPP gründen	ADJA gegründet	ADJD gegründet
+gehn	VVINF gehen	VVFIN gehen
+gehts	VVFIN gehen
+gek	ADJA gekocht	ADJD gekocht
+gek.	ADJA gekocht	ADJD gekocht
+gelevelt	VVPP leveln	ADJD gelevelt
+gelevelte	ADJA gelevelt
+geleveltem	ADJA gelevelt
+gelevelten	ADJA gelevelt
+gelevelter	ADJA gelevelt
+geleveltes	ADJA gelevelt
+geliket	VVPP liken	ADJD geliket
+gelikete	ADJA geliket
+geliketem	ADJA geliket
+geliketen	ADJA geliket
+geliketer	ADJA geliket
+geliketes	ADJA geliket
+gelinkt	VVPP linken	ADJD gelinkt
+gelinkte	ADJA gelinkt
+gelinktem	ADJA gelinkt
+gelinkten	ADJA gelinkt
+gelinkter	ADJA gelinkt
+gelinktes	ADJA gelinkt
+gelvlt	VVPP leveln	ADJD gelevelt
+gelvlte	ADJA gelevelt
+gelvltem	ADJA gelevelt
+gelvlten	ADJA gelevelt
+gelvlter	ADJA gelevelt
+gelvltes	ADJA gelevelt
+gem	ADJA gem.	ADJD gem.
+gem.	ADJA gem.	ADJD gem.
+gemailt	VVPP mailen	ADJD gemailt
+gemailte	ADJA gemailt
+gemailtem	ADJA gemailt
+gemailten	ADJA gemailt
+gemailter	ADJA gemailt
+gemailtes	ADJA gemailt
+gemoddet	VVPP modden	ADJD gemoddet
+gemoddete	ADJA gemoddet
+gemoddetem	ADJA gemoddet
+gemoddeten	ADJA gemoddet
+gemoddeter	ADJA gemoddet
+gemoddetes	ADJA gemoddet
+geparshippt	VVPP parshippen
+geparshipt	VVPP parshippen
+gepiercet	VVPP piercen	ADJD gepiercet
+gepiercete	ADJA gepiercet
+gepiercetem	ADJA gepiercet
+gepierceten	ADJA gepiercet
+gepierceter	ADJA gepiercet
+gepiercetes	ADJA gepiercet
+gepostet	VVPP posten	ADJD gepostet
+gepostete	ADJA gepostet
+gepostetem	ADJA gepostet
+geposteten	ADJA gepostet
+geposteter	ADJA gepostet
+gepostetes	ADJA gepostet
+gerad	ADJD gerade	ADV gerade
+gerade	ADJA gerade	ADV gerade
+geradem	ADJA gerade
+geraden	ADJA gerade
+gerader	ADJA gerade
+gerades	ADJA gerade
+gesch	ADJA gesch.	ADJD gesch.
+gesch.	ADJA gesch.	ADJD gesch.
+gesehn	VVPP sehen
+gesetzl	ADJA gestzlich	ADJD gesetzlich
+gesetzl.	ADJA gestzlich	ADJD gesetzlich
+gesimst	VVPP simsen	ADJD gesimst
+gesimste	ADJD gesimst
+gesimstem	ADJD gesimst
+gesimsten	ADJD gesimst
+gesimster	ADJD gesimst
+gesimstes	ADJD gesimst
+geskillt	VVPP skillen	ADJD geskillt
+geskillte	ADJA geskillt
+geskilltem	ADJA geskillt
+geskillten	ADJA geskillt
+geskillter	ADJA geskillt
+geskilltes	ADJA geskillt
+gesmst	VVPP simsen	ADJD gesimst
+gesmste	ADJD gesimst
+gesmstem	ADJD gesimst
+gesmsten	ADJD gesimst
+gesmster	ADJD gesimst
+gesmstes	ADJD gesimst
+gespammt	VVPP spammen	ADJD gespammt
+gespammte	ADJA gespammt
+gespammtem	ADJA gespammt
+gespammten	ADJA gespammt
+gespammter	ADJA gespammt
+gespammtes	ADJA gespammt
+gespamt	VVPP spammen	ADJD gespammt
+gespamte	ADJA gespammt
+gespamtem	ADJA gespammt
+gespamten	ADJA gespammt
+gespamter	ADJA gespammt
+gespamtes	ADJA gespammt
+gest	ADJD gestorben	ADJA gestorben	VVPP sterben
+gest.	ADJD gestorben	ADJA gestorben	VVPP sterben
+getunet	VVPP tunen	ADJD getunet
+getunete	ADJA getunet
+getunetem	ADJA getunet
+getuneten	ADJA getunet
+getuneter	ADJA getunet
+getunetes	ADJA getunet
+getwittert	VVPP twittern	ADJD getwittert
+getwitterte	ADJA getwittert
+getwittertem	ADJA getwittert
+getwitterten	ADJA getwittert
+getwitterter	ADJA getwittert
+getwittertes	ADJA getwittert
+geuploadet	VVPP uploaden	ADJD geuploadet
+geuploadete	ADJA geuploadet
+geuploadetem	ADJA geuploadet
+geuploadeten	ADJA geuploadet
+geuploadeter	ADJA geuploadet
+geuploadetes	ADJA geuploadet
+gevotet	VVPP voten	ADJD gevotet
+gevotete	ADJA gevotet
+gevotetem	ADJA gevotet
+gevoteten	ADJA gevotet
+gevoteter	ADJA gevotet
+gevotetes	ADJA gevotet
+gez	APPR gezeichnet
+gez.	APPR gezeichnet
+gezockt	VVPP zocken	ADJD gezockt
+gezockte	ADJA gezockt
+gezocktem	ADJA gezockt
+gezockten	ADJA gezockt
+gezockter	ADJA gezockt
+gezocktes	ADJA gezockt
+gg	ITJ gg
+ggf	ADV gegebenenfalls
+ggf.	ADV gegebenenfalls
+ggfs	ADV gegebenenfalls
+ggg	ITJ gg
+gibbet	VVFIN geben
+gibs	VVFIN geben	VVIMP geben
+gibts	VVFIN geben
+giebt	VVFIN geben
+gings	VVFIN gehen
+google	NE Google
+googles	NE Google
+gr.	ADJD gr.	ADJA gr.
+grad	ADV gerade
+greetz	ITJ greetz	NN Greetz
+gruesse	NN Gruß
+gruss	NN Gruß
+hab	VVFIN haben	VAFIN haben	VVIMP haben
+habs	VVFIN haben	VAFIN haben
+hach	ITJ hach
+haette	VVFIN haben	VAFIN haben
+haha	ITJ haha
+halbtags	ADV halbtags
+hallöchen	ITJ hallöchen
+ham	VVFIN haben	VAFIN haben
+hamm	VVFIN haben	VAFIN haben
+hamma	VVFIN haben	VAFIN haben	ADJA hamma	ADJD hamma
+hammer	ADJA hammer	ADJD hammer
+happier	ADJA happy	ADJD happy
+happy	ADJA happy	ADJD happy
+happyer	ADJA happy	ADJD happy
+hats	VVFIN haben	VVINF haben
+hatt	VVFIN haben	VVINF haben
+hehe	ITJ hehe
+heraufgeladen	VVPP heraufladen	ADJD heraufgeladen
+heraufgeladene	ADJA heraufgeladen
+heraufgeladenem	ADJA heraufgeladen
+heraufgeladenen	ADJA heraufgeladen
+heraufgeladener	ADJA heraufgeladen
+heraufgeladenes	ADJA heraufgeladen
+herauflade	VVFIN heraufladen
+heraufladen	VVINF heraufladen	VVINF heraufladen
+heraufladest	VVFIN heraufladen
+heraufladet	VVFIN heraufladen
+heraufladete	VVFIN heraufladen
+heraufladeten	VVFIN heraufladen
+heraufladetest	VVFIN heraufladen
+heraufladetet	VVFIN heraufladen
+herauflud	VVFIN heraufladen
+heraufluden	VVFIN heraufladen
+heraufludest	VVFIN heraufladen
+heraufludet	VVFIN heraufladen
+heraufludst	VVFIN heraufladen
+heraufludt	VVFIN heraufladen
+herauflädst	VVFIN heraufladen
+herauflädt	VVFIN heraufladen
+herauflüde	VVFIN heraufladen
+herauflüden	VVFIN heraufladen
+herauflüdest	VVFIN heraufladen
+herauflüdet	VVFIN heraufladen
+heritrix	NE Heritrix
+heritrixes	NE Heritrix
+heruntergeladen	VVPP herunterladen	ADJD heruntergeladen
+heruntergeladene	ADJA heruntergeladen
+heruntergeladenem	ADJA heruntergeladen
+heruntergeladenen	ADJA heruntergeladen
+heruntergeladener	ADJA heruntergeladen
+heruntergeladenes	ADJA heruntergeladen
+herunterlade	VVFIN herunterladen
+herunterladen	VVINF herunterladen	VVINF herunterladen
+herunterladest	VVFIN herunterladen
+herunterladet	VVFIN herunterladen
+herunterladete	VVFIN herunterladen
+herunterladeten	VVFIN herunterladen
+herunterladetest	VVFIN herunterladen
+herunterladetet	VVFIN herunterladen
+herunterlud	VVFIN herunterladen
+herunterluden	VVFIN herunterladen
+herunterludest	VVFIN herunterladen
+herunterludet	VVFIN herunterladen
+herunterludst	VVFIN herunterladen
+herunterludt	VVFIN herunterladen
+herunterlädst	VVFIN herunterladen
+herunterlädt	VVFIN herunterladen
+herunterlüde	VVFIN herunterladen
+herunterlüden	VVFIN herunterladen
+herunterlüdest	VVFIN herunterladen
+herunterlüdet	VVFIN herunterladen
+hi	ITJ hi
+hihi	ITJ hihi
+hip	ADJA hip	ADJD hip
+hippe	ADJA hip
+hippem	ADJA hip
+hippen	ADJA hip
+hipper	ADJA hip	ADJD hip
+hippere	ADJA hip
+hipperem	ADJA hip
+hipperen	ADJA hip
+hipperer	ADJA hip
+hipperes	ADJA hip
+hippeste	ADJA hip
+hippestem	ADJA hip
+hippesten	ADJA hip
+hippester	ADJA hip
+hippestes	ADJA hip
+hippste	ADJA hip
+hippstem	ADJA hip
+hippsten	ADJA hip
+hippster	ADJA hip
+hippstes	ADJA hip
+hm	ITJ hm
+hmm	ITJ hm
+hmmm	ITJ hm
+ho	ITJ ho
+hochgeladen	VVPP hochladen	ADJD hochgeladen
+hochgeladene	ADJA hochgeladen
+hochgeladenem	ADJA hochgeladen
+hochgeladenen	ADJA hochgeladen
+hochgeladener	ADJA hochgeladen
+hochgeladenes	ADJA hochgeladen
+hochlade	VVFIN hochladen
+hochladen	VVINF hochladen	VVINF hochladen
+hochladest	VVFIN hochladen
+hochladet	VVFIN hochladen
+hochladete	VVFIN hochladen
+hochladeten	VVFIN hochladen
+hochladetest	VVFIN hochladen
+hochladetet	VVFIN hochladen
+hochlud	VVFIN hochladen
+hochluden	VVFIN hochladen
+hochludest	VVFIN hochladen
+hochludet	VVFIN hochladen
+hochludst	VVFIN hochladen
+hochludt	VVFIN hochladen
+hochlädst	VVFIN hochladen
+hochlädt	VVFIN hochladen
+hochlüde	VVFIN hochladen
+hochlüden	VVFIN hochladen
+hochlüdest	VVFIN hochladen
+hochlüdet	VVFIN hochladen
+hoho	ITJ hoho
+home	NN Home
+hpts	ADV hauptsächlich
+hpts.	ADV hauptsächlich
+hrsg	ADJA herausgegeben	ADJD herausgegeben
+hrsg.	ADJA herausgegeben	ADJD herausgegeben
+huhu	ITJ huhu
+hä	ITJ hä
+hälst	VVFIN halten
+hät	VVFIN haben	VVINF haben
+hätt	VVFIN haben	VVINF haben
+hö	ITJ hö
+i.d.R.	ADV i.d.R.
+iOS	NE iOS
+iPad	NN iPad
+iPads	NN iPad
+iPhone	NN iPhone
+iPhones	NN iPhone
+iTunes	NE iTunes
+ichs	PPER ich
+idR	ADV i.d.R.
+idR.	ADV i.d.R.
+imho	ADV imho
+immernoch	ADV immernoch
+incl	APPR inklusive
+incl.	APPR inklusive
+infrage	ADJD infrage
+inkl	APPR inklusive
+inkl.	APPR inklusive
+innem	APPRART inner
+inner	APPRART inner
+inspektioniere	VVFIN inspektionieren
+inspektionieren	VVINF inspektionieren	VVFIN inspektionieren
+inspektionierest	VVFIN inspektionieren
+inspektionieret	VVFIN inspektionieren
+inspektionierst	VVFIN inspektionieren
+inspektioniert	VVFIN inspektionieren	VVPP inspektionieren	ADJD inspektioniert
+inspektionierte	VVFIN inspektionieren	ADJA inspektioniert
+inspektioniertem	ADJA inspektioniert
+inspektionierten	VVFIN inspektionieren	ADJA inspektioniert
+inspektionierter	ADJA inspektioniert
+inspektioniertes	ADJA inspektioniert
+inspektioniertest	VVFIN inspektionieren
+inspektioniertet	VVFIN inspektionieren
+irgendein	PIAT irgendein
+is	VAFIN sein
+isser	VAFIN sein
+isses	VAFIN sein
+ists	VAFIN sein
+jaja	ITJ jaja
+jelsoft	NE JelSoft
+jelsofts	NE JelSoft
+jetz	ADV jetzt
+jew	ADV jeweils	ADJA jeweilig 
+jew.	ADV jeweils	ADJA jeweilig 
+jhrl	ADJA jährlich	ADJD jährlich
+jhrl.	ADJA jährlich	ADJD jährlich
+jr	NN Junior
+jr.	NN Junior
+jährig	ADJD jährig
+jährige	ADJA jährig
+jährigem	ADJA jährig
+jährigen	ADJA jährig
+jähriger	ADJA jährig
+jähriges	ADJA jährig
+k.A.	NN k.A.
+kA	NN k.A.
+kA.	NN k.A.
+kW	NN kW
+kanns	VMFIN können	VVFIN können
+kannste	VMFIN können	VVFIN können
+kath	ADJA katholisch	ADJD katholisch
+kath.	ADJA katholisch	ADJD katholisch
+keinste	PIAT kein
+keinstem	PIAT kein
+keinsten	PIAT kein
+keinster	PIAT kein
+keinstes	PIAT kein
+kfm	ADJA kaufmännisch	ADJD kaufmännisch
+kfm.	ADJA kaufmännisch	ADJD kaufmännisch
+kgl	ADJA königlich	ADJD königlich
+kgl.	ADJA königlich	ADJD königlich
+klappts	VVFIN klappen
+klasse	ITJ klasse	ADJA klasse	ADJD klasse
+koennen	VMFIN können	VAINF können
+kommts	VVFIN kommen
+konfigurier	VVFIN konfigurieren	VVIMP konfigurieren
+konfiguriere	VVFIN konfigurieren	VVIMP konfigurieren
+konfigurieren	VVINF konfigurieren	VVFIN konfigurieren
+konfigurierst	VVFIN konfigurieren
+konfiguriert	VVFIN konfigurieren	VVIMP konfigurieren	VVPP konfigurieren	ADJD konfiguriert
+konfigurierte	VVFIN konfigurieren	ADJA konfiguriert
+konfiguriertem	ADJA konfiguriert
+konfigurierten	VVFIN konfigurieren	ADJA konfiguriert
+konfigurierter	ADJA konfiguriert
+konfiguriertes	ADJA konfiguriert
+konfiguriertest	VVFIN konfigurieren
+konfiguriertet	VVFIN konfigurieren
+konnt	VMFIN können
+lat	ADJA latein	ADJD latein
+lat.	ADJA latein	ADJD latein
+lern	VVFIN lernen
+level	VVFIN leveln	VVIMP leveln	NN Level
+levele	VVFIN leveln
+leveln	VVINF leveln	VVFIN leveln
+levels	NN Level
+levelst	VVFIN leveln
+levelt	VVFIN leveln	VVIMP leveln
+levelte	VVFIN leveln
+levelten	VVFIN leveln
+leveltest	VVFIN leveln
+leveltet	VVFIN leveln
+lg	ITJ lg
+like	VVINF liken	VVIMP liken
+liken	VVINF liken	VVINF liken
+liket	VVINF liken	VVIMP liken
+likst	VVINF liken
+likt	VVINF liken
+link	VVIMP linken
+linke	VVFIN linken	VVIMP linken
+linken	VVINF linken	VVFIN linken
+linkst	VVFIN linken
+linkt	VVFIN linken
+linkte	VVFIN linken
+linkten	VVFIN linken
+linktest	VVFIN linken
+linktet	VVFIN linken
+loade	VVFIN loaden
+loaden	VVINF loaden	VVFIN loaden
+loadest	VVFIN loaden
+loadet	VVFIN loaden
+loadete	VVFIN loaden
+loadeten	VVFIN loaden
+loadetest	VVFIN loaden
+loadetet	VVFIN loaden
+loadst	VVFIN loaden
+lol	ITJ lol
+lorelai	NE Lorelai
+lorelais	NE Lorelai
+lt	APPR laut
+lt.	APPR laut
+lvl	VVFIN leveln	VVIMP leveln	NN Level
+lvle	VVFIN leveln
+lvln	VVINF leveln	VVFIN leveln
+lvls	NN Level
+lvlst	VVFIN leveln
+lvlt	VVFIN leveln	VVIMP leveln
+lvlte	VVFIN leveln
+lvlten	VVFIN leveln
+lvltest	VVFIN leveln
+lvltet	VVFIN leveln
+läufts	VVFIN laufen
+m.E.	ADV m.E.
+mE	ADV m.E.
+mE.	ADV m.E.
+machts	VVFIN machen
+maile	VVFIN mailen
+mailen	VVINF mailen	VVFIN mailen
+mailest	VVFIN mailen
+mailet	VVFIN mailen
+mailst	VVFIN mailen
+mailt	VVFIN mailen
+mailte	VVFIN mailen
+mailten	VVFIN mailen
+mailtest	VVFIN mailen
+mailtet	VVFIN mailen
+mann	PIS man
+max	ADJA maximal	ADJD maximal
+max.	ADJA maximal	ADJD maximal
+medial	ADJD medial
+mediale	ADJA medial
+medialem	ADJA medial
+medialen	ADJA medial
+medialer	ADJA medial
+mediales	ADJA medial
+mfg	ITJ mfg
+min	ADJA minimal	ADJD minimal	ADJA mindestens	ADJD mindestens
+min.	ADJA minimal	ADJD minimal	ADJA mindestens	ADJD mindestens
+mind	ADJA mindestens	ADJD mindestens
+mind.	ADJA mindestens	ADJD mindestens
+mitem	APPRART mitm
+miter	APPRART mitm
+mitm	APPRART mitm
+modde	VVFIN modden	VVIMP modden
+modden	VVINF modden	VVFIN modden
+moddest	VVFIN modden
+moddet	VVFIN modden	VVIMP modden
+moddete	VVFIN modden
+moddeten	VVFIN modden
+moddetest	VVFIN modden
+moddetet	VVFIN modden
+moeglich	ADJD möglich
+moin	ITJ moin
+mords	ADJA mords
+mortz	ADJA mords
+morz	ADJA mords
+mtl	ADJA monatlich	ADJD monatlich
+mtl.	ADJA monatlich	ADJD monatlich
+muessen	VMFIN müssen	VMINF müssen
+muslimisch	ADJD muslimisch
+muslimische	ADJA muslimisch
+muslimischem	ADJA muslimisch
+muslimischen	ADJA muslimisch
+muslimischer	ADJA muslimisch
+muslimisches	ADJA muslimisch
+m²	NN Quadratmeter
+m³	NN Kubikmeter
+möbl	ADJA möbliert	ADJD möbliert
+möbl.	ADJA möbliert	ADJD möbliert
+möcht	VMFIN mögen
+n	ART n
+'n	ART n
+naechst	ADJD nächst
+naechste	ADJA nächst
+naechstem	ADJA nächst
+naechsten	ADJA nächst
+naechster	ADJA nächst
+naechstes	ADJA nächst
+naja	ITJ naja
+nat	ADJA nat.	ADJD nat.
+nat.	ADJA nat.	ADJD nat.
+natuerlich	ADV natürlich
+nciht	PTKNEG nicht
+ne	ART n
+'ne	ART n
+ned	PTKNEG nicht
+nee	ITJ nee
+nehm	VVFIN nehmen	VVIMP nehmen
+nem	ART n
+'nem	ART n
+nen	ART n
+'nen	ART n
+neoliberal	ADJD neoliberal
+neoliberale	ADJA neoliberal
+neoliberalem	ADJA neoliberal
+neoliberalen	ADJA neoliberal
+neoliberaler	ADJA neoliberal	ADJD neoliberal
+neoliberalere	ADJA neoliberal
+neoliberalerem	ADJA neoliberal
+neoliberaleren	ADJA neoliberal
+neoliberalerer	ADJA neoliberal
+neoliberaleres	ADJA neoliberal
+neoliberales	ADJA neoliberal
+neoliberalste	ADJA neoliberal
+neoliberalstem	ADJA neoliberal
+neoliberalsten	ADJA neoliberal
+neoliberalster	ADJA neoliberal
+neoliberalstes	ADJA neoliberal
+ner	ART n
+net	PTKNEG nicht
+nich	PTKNEG nicht
+nichtmal	ADV nichtmal
+nichtmehr	ADV nichtmehr
+nochma	ADV nochmal
+nochwas	PIS nochwas	PIAT nochwas
+nähmlich	ADV nämlich
+näml	ADV nämlich
+näml.	ADV nämlich
+nö	ITJ nö
+o.k.	ADJD okay	ADJD okay	ITJ okay
+o.ä.	ADV o.ä.
+och	ITJ och
+od	KON oder
+od.	KON oder
+off-topic	ADJA offtopic	ADJD offtopic
+offline	ADJA offline	ADJD offline
+offtopic	ADJA offtopic	ADJD offtopic
+ok	ADJD okay	ADJD okay	ITJ okay
+okay	ADJD okay	ADJD okay	ITJ okay
+oki	ITJ oki
+online	ADJA online	ADJD online
+orig	ADJA original	ADJD original
+orig.	ADJA original	ADJD original
+outgesourcet	VVPP outsourcen	ADJD outgesourcet
+outgesourcete	ADJA outgesourcet
+outgesourcetem	ADJA outgesourcet
+outgesourceten	ADJA outgesourcet
+outgesourceter	ADJA outgesourcet
+outgesourcetes	ADJA outgesourcet
+outsource	VVFIN outsourcen	VVIMP outsourcen
+outsourcen	VVINF outsourcen	VVFIN outsourcen
+outsourcest	VVFIN outsourcen
+outsourcet	VVFIN outsourcen	VVIMP outsourcen
+outsourcete	VVFIN outsourcen
+outsourceten	VVFIN outsourcen
+outsourcetest	VVFIN outsourcen
+outsourcetet	VVFIN outsourcen
+oä	ADV o.ä.
+oä.	ADV o.ä.
+parshipe	VVFIN parshippen
+parshipen	VVINF parshippen	VVFIN parshippen
+parshippe	VVFIN parshippen
+parshippen	VVINF parshippen	VVFIN parshippen
+parshippst	VVFIN parshippen
+parshippt	VVFIN parshippen
+parshippte	VVFIN parshippen
+parshippten	VVFIN parshippen
+parshipptest	VVFIN parshippen
+parshipptet	VVFIN parshippen
+parshipst	VVFIN parshippen
+parshipt	VVFIN parshippen
+parshipte	VVFIN parshippen
+parshipten	VVFIN parshippen
+parshiptest	VVFIN parshippen
+parshiptet	VVFIN parshippen
+pdf	NN PDF
+pdfs	NN PDF
+permalink	NN Permalink
+permalinks	NN Permalink
+pers	ADJA persönlich	ADJD persönlich
+pers.	ADJA persönlich	ADJD persönlich
+phil	ADJA phil.
+phil.	ADJA phil.
+phpBB	NE phpBB
+phpBB.de	NE phpBB.de
+phpBBs	NE phpBB
+pierce	VVFIN piercen	VVIMP piercen
+piercen	VVINF piercen	VVFIN piercen
+piercest	VVFIN piercen
+piercet	VVFIN piercen	VVIMP piercen
+piercete	VVFIN piercen
+pierceten	VVFIN piercen
+piercetest	VVFIN piercen
+piercetet	VVFIN piercen
+positioniere	VVFIN positionieren
+positionieren	VVINF positionieren	VVFIN positionieren
+positionierest	VVFIN positionieren
+positionieret	VVFIN positionieren
+positionierst	VVFIN positionieren
+positioniert	VVFIN positionieren	VVPP positionieren	ADJD positioniert
+positionierte	VVFIN positionieren	ADJA positioniert
+positioniertem	ADJA positioniert
+positionierten	VVFIN positionieren	ADJA positioniert
+positionierter	ADJA positioniert
+positioniertes	ADJA positioniert
+positioniertest	VVFIN positionieren
+positioniertet	VVFIN positionieren
+poste	VVFIN posten	VVIMP posten
+posten	VVINF posten	VVFIN posten
+postest	VVFIN posten
+postet	VVFIN posten	VVIMP posten
+postete	VVFIN posten
+posteten	VVFIN posten
+postetest	VVFIN posten
+postetet	VVFIN posten
+pp.	ADV pp.
+prepaid	ADJD prepaid	ADJA prepaid
+puh	ITJ puh
+raufgeladen	VVPP raufladen	ADJD raufgeladen
+raufgeladene	ADJA raufgeladen
+raufgeladenem	ADJA raufgeladen
+raufgeladenen	ADJA raufgeladen
+raufgeladener	ADJA raufgeladen
+raufgeladenes	ADJA raufgeladen
+rauflade	VVFIN raufladen
+raufladen	VVINF raufladen	VVINF raufladen
+raufladest	VVFIN raufladen
+raufladet	VVFIN raufladen
+raufladete	VVFIN raufladen
+raufladeten	VVFIN raufladen
+raufladetest	VVFIN raufladen
+raufladetet	VVFIN raufladen
+rauflud	VVFIN raufladen
+raufluden	VVFIN raufladen
+raufludest	VVFIN raufladen
+raufludet	VVFIN raufladen
+raufludst	VVFIN raufladen
+raufludt	VVFIN raufladen
+rauflädst	VVFIN raufladen
+rauflädt	VVFIN raufladen
+rauflüde	VVFIN raufladen
+rauflüden	VVFIN raufladen
+rauflüdest	VVFIN raufladen
+rauflüdet	VVFIN raufladen
+rer	ADJA rer.
+rer.	ADJA rer.
+riesen	ADJA riesen
+runtergeladen	VVPP runterladen	ADJD runtergeladen
+runtergeladene	ADJA runtergeladen
+runtergeladenem	ADJA runtergeladen
+runtergeladenen	ADJA runtergeladen
+runtergeladener	ADJA runtergeladen
+runtergeladenes	ADJA runtergeladen
+runterlade	VVFIN runterladen
+runterladen	VVINF runterladen	VVINF runterladen
+runterladest	VVFIN runterladen
+runterladet	VVFIN runterladen
+runterladete	VVFIN runterladen
+runterladeten	VVFIN runterladen
+runterladetest	VVFIN runterladen
+runterladetet	VVFIN runterladen
+runterlud	VVFIN runterladen
+runterluden	VVFIN runterladen
+runterludest	VVFIN runterladen
+runterludet	VVFIN runterladen
+runterludst	VVFIN runterladen
+runterludt	VVFIN runterladen
+runterlädst	VVFIN runterladen
+runterlädt	VVFIN runterladen
+runterlüde	VVFIN runterladen
+runterlüden	VVFIN runterladen
+runterlüdest	VVFIN runterladen
+runterlüdet	VVFIN runterladen
+röm	ADJA römisch	ADJD römisch
+röm.	ADJA römisch	ADJD römisch
+röm\.-kath	ADJA römisch-katholisch	ADJD römisch-katholisch
+röm\.-kath.	ADJA römisch-katholisch	ADJD römisch-katholisch
+s.o.	ITJ s.o.
+s.u.	ITJ s.u.
+sach	VVIMP sagen	VVFIN sagen
+sacht	VVFIN sagen
+schaun	VVFIN schauen	VVIMP schauen
+schaus	VVFIN schauen
+schauts	VVFIN schauen
+scheiss	ADJA scheiß
+scheiß	ADJA scheiß
+schles	ADJA schlesisch	ADJD schlesisch
+schles.	ADJA schlesisch	ADJD schlesisch
+schomma	ADV schonmal
+schonmal	ADV schonmal
+schreib	VVFIN schreiben	VVIMP schreiben
+schweiz	ADJA schweizerisch	ADJD schweizerisch
+schweiz.	ADJA schweizerisch	ADJD schweizerisch
+schwäb	ADJA schwäbisch	ADJD schwäbisch
+schwäb.	ADJA schwäbisch	ADJD schwäbisch
+seh	VVFIN sehen	VVIMP sehen
+selbe	ADJA selbe
+selben	ADJA selbe
+servus	ITJ servus
+sexiem	ADJA sexy
+sexien	ADJA sexy
+sexier	ADJA sexy	ADJD sexy
+sexies	ADJA sexy
+sexiest	ADJA sexy	ADJD sexy
+sexieste	ADJA sexy	ADJD sexy
+sexiestem	ADJA sexy	ADJD sexy
+sexiesten	ADJA sexy	ADJD sexy
+sexiester	ADJA sexy	ADJD sexy
+sexiestes	ADJA sexy	ADJD sexy
+sexy	ADJA sexy	ADJD sexy
+sexyem	ADJA sexy
+sexyen	ADJA sexy
+sexyer	ADJA sexy	ADJD sexy
+sexyes	ADJA sexy
+sexyst	ADJA sexy	ADJD sexy
+sexyste	ADJA sexy	ADJD sexy
+sexystem	ADJA sexy	ADJD sexy
+sexysten	ADJA sexy	ADJD sexy
+sexyster	ADJA sexy	ADJD sexy
+sexystes	ADJA sexy	ADJD sexy
+sg	ADJA sogenannt
+sg.	ADJA sogenannt
+siehts	VVFIN sehen
+sims	VVFIN simsen	VVIMP simsen
+simse	VVFIN simsen	VVIMP simsen
+simsen	VVINF simsen	VVFIN simsen
+simst	VVFIN simsen	VVIMP simsen
+simste	VVFIN simsen
+simsten	VVFIN simsen
+simstest	VVFIN simsen
+simstet	VVFIN simsen
+sinds	VAFIN sein
+single	ADJD single
+skill	VVFIN skillen	VVIMP skillen
+skille	VVFIN skillen	VVIMP skillen
+skillst	VVFIN skillen
+skillt	VVFIN skillen	VVIMP skillen
+skillte	VVFIN skillen
+skillten	VVFIN skillen
+skilltest	VVFIN skillen
+skilltet	VVFIN skillen
+sms	VVFIN simsen	VVIMP simsen	NN SMS
+smse	VVFIN simsen	VVIMP simsen	NN SMS
+smsen	VVINF simsen	VVFIN simsen
+smst	VVFIN simsen	VVIMP simsen
+smste	VVFIN simsen
+smsten	VVFIN simsen
+smstest	VVFIN simsen
+smstet	VVFIN simsen
+sodass	KOUS sodass
+sodaß	KOUS sodass
+soetwas	PIS soetwas	PIAT soetwas
+sog	ADJA sogennant
+sog.	ADJA sogennant
+sooo	ITJ sooo
+sorry	ITJ sorry
+source	VVFIN sourcen	VVIMP sourcen
+sourcen	VVINF sourcen	VVFIN sourcen
+sourcest	VVFIN sourcen
+sourcet	VVFIN sourcen	VVIMP sourcen
+sourcete	VVFIN sourcen
+sourceten	VVFIN sourcen
+sourcetest	VVFIN sourcen
+sourcetet	VVFIN sourcen
+soviel	PIS soviel	PIAT soviel	ADV soviel
+soviele	PIS soviel	PIAT soviel
+sovielen	PIS soviel	PIAT soviel
+sovieler	PIS soviel	PIAT soviel
+sowas	PIS sowas	PIAT sowas
+spame	VVFIN spammen	VVIMP spammen
+spamen	VVINF spammen	VVFIN spammen
+spamme	VVFIN spammen	VVIMP spammen
+spammen	VVINF spammen	VVFIN spammen
+spammst	VVFIN spammen
+spammt	VVFIN spammen	VVIMP spammen
+spammte	VVFIN spammen
+spammten	VVFIN spammen
+spammtest	VVFIN spammen
+spammtet	VVFIN spammen
+spamst	VVFIN spammen
+spamt	VVFIN spammen	VVIMP spammen
+spamte	VVFIN spammen
+spamten	VVFIN spammen
+spamtest	VVFIN spammen
+spamtet	VVFIN spammen
+sr.	ADJA sr.	ADJD sr.
+sry	ITJ sry
+st.	ADJA st.	ADJA st.
+std.	ADJA st.	ADJD std.
+stehn	VVFIN stehen	VVINF stehen
+stehts	VVFIN stehen
+stellv	ADJA stellvertretend
+stellv.	ADJA stellvertretend
+supi	ITJ supi	ADJA supi	ADJD supi
+surf	VVFIN surfen	VVIMP surfen
+surfe	VVFIN surfen	VVIMP surfen
+surfen	VVINF surfen	VVFIN surfen
+surfst	VVFIN surfen
+surft	VVFIN surfen	VVIMP surfen
+surfte	VVFIN surfen
+surften	VVFIN surfen
+surftest	VVFIN surfen
+surftet	VVFIN surfen
+systemisch	ADJD systemisch
+systemische	ADJA systemisch
+systemischem	ADJA systemisch
+systemischen	ADJA systemisch
+systemischer	ADJA systemisch	ADJD systemisch
+systemischere	ADJA systemisch
+systemischerem	ADJA systemisch
+systemischeren	ADJA systemisch
+systemischerer	ADJA systemisch
+systemischeres	ADJA systemisch
+systemisches	ADJA systemisch
+systemischste	ADJA systemisch
+systemischstem	ADJA systemisch
+systemischsten	ADJA systemisch
+systemischster	ADJA systemisch
+systemischstes	ADJA systemisch
+südd.	ADJA süddeutsch	ADJD süddeutsch
+tach	ITJ tach
+taz	NE taz	NN taz
+thnx	ITJ thnx
+thx	ITJ thx
+tja	ITJ tja
+tuen	VVINF tun	VVFIN tun
+tune	VVFIN tunen
+tunen	VVINF tunen	VVFIN tunen
+tunest	VVFIN tunen
+tunet	VVFIN tunen
+tunete	VVFIN tunen
+tuneten	VVFIN tunen
+tunetest	VVFIN tunen
+tunetet	VVFIN tunen
+tuts	VVFIN tun
+twitter	VVFIN twittern	VVIMP twittern
+twittere	VVFIN twittern	VVIMP twittern
+twittern	VVINF twittern	VVFIN twittern
+twitterst	VVFIN twittern
+twittert	VVFIN twittern	VVIMP twittern
+twitterte	VVFIN twittern
+twitterten	VVFIN twittern
+twittertest	VVFIN twittern
+twittertet	VVFIN twittern
+tägl	ADJA täglich	ADJD täglich
+tägl.	ADJA täglich	ADJD täglich
+tätig	ADJD tätig
+tätige	ADJA tätig
+tätigem	ADJA tätig
+tätigen	ADJA tätig
+tätiger	ADJA tätig
+tätiges	ADJA tätig
+u.U.	ADV u.U.
+u.s.w.	ADV usw.
+u.v.m.	ADV u.v.m.
+u.ä.	ADV u.ä.
+uU	ADV u.U.
+udn	KON und
+ueber	APPR über
+unbenannt	ADJD unbenannt
+unbenannte	ADJA unbenannt
+unbenanntem	ADJA unbenannt
+unbenannten	ADJA unbenannt
+unbenannter	ADJA unbenannt
+unbenanntes	ADJA unbenannt
+ungelesen	ADJD ungelesen
+ungelesene	ADJA ungelesen
+ungelesenem	ADJA ungelesen
+ungelesenen	ADJA ungelesen
+ungelesener	ADJA ungelesen
+ungelesenes	ADJA ungelesen
+up	ADJD up	PTKVZ up
+upgeloadet	VVPP uploaden	ADJD upgeloadet
+upgeloadete	ADJA upgeloadet
+upgeloadetem	ADJA downgeloadet
+upgeloadeten	ADJA upgeloadet
+upgeloadeter	ADJA upgeloadet
+upgeloadetes	ADJA upgeloadet
+uploade	VVFIN uploaden
+uploaden	VVINF uploaden	VVFIN uploaden
+uploadest	VVFIN uploaden
+uploadet	VVFIN uploaden
+uploadete	VVFIN uploaden
+uploadeten	VVFIN uploaden
+uploadetest	VVFIN uploaden
+uploadetet	VVFIN uploaden
+uploadst	VVFIN uploaden
+ups	ITJ ups
+usw	ADV usw.
+usw.	ADV usw.
+uvm	ADV u.v.m.
+uvm.	ADV u.v.m.
+uä	ADV u.ä.
+uä.	ADV u.ä.
+v.a.	ADV v.a.
+vBulletin	NE vBulletin
+vBulletin®	NE vBulletin
+vBulletin™	NE vBulletin
+va	ADV v.a.
+va.	ADV v.a.
+ver.di	NE ver.di
+ver.dis	NE ver.di
+verh.	ADJA verheiratet	ADJD verheiratet
+verlink	VVIMP verlinken
+verlinke	VVFIN verlinken	VVIMP verlinken
+verlinken	VVINF verlinken	VVFIN verlinken
+verlinkst	VVFIN verlinken
+verlinkt	VVPP verlinken	ADJD verlinkt	VVFIN verlinken
+verlinkte	VVFIN verlinken	ADJA verlinkt
+verlinktem	ADJA verlinkt
+verlinkten	VVFIN verlinken	ADJA verlinkt
+verlinkter	ADJA verlinkt
+verlinktes	ADJA verlinkt
+verlinktest	VVFIN verlinken
+verlinktet	VVFIN verlinken
+versandkostenfrei	ADJD versandkostenfrei
+versandkostenfreie	ADJA versandkostenfrei
+versandkostenfreiem	ADJA versandkostenfrei
+versandkostenfreien	ADJA versandkostenfrei
+versandkostenfreier	ADJA versandkostenfrei
+versandkostenfreies	ADJA versandkostenfrei
+verschlagworte	VVFIN verschlagworten	VVIMP verschlagworten
+verschlagworten	VVINF verschlagworten	VVFIN verschlagworten
+verschlagwortest	VVFIN verschlagworten
+verschlagwortet	VVFIN verschlagworten	VVPP verschlagworten	ADJD verschlagwortet
+verschlagwortete	VVFIN verschlagworten	ADJA verschlagwortet
+verschlagwortetem	ADJA verschlagwortet
+verschlagworteten	VVFIN verschlagworten	ADJA verschlagwortet
+verschlagworteter	ADJA verschlagwortet
+verschlagwortetes	ADJA verschlagwortet
+verschlagwortetest	VVFIN verschlagworten
+verschlagwortetet	VVFIN verschlagworten
+verschlechter	VVFIN verschlechtern	VVIMP verschlechtern
+verschlechtere	VVFIN verschlechtern	VVIMP verschlechtern
+verschlechtern	VVINF verschlechtern	VVFIN verschlechtern
+verschlechterst	VVFIN verschlechtern
+verschlechtert	VVFIN verschlechtern	VVIMP verschlechtern	VVPP twittern	ADJD verschlechtert
+verschlechterte	VVFIN verschlechtern	ADJA verschlechtert
+verschlechtertem	ADJA verschlechtert
+verschlechterten	ADJA verschlechtert	VVFIN verschlechtern
+verschlechterter	ADJA verschlechtert
+verschlechtertes	ADJA verschlechtert
+verschlechtertest	VVFIN verschlechtern
+verschlechtertet	VVFIN verschlechtern
+vgl	VVIMP vergleichen
+vgl.	VVIMP vergleichen
+vieleicht	ADV vielleicht
+visualisiere	VVFIN visualisieren
+visualisieren	VVINF visualisieren	VVFIN visualisieren
+visualisierest	VVFIN visualisieren
+visualisieret	VVFIN visualisieren
+visualisierst	VVFIN visualisieren
+visualisiert	VVFIN visualisieren	VVPP visualisieren	ADJD visualisiert
+visualisierte	VVFIN visualisieren	ADJA visualisiert
+visualisiertem	ADJA visualisiert
+visualisierten	VVFIN visualisieren	ADJA visualisiert
+visualisierter	ADJA visualisiert
+visualisiertes	ADJA visualisiert
+visualisiertest	VVFIN visualisieren
+visualisiertet	VVFIN visualisieren
+vllt	ADV vielleicht
+vllt.	ADV vielleicht
+vlt	ADV vielleicht
+vlt.	ADV vielleicht
+vorallem	ADV vorallem
+vorm.	ADV vormals	ADJA vormalig	ADJD vormalig
+vorraus	ADV voraus
+vorrätig	ADJD vorrätig
+vorrätige	ADJA vorrätig
+vorrätigem	ADJA vorrätig
+vorrätigen	ADJA vorrätig
+vorrätiger	ADJA vorrätig
+vorrätiges	ADJA vorrätig
+vote	VVFIN voten
+voten	VVINF voten	VVFIN voten
+votest	VVFIN voten
+votet	VVFIN voten
+votete	VVFIN voten
+voteten	VVFIN voten
+votetest	VVFIN voten
+votetet	VVFIN voten
+waehrend	APPR während
+waere	VAFIN sein
+wars	VAFIN sein
+wat	PRELS was	PIS was	PWS was	PIAT was
+watt	PRELS was	PIS was	PWS was	PIAT was
+weils	KOUS weils
+weiters	ADV weiters
+wenns	KOUS wenns
+werd	VAFIN werden
+werds	VAFIN werden
+wg	APPR wegen
+wg.	APPR wegen
+wiedermal	ADV wiedermal
+wiederrum	ADV wiederum
+willste	VMFIN wollen
+wirds	VAFIN werden
+wiss.	ADJA wissenschaftlich	ADJD wissenschaftlich
+wow	NE WoW	ITJ wow
+wuerde	VAFIN werden
+www	NN WWW
+wär	VAFIN sein
+wärs	VAFIN sein
+wöch	ADJA wöchentlich	ADJD wöchentlich
+wöch.	ADJA wöchentlich	ADJD wöchentlich
+würd	VAFIN werden
+würds	VAFIN werden
+xD	ITJ xD
+xbox	NE XboX	NN XboX
+yahoo	NE Yahoo
+z.T.	ADV z.T.
+z.Zt.	ADV z.Zt.
+z.b.	ADV z.B.
+zT	ADV z.T.
+zT.	ADV z.T.
+zahlr	ADJA zahlreich	ADJD zahlreich
+zahlr.	ADJA zahlreich	ADJD zahlreich
+zb	ADV z.B.
+zb.	ADV z.B.
+ziehmlich	ADV ziemlich
+zig	ADJA zig
+zocke	VVFIN zocken
+zocken	VVINF zocken	VVFIN zocken
+zockest	VVFIN zocken
+zocket	VVFIN zocken
+zockst	VVFIN zocken
+zockt	VVFIN zocken
+zockte	VVFIN zocken
+zockten	VVFIN zocken
+zocktest	VVFIN zocken
+zocktet	VVFIN zocken
+zugespammt	VVPP spammen	ADJD zugespammt
+zugespammte	ADJA zugespammt
+zugespammtem	ADJA zugespammt
+zugespammten	ADJA zugespammt
+zugespammter	ADJA zugespammt
+zugespammtes	ADJA zugespammt
+zugespamt	VVPP spammen	ADJD zugespammt
+zugespamte	ADJA zugespammt
+zugespamtem	ADJA zugespammt
+zugespamten	ADJA zugespammt
+zugespamter	ADJA zugespammt
+zugespamtes	ADJA zugespammt
+zuletzt	ADV zuletzt
+zumindestens	ADV zumindestens
+zus.	ADJA zusammen	ADJD zusammen	ADV zusammen
+zuspame	VVFIN zuspammen	VVIMP zuspammen
+zuspamen	VVINF zuspammen	VVFIN zuspammen
+zuspamme	VVFIN zuspammen	VVIMP zuspammen
+zuspammen	VVINF zuspammen	VVFIN zuspammen
+zuspammst	VVFIN zuspammen
+zuspammt	VVFIN zuspammen	VVIMP zuspammen
+zuspammte	VVFIN zuspammen
+zuspammten	VVFIN zuspammen
+zuspammtest	VVFIN zuspammen
+zuspammtet	VVFIN zuspammen
+zuspamst	VVFIN zuspammen
+zuspamt	VVFIN zuspammen	VVIMP zuspammen
+zuspamte	VVFIN zuspammen
+zuspamten	VVFIN zuspammen
+zuspamtest	VVFIN zuspammen
+zuspamtet	VVFIN zuspammen
+zw	APPR zwischen
+zw.	APPR zwischen
+zzgl.	APPR zuzüglich
+§	NN §
+§§	NN §
+¯	$.	¯
+°C	NN °C
+Äh	ITJ äh
+Ähm	ITJ ähm
+Öhm	ITJ öhm
+Özil	NE Özil
+Özils	NE Özil
+Übersichtsseite	NN Übersichtsseite
+Übersichtsseiten	NN Übersichtsseite
+äh	ITJ äh
+ähm	ITJ ähm
+öhm	ITJ öhm
+österr	ADJA österreichisch ADJD österreichisch
+österr.	ADJA österreichisch ADJD österreichisch
+überm	APPRART übern
+übern	APPRART übern
+übers	APPRART übern
+•	$.	•
+€	NN €
+'s	PPER es
+sagn	VVINF sagen	VVFIN sagen
+machn	VVINF machen	VVFIN machen
+müssn	VAINF müssen	VAFIN müssen
+wolln	VAFIN wollen	VVFIN wollen	VAINF wollen	VVINF wollen

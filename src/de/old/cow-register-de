@@ -1,0 +1,210 @@
+#!/usr/bin/python
+
+# This script creates structural annotation for "document register"
+# in German COW14 gzipped XML files.
+
+import gzip
+import re
+import argparse
+import os.path
+import sys
+
+parser = argparse.ArgumentParser()
+parser.add_argument("inn", help="COW-XML file (gzipped) for which to generate the annotations.")
+parser.add_argument("out", help="Output gzipped annotation file.")
+args = parser.parse_args()
+
+if not os.path.exists(args.inn):
+    sys.exit("Input file does not exist.")
+
+if os.path.exists(args.out):
+    sys.exit("Output file exists!")
+
+if args.out == args.inn:
+    sys.exit("Inputs and output cannot be the same file.")
+
+#################################
+
+xml_file = gzip.open(args.inn)
+out_file=gzip.open(args.out, 'wb')
+
+url_re = re.compile('^<doc url="([^"]+)" id="([^"]+)"(| .+)>$')
+cas_re = re.compile('^\|(nom|acc|dat|gen)\|.+$')
+
+url = "" # Document URL.
+doc = "" # Document ID.
+tok = 0  # Tokens in document.
+art = 0  # Number of non-clitic indefinite articles in document.
+cli = 0  # Number of clitic articles in document.
+emo = 0  # Number of smileys and PHPBB emoticons in document.
+unk = 0  # Number of unknowns in document.
+bla = 0  # Number of texrex blanks in document.
+cas = 0  # Number of cased tokens in document.
+gen = 0  # Number of genitive tokens in document.
+cli_score = "00000" # Per-10-millage of clitic indef. articles within articles.
+emo_score = "00000" # Per-100-millage of emoticons within tokens.
+gen_score = "0000" # Permillage of genitives within nominal tokens.
+unk_score = "0000" # Permillage of unknowns in tokens.
+bla_score = "0000" # Permillage of blanks in tokens.
+qs_score  = "000" # Aggregated representation.
+
+for x in xml_file:
+
+    x = x.strip()
+
+    # Handle XML lines.
+    if x[0] == "<":
+
+	# Document ending.
+	if x == "</doc>":
+
+	    # Calculate scores.
+	    if cas > 0:
+		gen_score = int(round(float(gen)/float(cas)*1000, 0))
+	    else:
+		gen_score = 0
+
+	    if tok > 0:
+		emo_score = int(round(float(emo)/float(tok)*100000, 0))
+		bla_score = int(round(float(bla)/float(tok)*1000, 0))
+		unk_score = int(round(float(unk)/float(tok)*1000, 0))
+	    else:
+		emo_score = 0
+		bla_score = 0
+		unk_score = 0
+
+	    if cli+art > 0:
+		cli_score = int(round(float(cli)/float(cli+art)*10000, 0))
+	    else:
+		cli_score = 0
+
+	    # The q_score consists of three digits in 0..9.
+	    # The first digit stands for CLITIC, second for EMOTICON, third for GENITIVE.
+
+	    # To find out the quantizations, decow14_0000000001_2014-08-15_09-46-26.xml.gz
+	    # containing 48554 documents was analyzed wrt the cli_score, emo_score, gen_score.
+
+	    # 1. Find lowest block containing no 1.5-IQR outliers.
+	    # 2. Find the 8 quantiles within this remaning block.
+	    # 3. Map "below block" to 0 and "above block" to 9.
+	    # 4. Map the 8 quantiles within the block to 2..8.
+
+	    # Emo: BLOCK = 1.. 435, quantiles: 3, 48, 75, 113, 162, 214, 286, 435 // n_BOX=3238 (44739 / 577)
+	    # Cli: BLOCK = 1..3470, quantiles: 26, 303, 526, 769, 1081, 1429, 2143, 3333  // n_BOX=3396 (44723 / 435)
+	    # Gen: BLOCK = 1.. 156, quantiles: 2, 28, 41, 53, 65, 80, 102, 155  // n_BOX=46575 (628 / 1351)
+
+	    # For Gen, the scale is reversed, because more genitive means less quasi-spontaneous.
+	    
+	    if emo_score < 1:
+		emo_map = "0"
+	    elif emo_score <= 3:
+		emo_map = "1"
+	    elif emo_score <= 48:
+		emo_map = "2"
+	    elif emo_score <= 75:
+		emo_map = "3"
+	    elif emo_score <= 113:
+		emo_map = "4"
+	    elif emo_score <= 162:
+		emo_map = "5"
+	    elif emo_score <= 214:
+		emo_map = "6"
+	    elif emo_score <= 286:
+		emo_map = "7"
+	    elif emo_score <= 435:
+		emo_map = "8"
+	    else:
+		emo_map = "9"
+	    
+	    if cli_score < 1:
+		cli_map = "0"
+	    elif cli_score <= 26:
+		cli_map = "1"
+	    elif cli_score <= 303:
+		cli_map = "2"
+	    elif cli_score <= 526:
+		cli_map = "3"
+	    elif cli_score <= 769:
+		cli_map = "4"
+	    elif cli_score <= 1081:
+		cli_map = "5"
+	    elif cli_score <= 1429:
+		cli_map = "6"
+	    elif cli_score <= 2143:
+		cli_map = "7"
+	    elif cli_score <= 3333:
+		cli_map = "8"
+	    else:
+		cli_map = "9"
+	    
+	    if gen_score < 1:
+		gen_map = "9"
+	    elif gen_score <= 2:
+		gen_map = "8"
+	    elif gen_score <= 28:
+		gen_map = "7"
+	    elif gen_score <= 41:
+		gen_map = "6"
+	    elif gen_score <= 53:
+		gen_map = "5"
+	    elif gen_score <= 65:
+		gen_map = "4"
+	    elif gen_score <= 80:
+		gen_map = "3"
+	    elif gen_score <= 102:
+		gen_map = "2"
+	    elif gen_score <= 155:
+		gen_map = "1"
+	    else:
+		gen_map = "0"
+
+	    qs_score  = "".join([cli_map, emo_map, gen_map])
+
+	    # Write info.
+	    out_file.write("\t".join(['url="'+url+'"', 'id="'+doc+'"', 'c_token="'+str(tok)+'"', 'c_art="'+str(art+cli)+'"', 'c_cli="'+str(cli)+'"', 'c_emo="'+str(emo)+'"', 'c_cased="'+str(cas)+'"', 'c_gen="'+str(gen)+'"', 'c_unk="'+str(unk)+'"', 'c_blank="'+str(bla)+'"', 's_cli="'+str(cli_score).zfill(5)+'"', 'm_cli="'+cli_map+'"', 's_emo="'+(str(emo_score).zfill(6))+'"', 'm_emo="'+emo_map+'"', 's_gen="'+str(gen_score).zfill(4)+'"', 'm_gen="'+gen_map+'"', 's_unk="'+str(unk_score).zfill(4)+'"', 's_blank="'+str(bla_score).zfill(4)+'"', 'qs="'+qs_score+'"']) + "\n")
+
+	# Document starting.
+	elif url_re.match(x):
+
+	    # Set and reset variables.
+	    grp = url_re.match(x).groups()
+	    url = grp[0]
+	    doc = grp[1]
+	    tok = 0
+	    art = 0
+	    cli = 0
+	    emo = 0
+	    unk = 0
+	    bla = 0
+	    cas = 0
+	    gen = 0
+	    
+	# No else. All other XML ignored.
+
+    # Not XML.
+    else:
+
+	# Get access to the single fields.
+	fields = x.split("\t")
+
+	# Do the counting.
+	tok += 1
+
+	if fields[2] == "(smiley)" or fields[2] == "(phpbbemo)":
+	    emo += 1
+	elif fields[2] == "(unknown)":
+	    unk += 1
+	elif fields[2] == "(blank)":
+	    bla += 1
+	elif fields[1] == "ART":
+	    if fields[2] == "ein":
+		art += 1
+	    elif fields[2] == "n":
+		cli += 1
+	elif cas_re.match(fields[4]):
+	    cas += 1
+	    if cas_re.match(fields[4]).groups()[0] == "gen":
+		gen += 1
+
+xml_file.close()
+out_file.close()

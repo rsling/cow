@@ -1,0 +1,73 @@
+#!/bin/bash
+
+# Pass input file (gz), output file (gz).
+
+# Define envvars:
+#    TT_MODEL_DE   (TT model abs. path)
+#    TT_LEXIC_DE   (additional lexicon abs, path)
+#    TT_TMP        (TMP path for ad-hoc lexicon and tmp tagging)
+#    TT_FILTER     (full path to filter-german-tags)
+
+set -e
+set -u
+
+
+export LC_ALL=C # Felix: set this or sort will not work as expected (reset at the end)
+
+TT_MODEL_DE="$HOME/NLP/TT/lib/german-dereko-utf8.par"
+TT_LEXIC_DE="$HOME/NLP/cow/src/de/lexicon"
+TT_TMP="/work/workspace/scratch/ma_fbildhau-corpus-0/UK-Rest/04-tagged/tmpfiles"
+#TT_TMP="/media/sf_linux-shared/dereko2noske"
+TT_FILTER="$HOME/NLP/TT/cmd/filter-german-tags"
+
+
+OPTS="-token -lemma -sgml -cap-heuristics -hyphen-heuristics -quiet"
+
+# Generate ad-hoc-NN-lexicon for pretagging.
+rnd=${RANDOM}
+lexf="${TT_TMP}/$(basename ${1})_${rnd}_nnlexicon"
+tmpf="${TT_TMP}/$(basename ${2})_${rnd}_tmp.gz"
+#tmpprefix="${TT_TMP}/$(basename ${2})_${rnd}_tmp"
+
+
+# 1. Generate unknown list for pretagging.
+gunzip -c ${1} | cut -f 1 | tree-tagger $OPTS -lex ${TT_LEXIC_DE} $TT_MODEL_DE | gzip -c > ${tmpf}
+
+# 2. Get SMOR analyses for unknowns.
+gunzip -c ${tmpf} | grep '	<unknown>' | cut -f 1 | smor-lemmatizer | sed 's/	\([A-Z]\+\|$\.\)\.[^	 ]\+/	\1/' | grep 'ADJ.\|NN\|NE' | cow16-normalize-lemmas | sort -u | cow16-lexcompactor2 > ${lexf}
+
+
+#gunzip -c ${tmpf} | grep '	<unknown>' | cut -f 1 > ${tmpprefix}_0
+#smor-lemmatizer < ${tmpprefix}_0 > ${tmpprefix}_1
+#sed 's/	\([A-Z]\+\|$\.\)\.[^	 ]\+/	\1/' ${tmpprefix}_1 > ${tmpprefix}_2
+#grep 'ADJ.\|NN\|NE' ${tmpprefix}_2 > ${tmpprefix}_3
+#cow16-normalize-lemmas < ${tmpprefix}_3 > ${tmpprefix}_4
+#sort -u ${tmpprefix}_4 > ${tmpprefix}_5
+#cow16-lexcompactor2 < ${tmpprefix}_5 > ${lexf}
+
+
+# 3. Final run with additional lexicon.
+gunzip -c ${1} | cut -f 1 |
+# Preserve sentence endings.
+  sed 's/^$/\n<SÄTZÄNDÖ>\n/' |
+  tree-tagger $OPTS -lex <(cat ${lexf} ${TT_LEXIC_DE}) $TT_MODEL_DE |
+  ${TT_FILTER} |
+# fix annotation of major smileys
+  sed 's/^\([:;8=|\[][-o]\{0,1\}[][(){}OoKSsDPp]\+\)	.\+$/\1	XY	(smiley)/' |
+  sed 's/^\&lt;3	.\+$/\&lt;3	XY	(smiley)/' |
+  sed 's/^\&lt;\/3	.\+$/\&lt;\/3	XY	(smiley)/' |
+  sed 's/^\(:[a-zäöüß]\+:\)	.\+$/\1	XY	(phpbbemo)/' |
+  sed 's/^\(\*[a-zäöüßA-ZÄÖÜ0-9-]\+\*\)	.\+$/\1	XY	(asteriskative)/' |
+# replace XML-unfriendly <unknown>
+  sed 's/<unknown>$/(unknown)/' |
+  sed 's/<UNKNOWN>$/(unknown)/' |
+# delete all annotations outside of sentences:
+  sed '/<s type="reg">/,/<\/s>/! {/^</! s/	[^	]\+/	_/g}'|
+# replace " ' with entity references:
+  sed '/^</! s/"/&quot;/g'|
+  sed "/^</! s/'/&apos;/g"|
+  gzip -c > ${2}
+
+#\rm ${tmpf}
+#\rm ${lexf}
+

@@ -1,0 +1,425 @@
+[RULES]
+%include url
+%include e-mail
+
+#Ex (oud)-studente(s)
+WORD-PARPREFIX-PARSUFFIX=(?:\p{Ps}\p{L}+[\p{Pc}\p{Pd}]?\p{Pe}[\p{Pc}\p{Pd}]?)\p{L}+(?:[\p{Pc}\p{Pd}]\p{L}+)*(?:[\p{Pc}\p{Pd}]?\p{Ps}[\p{Pc}\p{Pd}]?\p{L}+\p{Pe})
+
+#Ex: (oud)-studente, (on)zin,
+WORD-PARPREFIX=(?:\p{Ps}\p{L}+[\p{Pc}\p{Pd}]?\p{Pe}[\p{Pc}\p{Pd}]?)\p{L}+(?:[\p{Pc}\p{Pd}]\p{L}+)*
+
+#Ex: könig(in)
+WORD-PARSUFFIX=\p{L}+(?:[\p{Pc}\p{Pd}]\p{L}+)*(?:[\p{Pc}\p{Pd}]?\p{Ps}[\p{Pc}\p{Pd}]?\p{L}+\p{Pe})
+
+#Keep dash/underscore connected parts (even if they are in parenthesis)
+WORD-COMPOUND=\p{L}+(?:[\p{Pc}\p{Pd}]\p{L}+)+
+
+#Abbreviations with multiple periods
+ABBREVIATION=\p{L}{1,3}(?:\.\p{L}{1,3})+\.?
+
+#retain initials
+INITIAL=^(?:\p{Lt}|\p{Lu})\.$
+
+#Homogeneous punctuation (ellipsis etc)
+PUNCTUATION-MULTI=(?:\.|\-|[!\?]){2,}
+
+#Date
+#DATE=\p{N}{1,2}[\.-]\p{Ps}?\p{N}{1,2}[\.-]\p{Ps}?\p{N}{2,4}
+#DATE-REVERSE=\p{N}{4}-\p{N}{1,2}[\.-]\p{N}{1,2}\.?
+#NUMBER-YEAR=('\p{N}{2})(?:\P{N}|\z)
+#NUMBER-YEAR=('\p{N}{2})\P{N}
+
+#Times
+TIME=\p{N}{1,2}:\p{N}{1,2}(?::\p{N})?(?i:am|pm)?
+
+#retain digits, including those starting with initial period (.22), and negative numbers
+NUMBER=-?(?:[\.,]?\p{N}+)+
+
+CURRENCY=\p{Sc}
+
+WORD=[\p{L}\p{Mn}]+
+
+PUNCTUATION=\p{P}
+
+UNKNOWN=.
+
+[ORDINALS]
+
+[TOKENS]
+# Specific tunings
+3D-[\p{L}]+
+H&M
+B&O
+C&A
+(?:[0-9]+)(?:rd|th)
+# asteriskatives
+\*[\p{L}\p{N}]+\*
+(?:[^ ]*)(?:ÜCTÖHÜ|ÜCTÖPÜ)[^ ]*
+# file names
+ÜCTÖFÜNÄb[^Ü]+ÜCTÖFÜNÄe
+# ISBNs and DOIs
+ÜCTÖISBNb[-0-9]+[0-9xX]ÜCTÖISBNe
+ÜCTÖDÖIb[^Ü]+ÜCTÖDÖIe
+# content types
+ÜCTÖCÖTÜb[^Ü]+ÜCTÖCÖTÜe
+# Web hosts (new for EmpiriST)
+(?:www|ftp|smtp|pop|pop3){0,1}[\p{Alphabetic}\p{Decimal_Number}\.-]+\.(?:com|org|net|int|edu|gov|mil|ar|at|au|be|bg|bo|br|by|ca|ch|cl|cn|co|cu|cz|dk|ec|ee|es|eu|fi|fr|gr|hk|hr|hu|id|ie|il|in|jp|kr|lt|mx|my|nl|no|nz|pl|pt|ro|rs|ru|se|sk|tr|tw|ua|uk|us|aero|asia|biz|info|jobs|mobi|name|pro|tel|travel|xxx|amsterdam|bayern|berlin|brussels|cologne|gent|hamburg|irish|koeln|london|moscow|paris|ruhr|saarland|scot|tirol|vlaandern|wales|wien)
+# special patterns, like "90ziger"
+(?:[a-zäöüßA-ZÄÖÜ0-9]+)-{0,1}(?:minüt|stünd|täg|wöchent|monat|jähr)(?:ig|lich)(?:e|er|es|en|em|)
+(?:[1-9][0-9]|[12][0-9]{3})(?:['-–`´]|)(?:s|ies|ys|zig|ziger|zigern|ziger-Jahre|ig|iger|igern|iger-Jahre|er|ern|er-Jahre)
+(?:[0-9]+)(?:[-–]|)(?:fach|fache|facher|faches|fachen|fachem)
+(?:[0-9]+)(?:['-–`´])(?:t|te|ter|tes|ten|tem)
+(?:[1-9][0-9]|[12][0-9]{3})(?:['-–`´]|)jährig(?:e|er|es|en|em|)
+# Hausaufgaben und -tätigkeiten / Vor- und Zuname
+(?:^-[\p{Alphabetic}]+) # modified: allow only at beginning of a token, i.e., don't destroy Bild-Zeitung etc.; FB
+(?:[\p{Alphabetic}]+-)
+# Stuff like programming langs
+C#
+C++
+\.NET
+s\/w
+S\/W
+# single letter plus ) is usually enumeration
+^[a-z]\)
+# Clitics
+(?:['’][a-zäöü]{1,3})
+# XML tags
+<[^>]+>
+# entities
+&gt;
+&lt;
+&amp;
+# time
+(?:[0-9]+:[0-9]+)
+# multiplication
+(?:[0-9]+) *(?:x|\*) *[0-9]+
+# Trash- und Hardcore
+(?:[A-ZÄÖÜa-zß]-)
+#PLZ
+(?:D|A|CH)-[0-9]{4,5}
+# erikatives
+\*+[a-zäöüßA-ZÄÖÜ0-9-]+\*+
+# smileys, European [usually, only ))) is repeated, not DDD etc.]
+# Note: for the mouth, / is not used because of http:// etc.
+(?:>?[8:;=|])[-o]?(?:[}{|\]\[\\OoKSsDpP>]|[)(]+)
+:[un]\)
+<3
+&lt;3
+</3
+&lt;/3
+# phpBB emoticons
+:[\p{Ll}]{2,}:
+# Hashtags and Twitter addresses (for EmpiriST)
+(?:#[\p{Alphabetic}\p{Decimal_Number}_]+)
+(?:@[\p{Alphabetic}\p{Decimal_Number}_]+)
+# Safe regions
+(?:[0-9]+ÜCTÖPÜ[0-9]+ÜCTÖPÜ[0-9]+)
+# Names like Kay-M. in which Ucto just eats the hyphen!
+[A-ZÄÖÜ][a-zäöüß]+ÜCTÖNÄÄÄ[A-ZÄÖÜ]ÜCTÖNÖÖÖ
+
+[UNITS]
+km
+m
+cm
+mm
+g
+kg
+C
+l
+s
+sec
+min
+gb
+mb
+kb
+St
+
+[CURRENCY]
+USD
+usd
+GBP
+gbp
+CAD
+cad
+NZD
+nzd
+AUD
+aud
+SGD
+sgd
+HKD
+hkd
+EUR
+eur
+
+[ABBREVIATIONS]
+(?:[[:letter:]])
+a\.a\.O
+Abb
+Abf
+Abg
+Abk
+Abs
+Abt
+abzgl
+aD
+a\.D
+Adr
+a\.k\.a
+al
+allg
+Allg
+am
+amtl
+Amtsbl
+Anh
+Anl
+Anm
+Aufl
+ausgew
+Aw
+Az
+AZ
+Bd
+beil
+bes
+betr
+Betr
+Bez
+Bhf
+Bj
+Bsp
+bspw
+bzgl
+bzw
+ca
+Ca
+Chr
+Darst
+dgl
+Dipl
+Dipl\.-Ing
+Dir
+DM
+Dr
+dt
+Dt
+Dtzd
+ebd
+Ebd
+ehem
+eig
+eigtl
+eindschl
+einschl
+engl
+Engl
+entspr
+erb
+erw
+Erw
+etc
+ev
+eV
+e\.V
+evtl
+Evtl
+exkl
+Fa
+Fam
+Ffm
+Fr
+Frl
+ff
+frz
+geb
+Gebr
+gedr
+gegr
+gek
+gem
+Ges
+gesch
+gesetzl
+gest
+gez
+ggf
+Ggf
+ggfs
+Ggfs
+gr
+Gr
+Hbf
+Hg
+hpts
+Hptst
+Hr
+Hrn
+hrsg
+Hrsg
+Hrsgg
+idR
+i\.d\.R
+incl
+Ing
+Inh
+inkl
+jew
+Jh
+jhrl
+jr
+Jr
+kA
+k\.A
+Kap
+kath
+kfm
+Kfm
+kgl
+Kl
+lat
+Lat
+led
+lt
+max
+mE
+m\.E
+min
+mind
+Mio
+möbl
+Mr
+Mrd
+Msp
+mtl
+MwSt
+MWSt
+näml
+nat
+Nr
+oä
+o\.ä
+Obb
+od
+o\.k
+O\.K
+o\.O
+O\.o
+orig
+Orig
+österr
+pers
+Pers
+Pfd
+phil
+Pkt
+Pl
+pp
+Prof
+Red
+rer
+röm
+röm\.-kath
+schles
+schwäb
+schweiz
+sg
+s\.o
+sog
+Spvgg
+sr
+Sr
+st
+St
+std
+Std
+stellv
+Str
+StR
+s\.u
+südd
+tägl
+Tel
+Ts
+uä
+u\.ä
+usf
+USt
+usw
+u\.s\.w
+u\.U
+uvam
+u\.v\.a\.m
+uvm
+u\.v\.m
+va
+v\.a
+vs
+Verf
+verh
+Verl
+Versandk
+verw
+vgl
+Vgl
+vllt
+vlt
+Vol
+vorm
+wg
+wiss
+wöch
+zahlr
+zb
+z\.b
+z\.B
+ZB
+Z\.B
+z\.Bsp
+zT
+z\.T
+Zt
+Ztr
+zur
+zus
+zw
+zzgl
+z\.Zt
+Jan
+Feb
+Mär
+Apr
+Jun
+Jul
+Aug
+Okt
+Nov
+Dez
+(?:[^ ]+[Ss]tr)
+(?:[0-9]+f{1,2})
+ff
+Franz
+franz
+bayr
+Bayr
+Max
+max
+Min
+min
+vllt
+Vllt
+Art
+(?:[cmvixCMVIX]+)
+Jg
+Co
+co
+(?:[0-9]+)f{1,2}
+
+
+[EOSMARKERS]
+%include standard-eos
+%include exotic-eos
+
+[QUOTES]
+%include standard-quotes
+%include exotic-quotes
