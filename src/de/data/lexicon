@@ -1,11 +1,11 @@
 !!	$. !
 !!!	$. !
 !?	$. !?
-&gt;	$.	&gt;
-&lt;	$.	&lt;
+&gt;	$(	&gt;
+&lt;	$(	&lt;
+&amp;	KON &amp;
 &quot;	$( &quot;
 &apos;	$( &apos;
-&amp;	KON &apos;
 ---	$.	-
 ..	$. ...
 ...	$. ...
