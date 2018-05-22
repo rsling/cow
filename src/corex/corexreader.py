@@ -112,7 +112,7 @@ class CORexReader:
         else:
             lline = line.split('\t')
             if not len(lline) == len(self.annos):
-                print "Line with incorrect no. of fileds: " + line + "\n"
+                print (self.infilename + ": Line with incorrect no. of fields: " + line.encode('utf-8') + "\n")
             else:
                 outl = list()
                 outl.append('<token>')
