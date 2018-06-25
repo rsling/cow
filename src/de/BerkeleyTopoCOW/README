@@ -1,0 +1,54 @@
+This is a minor adaptation of Slav Petrov's Berkeley parser as provided by Cheung and Penn
+at https://www.cs.mcgill.ca/~jcheung/topoparsing/ for topological parsing of German.
+
+Most modifications concern convenient handling of input and output formats, for use 
+in the COW web corpus project (http://corporafromtheweb.org/):
+
+
+* With the -useGoldPOS option, reads vertical text, with TAB-separated
+  annotations. The first column is the token, the second column is the gold
+  POS tag, all other columns with be ignored. Sentences must be separated by
+  a blank line, and the input text must end with a newline char.
+
+* The maximal sentence length can be passed as a command line argument
+  (defaults to 200 tokens). 
+
+* Any sentence longer than maxLength, or otherwise unparsable, will simply be
+  copied to output (NOT omitted).
+
+* Substitutes parentheses with square brackets in the input.
+ 
+* Performs some mapping from standard STTS-tags (or token-pos pairs) 
+  to a version known to the parser.
+
+* With option -outputXML, outputs and XML-like format with topological field
+  labels and phrase structure labels as XML-elements.
+
+* Improved diagnostic and error messages.
+
+
+
+For use with Cheung and Penn's tuebadz_topf_no_edge.gr model. 
+
+
+Copyright (c) (modifications only) 2018 Felix Bildhauer.
+License: GNU GPL 2.0, included in this directory.
+
+
+----------------------------------------
+
+Modified classes:
+
+edu.berkeley.nlp.PCFGLA.BerkeleyParser
+edu.berkeley.nlp.ling.Tree
+
+Additional class:
+
+edu.berkeley.nlp.ling.TopoLabels
+
+----------------------------------------
+
+
+
+
+
