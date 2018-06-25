@@ -201,7 +201,7 @@ public class BerkeleyParser  {
     		// will not be parsed, but simply copied to outdata:
 			if (sentence.size() > opts.maxLength) {System.err.println("Line " + lcounter + ": Skipping sentence #" + scounter + " with "+sentence.size()+" words since it is too long (limit: " + opts.maxLength + ")");
 			if (opts.outputXML) {
-				outputData.write(String.join("\n",sentence) + "\n\n");
+				outputData.write("<s>\n"+String.join("\n",sentence) + "\n</s>\n");
 				}
 			else {
 				outputData.write(String.join(" ",sentence) + "\n");
