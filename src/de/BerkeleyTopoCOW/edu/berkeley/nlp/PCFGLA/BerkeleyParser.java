@@ -300,10 +300,10 @@ public class BerkeleyParser  {
 			parsedTree = TreeAnnotations.unAnnotateTree(parsedTree);
 			
 			if (!parsedTree.getChildren().isEmpty()) { 
-	       		outputData.write(parsedTree.getChildren().get(0).otpl()+"\n\n");	       			
+	       		outputData.write("<s>\n" + parsedTree.getChildren().get(0).otpl() + "\n</s>\n");	       			
 	    } else {
 	   
-	    	outputData.write(String.join("\n", sentence) + "\n\n");
+	    	outputData.write("<s>\n" + String.join("\n", sentence) + "</s>\n");
 	    }
 		}
 	}
