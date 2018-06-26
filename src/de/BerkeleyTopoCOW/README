@@ -13,7 +13,7 @@ in the COW web corpus project (http://corporafromtheweb.org/):
 * The maximal sentence length can be passed as a command line argument
   (defaults to 200 tokens). 
 
-* Sentence longer than maxLength, or otherwise not parseable, will 
+* Sentences longer than maxLength, or otherwise not parseable, will 
   be copied to output (NOT omitted).
 
 * Substitutes parentheses with square brackets in the input.
