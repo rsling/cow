@@ -51,7 +51,7 @@ import javax.swing.JFrame;
  * @author Slav Petrov
  * 
  * with minor modifications by Felix Bildhauer
- * for the COW webcorpus project
+ * for the COW web corpus project
  */
 
 public class BerkeleyParser  {
@@ -303,7 +303,7 @@ public class BerkeleyParser  {
 	       		outputData.write("<s>\n" + parsedTree.getChildren().get(0).otpl() + "\n</s>\n");	       			
 	    } else {
 	   
-	    	outputData.write("<s>\n" + String.join("\n", sentence) + "</s>\n");
+	    	outputData.write("<s>\n" + String.join("\n", sentence) + "\n</s>\n");
 	    }
 		}
 	}
