@@ -6,15 +6,15 @@ in the COW web corpus project (http://corporafromtheweb.org/):
 
 
 * With the -useGoldPOS option, reads vertical text, with TAB-separated
-  annotations. The first column is the token, the second column is the gold
-  POS tag, all other columns with be ignored. Sentences must be separated by
+  annotations. First column: token; second column: gold POS tag;
+  all other columns will be ignored. Sentences must be separated by
   a blank line, and the input text must end with a newline char.
 
 * The maximal sentence length can be passed as a command line argument
   (defaults to 200 tokens). 
 
-* Any sentence longer than maxLength, or otherwise unparsable, will simply be
-  copied to output (NOT omitted).
+* Sentence longer than maxLength, or otherwise not parseable, will 
+  be copied to output (NOT omitted).
 
 * Substitutes parentheses with square brackets in the input.
  
