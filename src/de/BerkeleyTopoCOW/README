@@ -26,6 +26,8 @@ in the COW web corpus project (http://corporafromtheweb.org/):
 
 * Improved diagnostic and error messages.
 
+* The -kbest and -nThreads options have been omitted. 
+
 
 
 For use with Cheung and Penn's tuebadz_topf_no_edge.gr model. 
