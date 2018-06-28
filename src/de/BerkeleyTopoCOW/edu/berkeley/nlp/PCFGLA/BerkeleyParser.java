@@ -39,11 +39,14 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+
 
 /**
  * Reads in the Penn Treebank and generates N_GRAMMARS different grammars.
@@ -89,9 +92,6 @@ public class BerkeleyParser  {
 
 		@Option(name = "-render", usage = "Write rendered tree to image file. (Default: false)")
 		public boolean render;
-		
-		@Option(name = "-chinese", usage = "Enable some Chinese specific features in the lexicon.")
-		public boolean chinese;
 
 		@Option(name = "-inputFile", usage = "Read input from this file instead of reading it from STDIN.")
 		public String inputFile;
@@ -126,22 +126,12 @@ public class BerkeleyParser  {
     Lexicon lexicon = pData.getLexicon();
     Numberer.setNumberers(pData.getNumbs());
     
-//    if (opts.chinese) Corpus.myTreebank = Corpus.TreeBankType.CHINESE;
     
     CoarseToFineMaxRuleParser parser = null;
- //   if (opts.kbest==1) 
     parser = new CoarseToFineMaxRuleParser(grammar, lexicon, threshold,-1,opts.viterbi,opts.substates,opts.scores, opts.accurate, false, true, true);
-    //else parser = new CoarseToFineNBestParser(grammar, lexicon, opts.kbest,threshold,-1,opts.viterbi,opts.substates,opts.scores, opts.accurate, false, true, true);
     parser.binarization = pData.getBinarization();
     
     if (opts.render) tjp = new TreeJPanel();
-    
- /*   MultiThreadedParserWrapper m_parser = null;
-    if (opts.nThreads > 1){
-	  	System.out.println("Parsing with "+opts.nThreads+" threads in parallel.");
-	  	m_parser = new MultiThreadedParserWrapper(parser, opts.nThreads);
-		}
- */
     
     try{
     	BufferedReader inputData = (opts.inputFile==null) ? new BufferedReader(new InputStreamReader(System.in)) : new BufferedReader(new InputStreamReader(new FileInputStream(opts.inputFile), "UTF-8"));
@@ -152,6 +142,8 @@ public class BerkeleyParser  {
     	String line = "";
     	int scounter = 0;
     	int lcounter = 0;
+    	
+    	float startTime = System.nanoTime();
     	
     	while((line=inputData.readLine()) != null){
       	List<String> sentence = null;
@@ -201,6 +193,7 @@ public class BerkeleyParser  {
     		// will not be parsed, but simply copied to outdata:
 			if (sentence.size() > opts.maxLength) {System.err.println("Line " + lcounter + ": Skipping sentence #" + scounter + " with "+sentence.size()+" words since it is too long (limit: " + opts.maxLength + ")");
 			if (opts.outputXML) {
+				long startTimeXML = System.nanoTime();
 				outputData.write("<s>\n"+String.join("\n",sentence) + "\n</s>\n");
 				}
 			else {
@@ -208,9 +201,10 @@ public class BerkeleyParser  {
 				}
 			   sentence = new ArrayList<String>();
 			   continue;
-			   } // felix
+			   }
 
-
+			 
+                			
     			List<Tree<String>> parsedTrees = null;
     			
     	  		parsedTrees = new ArrayList<Tree<String>>();
@@ -234,14 +228,21 @@ public class BerkeleyParser  {
 
     	  		parsedTrees.add(parsedTree);
     			
-    			if(opts.outputXML){outputTreesXML(parsedTrees, outputData, parser, opts, sentence);}
-    			else{outputTrees(parsedTrees, outputData, parser, opts, sentence);}
-    			if (opts.render)		writeTreeToImage(parsedTrees.get(0),line.replaceAll("[^a-zA-Z]", "")+".png");
+    	  		
+    			if(opts.outputXML)	outputTreesXML(parsedTrees, outputData, parser, opts, sentence);
+    			else outputTrees(parsedTrees, outputData, parser, opts, sentence);
+    			
+    			if (opts.render) writeTreeToImage(parsedTrees.get(0),line.replaceAll("[^a-zA-Z]", "")+".png");
     		
     	}
 
   		outputData.flush();
   		outputData.close();
+  		
+  		float estimatedTime = (System.nanoTime() - startTime)/1000000000;
+  		DecimalFormat df = new DecimalFormat("#.##########");
+  		df.setRoundingMode(RoundingMode.CEILING);
+  		System.err.println("\nTime elapsed: " + df.format(estimatedTime) + " sec.");
     } catch (Exception ex) {
       ex.printStackTrace();
     }
@@ -278,8 +279,7 @@ public class BerkeleyParser  {
 	    }
 		}
 	}
-
- 	//  
+ 
  		
  	/**
  	 * Generate XML-like output, one token per line. 
@@ -307,6 +307,8 @@ public class BerkeleyParser  {
 	    }
 		}
 	}
+ 	
+ 	
  	
  	/**
  	 * Transform some POS tags from standard STTS

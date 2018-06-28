@@ -205,19 +205,26 @@ public class Tree<L> implements Serializable {
   
   public void toArrayList(ArrayList<String> buf) {
 	    	    
-	    if (! isLeaf() & getLabel() != null & TopoLabels.checkLabel(getLabel().toString())) {
+	     
+	  
+	    if (! isLeaf() & getLabel() != null & TopoLabels.topofields.contains(getLabel().toString())) 
+	    {
 	    	buf.add("<" + getLabel().toString().toLowerCase() + ">");
 	    }
 	    if (! isLeaf()) {
 	      for (Tree<L> child : getChildren()) {
 	        child.toArrayList(buf);
 	      }
-	      if (! isLeaf() & getLabel() != null & TopoLabels.checkLabel(getLabel().toString())) {
+	      
+	    
+	      if (! isLeaf() & getLabel() != null & TopoLabels.topofields.contains(getLabel().toString())) 
+	      {
 	      buf.add("</" + getLabel().toString().toLowerCase() + ">");
 	      }
 	    }
 	    if (isLeaf()){
-	    	buf.add(getLabel().toString());	
+	    	buf.add(getLabel().toString().replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"));
+	    	
 	    }
 	  }
   
