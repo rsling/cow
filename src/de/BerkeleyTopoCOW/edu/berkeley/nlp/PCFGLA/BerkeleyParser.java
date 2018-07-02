@@ -258,7 +258,12 @@ public class BerkeleyParser  {
   		DecimalFormat df = new DecimalFormat("#.##");
   		df.setRoundingMode(RoundingMode.CEILING);
   		
+  		String inputFileName;
+  		if (opts.inputFile!=null) {inputFileName = opts.inputFile;}
+  		else {inputFileName = "stdin";}
+  		
   		System.err.println("\n---------- Summary ----------");
+  		System.err.println("Input:\t" + inputFileName);
   		System.err.println("Time elapsed:\t" + df.format(estimatedTime) + " sec.");
   		System.err.println("Total lines:\t" + lcounter);
   		System.err.println("Total sentences:\t" + scounter);
