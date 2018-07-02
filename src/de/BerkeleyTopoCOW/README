@@ -4,7 +4,6 @@ at https://www.cs.mcgill.ca/~jcheung/topoparsing/ for topological parsing of Ger
 Most modifications concern convenient handling of input and output formats, for use 
 in the COW web corpus project (http://corporafromtheweb.org/):
 
-
 * With the -useGoldPOS option, reads vertical text, with TAB-separated
   annotations. First column: token; second column: gold POS tag;
   all other columns will be ignored. Sentences must be separated by
@@ -16,7 +15,7 @@ in the COW web corpus project (http://corporafromtheweb.org/):
 * Sentences longer than maxLength, or otherwise not parseable, will 
   be copied to output (NOT omitted).
 
-* Substitutes parentheses with square brackets in the input.
+* Replaces parentheses with square brackets in the input.
  
 * Performs some mapping from standard STTS-tags (or token-pos pairs) 
   to a version known to the parser.
@@ -27,7 +26,6 @@ in the COW web corpus project (http://corporafromtheweb.org/):
 * Improved diagnostic and error messages.
 
 * The -kbest, -nThreads and -chinese options have been omitted. 
-
 
 
 For use with Cheung and Penn's tuebadz_topf_no_edge.gr model. 
