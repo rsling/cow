@@ -60,7 +60,10 @@ import javax.swing.JFrame;
 public class BerkeleyParser  {
 	static TreeJPanel tjp;
 	static JFrame frame;
-	
+	static int unparsedCounter = 0;
+    static int tooLongCounter = 0;
+	static int parsedWithoutGoldPOSCounter = 0;
+		
 	public static class Options {
 
 		@Option(name = "-gr", required = true, usage = "Grammarfile (Required)\n")
@@ -107,6 +110,9 @@ public class BerkeleyParser  {
 		
 		@Option(name = "-maxLength", usage = "Maximum length of sentences (default: 200 tokens). Longer sentences will simply be copied to output.")
 		public int maxLength = 200;
+		
+		@Option(name = "-verbose", usage = "Print information about unsuccessful use of gold POS tags")
+		public boolean verbose;
 	}
 	
   @SuppressWarnings("unchecked")
@@ -133,6 +139,9 @@ public class BerkeleyParser  {
     
     if (opts.render) tjp = new TreeJPanel();
     
+    
+   
+    
     try{
     	BufferedReader inputData = (opts.inputFile==null) ? new BufferedReader(new InputStreamReader(System.in)) : new BufferedReader(new InputStreamReader(new FileInputStream(opts.inputFile), "UTF-8"));
     	PrintWriter outputData = (opts.outputFile==null) ? new PrintWriter(new OutputStreamWriter(System.out)) : new PrintWriter(new OutputStreamWriter(new FileOutputStream(opts.outputFile), "UTF-8"), true);
@@ -142,6 +151,7 @@ public class BerkeleyParser  {
     	String line = "";
     	int scounter = 0;
     	int lcounter = 0;
+    	
     	
     	float startTime = System.nanoTime();
     	
@@ -191,9 +201,10 @@ public class BerkeleyParser  {
     		
     		// set maximum sentence length (in tokens); sentences longer than this
     		// will not be parsed, but simply copied to outdata:
-			if (sentence.size() > opts.maxLength) {System.err.println("Line " + lcounter + ": Skipping sentence #" + scounter + " with "+sentence.size()+" words since it is too long (limit: " + opts.maxLength + ")");
+			if (sentence.size() > opts.maxLength) {
+				tooLongCounter += 1;
+				System.err.println("Line " + lcounter + ": Skipping sentence #" + scounter + " with "+sentence.size()+" words since it is too long (limit: " + opts.maxLength + ")");
 			if (opts.outputXML) {
-				long startTimeXML = System.nanoTime();
 				outputData.write("<s>\n"+String.join("\n",sentence) + "\n</s>\n");
 				}
 			else {
@@ -211,9 +222,11 @@ public class BerkeleyParser  {
     	
     	  		Tree<String> parsedTree = parser.getBestConstrainedParse(sentence,posTags,null);
     	  		if (opts.goldPOS && parsedTree.getChildren().isEmpty()){ // parse error when using goldPOS, try without
-
+    	  			parsedWithoutGoldPOSCounter += 1;
+    	  			
+    	  			if(opts.verbose){
     	  			String msgtext = null;
-    	  			if (posTags != null) {
+    	  			if (posTags != null) {    	  				
     	  				ArrayList<String> msg = new ArrayList<String>();
     	  				for (int w = 0; w < sentence.size(); w++){
     	  				msg.add(sentence.get(w)+"_"+posTags.get(w));}
@@ -223,6 +236,8 @@ public class BerkeleyParser  {
     	  				msgtext = "NO PARSE: " + String.join(" ", sentence) + "\n";
     	  				}
 				    System.err.println(msgtext);
+    	  			}
+    	  			
   	    			parsedTree = parser.getBestConstrainedParse(sentence,null,null);
   	    		}
 
@@ -240,9 +255,17 @@ public class BerkeleyParser  {
   		outputData.close();
   		
   		float estimatedTime = (System.nanoTime() - startTime)/1000000000;
-  		DecimalFormat df = new DecimalFormat("#.##########");
+  		DecimalFormat df = new DecimalFormat("#.##");
   		df.setRoundingMode(RoundingMode.CEILING);
-  		System.err.println("\nTime elapsed: " + df.format(estimatedTime) + " sec.");
+  		
+  		System.err.println("\n---------- Summary ----------");
+  		System.err.println("Time elapsed:\t" + df.format(estimatedTime) + " sec.");
+  		System.err.println("Total lines:\t" + lcounter);
+  		System.err.println("Total sentences:\t" + scounter);
+  		System.err.println("Sentences skipped (> " + opts.maxLength + " tokens):\t" + tooLongCounter);
+  		System.err.println("Ignored gold POS (sentences):\t" + parsedWithoutGoldPOSCounter);
+  		System.err.println("Unparsed sentences (<= " + opts.maxLength + " tokens):\t" + unparsedCounter);
+  		
     } catch (Exception ex) {
       ex.printStackTrace();
     }
@@ -276,6 +299,7 @@ public class BerkeleyParser  {
 	       			if (true) outputData.write(parsedTree.getChildren().get(0)+"\n");
 	    } else {
 	    	outputData.write(String.join(" ", sentence) + "\n");
+	    	unparsedCounter += 1;
 	    }
 		}
 	}
@@ -302,7 +326,7 @@ public class BerkeleyParser  {
 			if (!parsedTree.getChildren().isEmpty()) { 
 	       		outputData.write("<s>\n" + parsedTree.getChildren().get(0).otpl() + "\n</s>\n");	       			
 	    } else {
-	   
+	    	unparsedCounter += 1;
 	    	outputData.write("<s>\n" + String.join("\n", sentence) + "\n</s>\n");
 	    }
 		}
