@@ -264,7 +264,7 @@ public class BerkeleyParser  {
   		System.err.println("Total sentences:\t" + scounter);
   		System.err.println("Sentences skipped (> " + opts.maxLength + " tokens):\t" + tooLongCounter);
   		System.err.println("Ignored gold POS (sentences):\t" + parsedWithoutGoldPOSCounter);
-  		System.err.println("Unparsed sentences (<= " + opts.maxLength + " tokens):\t" + unparsedCounter);
+  		System.err.println("No parse (sentences <= " + opts.maxLength + " tokens):\t" + unparsedCounter);
   		
     } catch (Exception ex) {
       ex.printStackTrace();
