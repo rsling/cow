@@ -6,6 +6,7 @@ import os
 import argparse
 import sys
 import gzip
+import re
 
 
 def entity_decode(s):
@@ -60,7 +61,7 @@ def main():
       # IN sentence.
       if insentence:
 
-        if (l == '</s>'):
+        if (re.match(r'^</s>', l)):
           insentence = False
           outfile_sent.write('\n')
         elif (not l[0] == '<'):
@@ -68,7 +69,7 @@ def main():
           outfile_sent.write('\t'.join([entity_decode(annos[i]) for i in fields]).encode('utf-8') + '\n')
 
       # NOT in sentence.
-      elif (l == '<s>'):
+      elif (re.match(r'^<s[ >]', l)):
           insentence = True
 
     f.close()
