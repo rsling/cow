@@ -13,12 +13,32 @@ import sys
 class Eof(Exception):
   pass
 
-def advance(h):
-  l = h.readline()
-  if not l:
-    raise Eof
-  l = l.decode('utf-8')
-  l = l.strip()
+
+def entity_encode(s):
+#  s = s.replace('&', '&amp;')
+  s = s.replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;').replace("'", '&apos;')
+  return s
+
+
+def advance(h, clean_topo = False):
+
+  # This serves to clean topological parses from
+  # XML input for DECOW16B/DECOW18 processing.
+  while True:
+    l = h.readline()
+    if not l:
+      raise Eof
+    l = l.decode('utf-8')
+    l = l.strip()
+  
+    # If we need to clean this line, just continue reading.
+    if ( clean_topo
+         #and re.search(r'^<', l)
+         and not re.search(r'^(?:[^<]|</{0,1}(?:doc|s|div|meta|title|dup)[ |>])', l) ):
+      continue
+    else:
+      break
+
   return l
 
 
@@ -27,6 +47,7 @@ def main():
   parser.add_argument("xml", help="master COW XML file (gzip)")
   parser.add_argument("parse", help="transformed parser output file (gzip)")
   parser.add_argument("output", help="output file (gzip)")
+  parser.add_argument("--cowtek18", action='store_true', help="use COWTek18 mode (discard old parses etc.)")
   parser.add_argument("--erase", action='store_true', help="erase outout files if present")
   args = parser.parse_args()
 
@@ -68,7 +89,7 @@ def main():
         in_sentence = False
 
         # Also consume line from XML file and see whether sentence starts there, too.
-        if not re.match(r'^</s>', advance(fh_xml)):
+        if not re.match(r'^</s>', advance(fh_xml, args.cowtek18)):
           sys.exit('Sentence not closed in XML for lines ' + str(i) + ',' + str(j))
         i = i + 1
         fh_out.write(u'</s>\n')
@@ -80,23 +101,26 @@ def main():
         if re.match(r'^<', p):
           fh_out.write(p.encode('utf-8') + '\n')
         else:
-          l = advance(fh_xml)
+          l = advance(fh_xml, args.cowtek18)
           i = i +1
           ls = l.split('\t')[0]
-          ps = p.split('\t')[0]
+          if args.cowtek18:
+            ps = entity_encode(p).split('\t')[0]
+          else:
+            ps = p.split('\t')[0]
           psx = ps.replace('[', '(').replace(']', ')')
           lsx = ls.replace('[', '(').replace(']', ')')
           if lsx == psx :
             fh_out.write(l.encode('utf-8') + '\n')
           else:
-            mess = 'Inconsistent annotations in lines ' + str(i) + ',' + str(j) + ':' + l.encode('utf-8') + ':' + p.encode('utf-8')
+            mess = 'Inconsistent annotations in lines ' + str(i) + ',' + str(j) + ':\n' + lsx.encode('utf-8') + '\n' + psx.encode('utf-8')
             sys.exit(mess)
         
 
     # Just write line from XML and check whether new sentence begins.
     else:
       try:
-        l = advance(fh_xml)
+        l = advance(fh_xml, args.cowtek18)
         i = i + 1
       except Eof:
         break

@@ -1,29 +1,35 @@
 #!/bin/bash
 
 # Pass:
-# xml-infile colum_with_pos outfile
+#    xml-infile   colum_with_pos(zero-based)   outfile
 
 # Define envvars:
 # PARSERHOME   # location of Berkeley + model
 # PARSER_TMP   # Where to put temp files.
 
-# Important: Merging will only work if there are no XML-tags embedded within
-# <s> ... </s> regions in the COW-XML file.
+# Important: This was modified for COWTek18.
+# Uses --cowtek18 flag to get rid of old parses in XML and work with
+#   modified toplogical parser.
+# Does not work with COWTek16 scripts.
 
 set -e
 set -u
 
 RESOURCES="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
 prefix="${PARSER_TMP}/${RANDOM}_$(basename $1 .gz)"
 topoxml="${prefix}_topo.xml.gz"
 
+echo "Using ${RESOURCES} resource path."
+echo "Using ${prefix} prefix."
+
 # Run the topological field parser on one sentence per line file.
-  python ${RESOURCES}/cow16-get-s.py ${1} ${2} | 
-    java -Xmx1g -jar ${PARSERHOME}/BerkeleyTopoCOW.jar -gr ${PARSERHOME}/tuebadz_topf_no_edge.gr -useGoldPOS -outputXML 
-#| gzip -c > ${topo}
+echo "${1} => ${topoxml}"
+python ${RESOURCES}/cow18-get-s.py ${1} ${2} |
+  java -Xmx7g -jar ${PARSERHOME}/BerkeleyTopoCOW.jar -gr ${PARSERHOME}/tuebadz_topf_no_edge.gr -useGoldPOS -outputXML | 
+  gzip -c > ${topoxml}
 
 # Merge xml files.
-#echo ${3}
-#python $RESOURCES/cow16-join-topo.py ${1} ${topoxml} ${3} --erase
-#\rm ${topoxml}
+echo "${topoxml} => ${3}"
+python $RESOURCES/cow16-join-topo.py ${1} ${topoxml} ${3} --erase --cowtek18
+echo "${topoxml} => _"
+\rm ${topoxml}
