@@ -77,8 +77,29 @@ def get_dominating_lk(vc):
     parent = get_dominating_X(current)
 
     if parent is not None:
-#      print  (tty_magenta + words_to_string(parent) + tty_reset)
-      lks =  parent.findall('.//lk')
+#      lks =  parent.findall('.//lk')
+#      only select lks immediately below dominating simpx;
+#      in particular, do not enter other (lower) simpxs:
+      lks =  parent.findall('./lk')
+
+#     This is not necessary because get_dominating_X()
+#     will stop at the fkonj parent if there is one and 
+#     never reach the dominating simpx.
+#     get_dominating_lk() can then look into this
+#      fkonj and find potential lks.
+#     
+#     ... and also add lks from such structures: 
+            # <simpx>
+            #   <fkoord>
+            #     <fkonj>
+            #       <lk>
+
+#      for fkoord in parent.findall('./fkoord'):
+#          for fkonj in fkoord.findall('./fkonj'):
+#              for lk in fkonj.findall('./lk'):
+#                  lks.append(lk)
+
+
       tags = [i.tag for i in lks]
 #      logging.debug('\t\t\t\tLKS: ' + ' + '.join(tags))
       # stop searching after the first LK has been found:
@@ -118,6 +139,20 @@ def get_dominating_lk(vc):
 #    else:
 #      break
 #  return(lks)
+
+################################################
+
+# Check for a non-verb-final structure (left bracket in verb-final clauses is 'c', not 'lk').
+def get_neighbouring_vce(vc):
+  current = vc
+  vces = []
+
+  parent = get_dominating_X(current)
+
+  if parent is not None:
+      vces =  parent.findall('./vce')
+  return(vces)
+
 
 
 def firstlemma(lemmastring):
@@ -164,7 +199,7 @@ def oberfeld(s):
     m = re.search('V[AMV](?:INF|FIN)(?: V[AMV](?:INF|FIN)){2,}', posse)
 
     if m:
-        logging.debug("\t\t" + posse[0:m.start()] + tty_magenta + posse[m.start():m.end()] + tty_reset + posse[m.end():])
+#        logging.debug("\t\t" + posse[0:m.start()] + tty_magenta + posse[m.start():m.end()] + tty_reset + posse[m.end():])
         words_and_tags_and_lemmas = zip(wwords,ttttpos,llemmas)
 #        print(tty_magenta)
 #        print(words_and_tags_and_lemmas)
@@ -175,15 +210,38 @@ def oberfeld(s):
             if ttttpos[p:p+len(seq)] == seq: 
                 items = words_and_tags_and_lemmas[p:p+len(seq)]
     return(items)
-        
+
+
+
+def has_oberfeldumstellung(s):
+     # Check for Oberfeldumstellung with Ersatzinfinitiv
+     # (no point in using topo-parse information here, it's almost always incorrect).
+
+     # overload input type:
+
+    if type(s) == lxml.etree._Element:
+        (wwords,ttttpos,llemmas,mmpos,mmorph) = get_wplpm(s)
+    elif type(s) == tuple:
+        if len(s) == 5:
+            (wwords,ttttpos,llemmas,mmpos,mmorph) = s
+        else:
+            sys.exit('oberfeld(): incorrect length of input tuple: ' + str(len(s)) + ' (required: 5)\n')
+    else:
+        sys.exit('oberfeld(): incompatible input type: ' + str(type(s))+ '\n')
+
+    posse = " ".join(ttttpos)
+    m = re.search('V[AMV](?:INF|FIN)(?: V[AMV](?:INF|FIN)){2,}', posse)
+
+    if m:
+        return True
+    else:
+        return False
+
 
 def oberfeld2(s, successfully_processed, sent_perfcounter, sent_pluperfcounter):
      # Check for Oberfeldumstellung with Ersatzinfinitiv
      # (no point in using topo-parse information here, it's almost always incorrect).
-
     
-    logging.debug(tty_blue + '\tChecking for Oberfeldumstellung...' + tty_reset)
-
      # overload input type:
 
     if type(s) == lxml.etree._Element:
@@ -198,7 +256,11 @@ def oberfeld2(s, successfully_processed, sent_perfcounter, sent_pluperfcounter):
 
     items = []
     posse = " ".join(ttttpos)
-    m = re.search('V[AMV](?:INF|FIN)(?: V[AMV](?:INF|FIN)){2,}', posse)
+    logging.debug(tty_red + "\t\t\tPOSSE: " + posse + tty_reset)
+
+    # also allow for a "VVPP" in the sequence ("hätten umgestellt werden müssen"):
+    m = re.search('V[AMV](?:INF|FIN)(?: VVPP)?(?: V[AMV](?:INF|FIN)){2,}', posse)
+    
 
     if m:
         logging.debug("\t\t" + posse[0:m.start()] + tty_magenta + posse[m.start():m.end()] + tty_reset + posse[m.end():])
@@ -207,6 +269,8 @@ def oberfeld2(s, successfully_processed, sent_perfcounter, sent_pluperfcounter):
 #        print(words_and_tags_and_lemmas)
 #        print(tty_reset)
 
+        # find sequence of (word, pos, lemma) triples that correspond 
+        # to the matched part of posse:
         seq = m.group(0).split(" ")
         for p in range(len(ttttpos) - len(seq) + 1):
             if ttttpos[p:p+len(seq)] == seq: 
@@ -235,46 +299,101 @@ def oberfeld2(s, successfully_processed, sent_perfcounter, sent_pluperfcounter):
                       logging.debug("\t\t[I] Oberfeldumstellung + finite perfect aux (pres) found in verbal complex: '" + finiteverb[0][0] + "'")
                       logging.debug('\t\t\t' + tty_green + '=> PERFECT' + tty_reset)
                       sent_perfcounter += 1
+                      successfully_processed.append(oberfeld_words)
                   elif haben_past(finiteverb[0][0]):
                       logging.debug("\t\t[J] Oberfeldumstellung + finite perfect aux (past) found in verbal complex: '" + finiteverb[0][0] +"'")
                       logging.debug('\t\t\t' + tty_green + '=> PLUPERFECT' + tty_reset)
                       sent_pluperfcounter += 1
+                      successfully_processed.append(oberfeld_words)
+                  
     else:
         logging.debug('\t\tNo suitable sequence of POS tags found.')
 
-    return (sent_perfcounter, sent_pluperfcounter)
+    return (sent_perfcounter, sent_pluperfcounter, successfully_processed)
 
 
+
+# Try to find bare participles in the vorfeld ("Angemalt wurde es nicht.").
+# These are typically not annotated as <vc> ...</vc> and we will thus miss them
+# if we only look for participles with <vc> ... </vc>:
+
+def vvpp_in_vf(s, sent_perfcounter, sent_pluperfcounter):
+    vvpp_vf_perfect_counter = sent_perfcounter
+    vvpp_vf_pluperfect_counter =  sent_pluperfcounter
+    donelist = []
+
+    # retrieve all vf elements:
+
+    vfs = s.findall('.//vf')
+    logging.debug('\t\tNumber of vf in this s: ' + str(len(vfs)))
     
+    vxinf_list = []
+
+    for vf in vfs:
+        vxinf_list = vxinf_list + vf.findall('./vxinf')
 
 
+    for num, vf in enumerate(vfs):
+        logging.debug('\t\tvf #' + str(num+1) + ': ' + words_to_string(vf))
 
 
-#    for i in range(0, len(words_and_tags_and_lemmas)):
-#      if words_and_tags_and_lemmas[i][1] == 'VAFIN':
-#        lastlemma = words_and_tags_and_lemmas[i][2]
-#        infcounter = 1
-#        while True:
-#          try:
-#            (nextword, nextpos, nextlemma) = words_and_tags_and_lemmas[i+infcounter]
-#            if nextpos in ['VVINF', 'VAINF', 'VMINF']:
-#              lastlemma = nextlemma
-#              infcounter += 1
-#            else:
-#              if lastlemma in ersatzinfinitives_set:
-#                candidate = wwords[i]
-#                if haben_pres(candidate):
-#                  logging.debug('\t\t\t\t[I] Oberfeldumstellung + finite perfect aux (pres) found in verbal complex: ' + candidate)
-#                  logging.debug('\t\t\t\t' + tty_green + '=> PERFECT' + tty_reset)
-#                  sent_perfcounter += 1
-#                elif haben_past(candidate):
-#                  logging.debug('\t\t\t\t[J] Oberfeldumstellung + finite perfect aux (past) found in verbal complex: ' + candidate)
-#                  logging.debug('\t\t\t\t' + tty_green + '=> PLUPERFECT' + tty_reset)
-#                  sent_pluperfcounter += 1
-#              break
-#          except IndexError:
-#            break
-
+#    for vf in vfs:
+    for vxinf in vxinf_list:
+        # check if vf contains a bare participle , for each vf:
+        (wwords,ppos,llemmas,mmpos,mmorph) = get_wplpm(vxinf)
+        participletags = ["VVPP", "VMPP", "VAPP"]
+        V_PP_list = [wwords[i] for i, pos in enumerate(ppos) if (ppos[i] in participletags or mmpos[i] in participletags)]
+        #if len(V_PP_list) > 0:
+        for participle in V_PP_list:
+            logging.debug(tty_red + '\t\tFound bare participle(s) in this vf: ' + participle + tty_reset)
+            # if so, retrieve the dominating simpx: 
+            parent =  get_dominating_X(vxinf)
+            if parent is not None:
+                # retrieve all lk within the dominating simpx: 
+                lks = parent.findall('.//lk')
+                logging.debug(tty_red + '\t\tFound ' + str(len(lks)) + ' lk element(s).' +tty_reset)
+                for n, lk in enumerate(lks):
+                    logging.debug(tty_red + '\t\tlk #' + str(n+1) + ': ' + words_to_string(lk) +tty_reset)
+                for lk in lks:
+                    # check if lk contains a perfect aux: increase perfect counters, stop looking at remaining lk:
+                    (lkwwords,lkppos,lkllemmas,lkmmpos,lkmmorph) = get_wplpm(lk)
+                    if len(lkllemmas) > 0:
+                        candidate = lkwwords[0]
+                        logging.debug(tty_red + '\t\tFound perfect aux in left bracket: ' + candidate + tty_reset) ############
+                        (add_to_perfcounter, add_to_pluperfcounter, add_to_donelist)  = get_tense(lkwwords[0], lkllemmas[0], participle)
+                        vvpp_vf_perfect_counter += add_to_perfcounter
+                        vvpp_vf_pluperfect_counter += add_to_pluperfcounter
+                        donelist = donelist + add_to_donelist
+                        # stop looking at remaining lks if we have found a perefect aux:
+                        if add_to_perfcounter + add_to_pluperfcounter > 0:
+                            break
+                            # if there is no perfect aux in lk, check for modal verb(s):
+                        else:
+                            VM_list = [lkwwords[i] for i, pos in enumerate(lkppos) if (lkppos[i].startswith("VM") or lkmmpos[i].startswith("VM"))]
+                            if len(VM_list) > 0:
+                                logging.debug(tty_red + '\t\tFound a modal verb in the left bracket: ' + jjoin(wwords, " ", "NONE") + tty_reset)
+                                logging.debug(tty_red + '\t\tLooking for a perfect aux in a verbal complex.' + tty_reset)
+                            # if so, retrieve all verbal complexes dominated by the same simpx:
+                                vcs = parent.findall('.//vc')
+                                if len(vcs) == 0:
+                                    logging.debug(tty_red + '\t\tNo verbal complex found.' + tty_reset)
+                                else:
+                                    logging.debug(tty_red + '\t\tFound ' + str(len(vcs)) + ' lk element(s).' +tty_reset)
+                                    for x, vc in enumerate(vcs):
+                                        logging.debug(tty_red + '\t\tvc #' + str(x+1) + ': ' + words_to_string(vc) +tty_reset)
+                                    for vc in vcs:
+                                        # check if the verbal complex contains (only a) perfect aux; if so check form and increase counters:
+                                        (vcwwords,vcppos,vcllemmas,vcmmpos,vcmmorph) = get_wplpm(vc)
+                                        if len(vcllemmas) == 1:
+                                            (add_to_perfcounter, add_to_pluperfcounter, add_to_donelist)  = get_tense(vcwwords[0], vcllemmas[0], participle)
+                                            vvpp_vf_perfect_counter += add_to_perfcounter
+                                            vvpp_vf_pluperfect_counter += add_to_pluperfcounter
+                                            donelist = donelist + add_to_donelist
+                                            if add_to_perfcounter + add_to_pluperfcounter > 0:
+                                                break
+                                # stop looking at remaining vcs.
+                                    break
+    return(vvpp_vf_perfect_counter, vvpp_vf_pluperfect_counter)
 
 
 def verbose(verbosearg,sentencelist):
@@ -312,6 +431,53 @@ def jjoin(somelist, sep, empty):
     if len(somelist) ==0:
         somelist = [empty.strip()]
     return(sep.join(somelist))
+
+
+
+def get_tense(candidate, auxlemma, participle): #, successfully_processed):
+    perfcounter = 0
+    pluperfcounter = 0 
+    donelist = []
+#    candidate = auxform
+
+    if auxlemma == u'haben':
+        # Check tense.
+        # Don't rely on Marmot morph annotations:
+        # there will be no annotation if Marmot thinks it is 'VAINF'.
+        if haben_pres(candidate):
+            perfcounter += 1
+            donelist.append(participle)
+            logging.debug('\t\tFinite perfect aux (pres) found: ' + candidate)
+            logging.debug('\t\t\t' + tty_green + '=> PERFECT' + tty_reset)
+          # successfully_processed.append(participle + " " + candidate)
+        elif haben_past(candidate):
+            pluperfcounter += 1 
+            donelist.append(participle)
+            logging.debug('\t\tFinite perfect aux (past) found: ' + candidate)
+            logging.debug('\t\t\t' + tty_green + '=> PLUPERFECT' + tty_reset)
+          # successfully_processed.append(participle + " " + candidate)
+
+    elif auxlemma == u'sein':
+        # Check if participle is among those that take 'sein' as perfect tense auxiliary.
+        if participle in sein_part_set or  sein_part_re.match(participle):
+            if sein_pres(candidate):
+                perfcounter += 1 
+                donelist.append(participle)
+            #   successfully_processed.append(participle + " " + candidate)
+                logging.debug('\t\tFinite perfect aux (pres) found: ' + candidate)
+                logging.debug('\t\t\t' + tty_green + '=> PERFECT' + tty_reset)
+            elif sein_past(candidate):
+                pluperfcounter += 1 
+                donelist.append(participle)
+             #  successfully_processed.append(jjoin(participle + " " + candidate)
+                logging.debug('\t\tFinite perfect aux (past) found: ' + candidate)
+                logging.debug('\t\t\t' + tty_green + '=> PLUPERFECT' + tty_reset)
+
+    return (perfcounter, pluperfcounter, donelist) #, successfully_processed)
+
+
+
+
 
 
 # Returns tokens tagged as 'V.PP'.
@@ -353,13 +519,14 @@ def perfect(doc):
     sent_perfcounter = 0
     sent_pluperfcounter = 0
     successfully_processed = []
+    vce = True
 
     # vc is not always a direct child of simpx (e.g. in coordination).
     vcs = s.findall('.//vc')
     logging.debug('Total number of VCs: ' + str(len(vcs)))
 
     for num, vc in enumerate(vcs):
-        (wwords,ttttpos,llemmas,mmpos,mmorph) = get_wplpm(vc)
+#        (wwords,ttttpos,llemmas,mmpos,mmorph) = get_wplpm(vc)
         logging.debug('\tVC #' + str(num+1) + ": " +  words_to_string(vc))
     
  #   logging.debug('\t------------------------------------')
@@ -393,20 +560,11 @@ def perfect(doc):
 
         for n, participle in enumerate(participles_and_ersatzinfs):
 
-          if len(oberfeld((wwords,ttttpos,llemmas,mmpos,mmorph))) > 0:
-              logging.debug('\t' + tty_red + 'BUT WE HAVE OBERFELDUMSTELLUNG!' + tty_reset)
-
-
 #          logging.debug('\tNow processing participle #' + str(n+1) + ": " + participle +' (analyzing verbal complex)')
           logging.debug('\t' + tty_blue + 'Searching for perfect aux in the verbal complex (participle #' + str(n+1) + ": " + participle + ")" + tty_reset)
           if ttttpos[-1] == 'VAFIN':
             candidate = wwords[-1]
             logging.debug('\t\tLast word in VC: ' + candidate)
-
-#          try to detect oberfeldumstellung right here:
-
-         
-
 
             if llemmas[-1] == u'haben':
               # Check tense.
@@ -443,13 +601,13 @@ def perfect(doc):
                   logging.debug('\t\t[D] Finite perfect aux (past) found in verbal complex: ' + candidate)
                   logging.debug('\t\t\t' + tty_green + '=> PLUPERFECT' + tty_reset)
 
-          #  logging.debug('\t\tParticiplelist after processing one participle (aux in vc): ' + ' + '.join(participles_and_ersatzinfs))
+        #  elif has_oberfeldumstellung((wwords,ttttpos,llemmas,mmpos,mmorph)):
+        #      logging.debug(tty_blue + '\tChecking for Oberfeldumstellung (this vc only)' + tty_reset)
+        #      (sent_perfcounter, sent_pluperfcounter, successfully_processed) = oberfeld2(s, successfully_processed, sent_perfcounter, sent_pluperfcounter)
 
           # Get the left bracket of the immediately dominating fkonj, fkord or simplex-element.
           else:
             logging.debug('\t\tNo perfect aux found in verbal complex.')
-
-        #logging.debug('\t\tParticiplelist after processing all participles (looking for aux in vc): ' + ' + '.join(participles_and_ersatzinfs))
 
         # Make sure we do not process a participle twice.
 #        logging.debug('\t\tDonelist: ' + ' + '.join(donelist))
@@ -459,38 +617,49 @@ def perfect(doc):
 
 
         if len(participles_and_ersatzinfs) > 0:
-            logging.debug('\t\tRemaining participles this VC: ' + str(len(participles_and_ersatzinfs)))
+            logging.debug('\t\tRemaining participles this VC: ' + jjoin(participles_and_ersatzinfs, ",", "NONE"))
             logging.debug('\t' + tty_blue + 'Trying to find a perfect aux in the left bracket.' + tty_reset)
+      
 
+        #for participle in participles_and_ersatzinfs
+        for participle in  participles_and_ersatzinfs[len(participles_and_ersatzinfs)-1:]:
+         logging.debug('\t\tParticiple:\t' + participle)
+         logging.debug('\t\tLocating left bracket...')
+         lks = get_dominating_lk(vc)
+         element = "left bracket: "
 
-        for participle in participles_and_ersatzinfs:
-          logging.debug('\t\tParticiple:\t' + participle)
-          logging.debug('\t\tLocating left bracket...')
-          lks = get_dominating_lk(vc)
+         if lks == []:
+          logging.debug('\t\tFound no left bracket.')
 
-          if lks == []:
-            logging.debug('\tFound no left bracket.')
-
+          vces = get_neighbouring_vce(vc)
+          if vces == []:
+           logging.debug('\t\tFound no vce.')
           else:
-            for lk in lks:
+           logging.debug('\t\tFound vce.')
+           element = "vce: " 
+           lks = vces
+           vce = True
+
+
+         for lk in lks:
               (wwords,ttttpos,llemmas,mmpos,mmorph) = get_wplpm(lk)
-              logging.debug('\t\tLeft bracket: ' + ' '.join(wwords))
+              logging.debug('\t\t' + element + ' '.join(wwords))
 
               # check for perfect auxiliary in left bracket:
               if  ttttpos[0] == u'VAFIN':
                 candidate =  wwords[0]
-                logging.debug("\t\tFound a suitable aux: '" + candidate + "'")
-                logging.debug("\t\tStop searching for more LKs.")
+                logging.debug("\t\tFound a potential perfect aux: '" + candidate + "'")
+                logging.debug("\t\tStop searching for more LKs/vces.")
                 if llemmas[0] == u'haben':
                   if haben_pres(candidate):
-                    logging.debug('\t\t\t\t[E] Finite perfect aux (pres) found in left bracket: ' + candidate)
+                    logging.debug('\t\t\t\t[E] Finite perfect aux (pres) found in ' + element + candidate)
                     logging.debug('\t\t\t\t' + tty_green + '=> PERFECT' + tty_reset)
                     sent_perfcounter += 1
                     donelist.append(participle)
                     successfully_processed.append(candidate + " " + this_vc_words)
                   elif haben_past(candidate):
-                    logging.debug('\t\t\t\t[F] Finite perfect aux (past) found in left bracket: ' + candidate)
-                    logging.debug('\t\t\t\t' + tty_green + '=> PLUPERFECT' + tty_reset)
+                    logging.debug('\t\t[F] Finite perfect aux (past) found in ' + element + candidate)
+                    logging.debug('\t\t\t' + tty_green + '=> PLUPERFECT' + tty_reset)
                     sent_pluperfcounter += 1
                     donelist.append(participle)
                     successfully_processed.append(candidate + " " + this_vc_words)
@@ -501,14 +670,18 @@ def perfect(doc):
                       sent_perfcounter += 1
                       donelist.append(participle)
                       successfully_processed.append(candidate + " " + this_vc_words)
-                      logging.debug('\t\t\t\t[G] Finite perfect aux (pres) found in left bracket: ' + candidate)
+                      logging.debug('\t\t\t\t[G] Finite perfect aux (pres) found in ' + element + candidate)
                       logging.debug('\t\t\t\t' + tty_green + '=> PERFECT' + tty_reset)
                     elif sein_past(candidate):
                       sent_pluperfcounter += 1
                       donelist.append(participle)
                       successfully_processed.append(candidate + " " + this_vc_words)
-                      logging.debug('\t\t\t\t[H] Finite perfect aux (past) found in left bracket: ' + candidate)
+                      logging.debug('\t\t\t\t[H] Finite perfect aux (past) found in ' + element + candidate)
                       logging.debug('\t\t\t\t' + tty_green + '=> PLUPERFECT' + tty_reset)
+                  else:
+                      logging.debug('\t\t\t' + "Not a suitable perfect aux for participle '" + participle + "': " + candidate)
+
+
                 
                 # Stop looking for aux in further lk when one suitable aux has been found.
                 break
@@ -519,83 +692,18 @@ def perfect(doc):
 
       else:
         logging.debug('\t\tNo past participle or infinitive found in verbal complex.')
-        logging.debug('\t\t\t' + tty_red + '=> NO PERFECT' + tty_reset)
-
-#    # Check for Oberfeldumstellung with Ersatzinfinitiv
-#    # (no point in using topo-parse information here, it's almost always incorrect).
-#    logging.debug('\t\tChecking for Oberfeldumstellung.')
-#
-#    (wwords,ttttpos,llemmas,mmpos,mmorph) = get_wplpm(s)
-#    words_and_tags_and_lemmas = zip(wwords,ttttpos,llemmas)
-#    print(tty_magenta)
-#    print(words_and_tags_and_lemmas)
-#    print(tty_reset)
-#
-#    for i in range(0, len(words_and_tags_and_lemmas)):
-#      if words_and_tags_and_lemmas[i][1] == 'VAFIN':
-#        lastlemma = words_and_tags_and_lemmas[i][2]
-#        infcounter = 1
-#        while True:
-#          try:
-#            (nextword, nextpos, nextlemma) = words_and_tags_and_lemmas[i+infcounter]
-#            if nextpos in ['VVINF', 'VAINF', 'VMINF']:
-#              lastlemma = nextlemma
-#              infcounter += 1
-#            else:
-#              if lastlemma in ersatzinfinitives_set:
-#                candidate = wwords[i]
-#                if haben_pres(candidate):
-#                  logging.debug('\t\t\t\t[I] Oberfeldumstellung + finite perfect aux (pres) found in verbal complex: ' + candidate)
-#                  logging.debug('\t\t\t\t' + tty_green + '=> PERFECT' + tty_reset)
-#                  sent_perfcounter += 1
-#                elif haben_past(candidate):
-#                  logging.debug('\t\t\t\t[J] Oberfeldumstellung + finite perfect aux (past) found in verbal complex: ' + candidate)
-#                  logging.debug('\t\t\t\t' + tty_green + '=> PLUPERFECT' + tty_reset)
-#                  sent_pluperfcounter += 1
-#              break
-#          except IndexError:
-#            break
-#
 
 
+# OBERFELDUMSTELLUNG:
+    if vce:
+        logging.debug(tty_blue + '\tNot checking for Oberfeldumstellung with REGEX because there was a vce-element.' + tty_reset)
+    else:
+        logging.debug(tty_blue + '\tChecking for Oberfeldumstellung (entire sentence, ignoring vc-tags)' + tty_reset)
+        (sent_perfcounter, sent_pluperfcounter, successfully_processed) = oberfeld2(s, successfully_processed, sent_perfcounter, sent_pluperfcounter)
 
-
-#    logging.debug(tty_blue + '\tChecking for Oberfeldumstellung...' + tty_reset)
-#    oberfeld_vc_items = oberfeld(s)
-#
-#    if len(oberfeld_vc_items) > 0:
-##        print("oberfeld_vc_items: "),
-##        print(tty_magenta) 
-##        for e in [" ".join(i) for i in oberfeld_vc_items]:
-##            print e.encode('utf-8')
-##        print(tty_reset)
-#
-#        oberfeld_words = " ".join([e[0] for e in oberfeld_vc_items])
-#        logging.debug("\t\tVC candidate: '" + oberfeld_words.encode('utf-8') + "'")
-#        logging.debug("\t\tSuccessfully processed before: " + jjoin(successfully_processed, ", ", "NONE").encode('utf-8'))
-#
-#        if oberfeld_words in set(successfully_processed):
-#            logging.debug("""\t\tIgnoring sequence '""" +  oberfeld_words.encode('utf-8') + """': was successfully processed before.""")
-#        else:
-#            if oberfeld_vc_items[-1][2] in ersatzinfinitives_set:
-#              finiteverb = [i for i in oberfeld_vc_items if (i[1].endswith('FIN') and i[2] in ['haben', 'sein'])]
-#            #  logging.debug("\t\tFinite aux in VC: '" + finiteverb[0][0].encode('utf-8') + "'")
-#              if len(finiteverb) > 0:
-#                  if haben_pres(finiteverb[0][0]):
-#                      logging.debug("\t\t[I] Oberfeldumstellung + finite perfect aux (pres) found in verbal complex: '" + finiteverb[0][0] + "'")
-#                      logging.debug('\t\t\t' + tty_green + '=> PERFECT' + tty_reset)
-#                      sent_perfcounter += 1
-#                  elif haben_past(finiteverb[0][0]):
-#                      logging.debug("\t\t[J] Oberfeldumstellung + finite perfect aux (past) found in verbal complex: '" + finiteverb[0][0] +"'")
-#                      logging.debug('\t\t\t' + tty_green + '=> PLUPERFECT' + tty_reset)
-#                      sent_pluperfcounter += 1
-#    else:
-#        logging.debug('\t\tNo suitable sequence of POS tags found.')
-#
-
-
-    (sent_perfcounter, sent_pluperfcounter) = oberfeld2(s, successfully_processed, sent_perfcounter, sent_pluperfcounter)
-    
+# BARE PARTICIPLES IN VF:
+    logging.debug(tty_blue + '\tChecking for bare participles in vf' + tty_reset)
+    (sent_perfcounter, sent_pluperfcounter) = vvpp_in_vf(s, sent_perfcounter, sent_pluperfcounter)
    
 
 
