@@ -139,7 +139,7 @@ def get_wplpm(enclosing_element):
 
 # Try to find bare participles in the vorfeld ("Angemalt wurde es nicht.").
 # These are typically not annotated as <vc> ...</vc> and we will thus miss them
-# if we only look for participles with <vc> ... </vc>:
+# if we only look for participles within <vc> ... </vc>:
 def vvpp_in_vf(s):
     vvpp_vf_passive_counter = 0 
     
@@ -152,15 +152,16 @@ def vvpp_in_vf(s):
 
     for vf in vfs:
         vxinf_list = vxinf_list + vf.findall('./vxinf')
-    print(vxinf_list)
     
+    if len(vxinf_list) == 0:
+         logging.debug('\t\t\tNo participle found in any vf.')    
    
 #    for num, vf in enumerate(vfs):
     for num, vf in enumerate(vxinf_list):
 
         logging.debug(tty_red + '\t#' + str(num+1) + ': ' + words_to_string(vf)+ tty_reset)
 
-    for vf in vfs:
+    for vf in vxinf_list:
         # check if vf contains a bare participle , for each vf:
         (wwords,ppos,llemmas,mmpos,mmorph) = get_wplpm(vf)
         if len(ppos) == 1 and (ppos[0] in ["VVPP", "VMPP"] or mmpos[0] in ["VVPP", "VMPP"]):
