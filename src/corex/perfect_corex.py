@@ -354,15 +354,25 @@ def vvpp_in_vf(s, sent_perfcounter, sent_pluperfcounter):
     
     vxinf_list = []
 
-    for vf in vfs:
-        vxinf_list = vxinf_list + vf.findall('./vxinf')
-
-
+#    for vf in vfs:
+#        vxinf_list = vxinf_list + vf.findall('./vxinf')
     for num, vf in enumerate(vfs):
         logging.debug('\t\tvf #' + str(num+1) + ': ' + words_to_string(vf))
-
+        # check if vf contains a finite verb:
+        vxfin = vf.findall('.//vxfin')
+        if len(vxfin) > 0:
+            logging.debug('\t\tIgnoring this vf (contains finite verb: ' + words_to_string(vxfin[0]) + ')')
+        else:
+            vxinf_list = vxinf_list + vf.findall('./vxinf')
+            simpx_list = vf.findall('./simpx')
+            for simpx in simpx_list:
+                vc_list =  simpx.findall('./vc')
+                for vc in vc_list:
+                    vxinf_list = vxinf_list + vc.findall('./vxinf')
+    
+        
     if len(vxinf_list) == 0:
-         logging.debug('\t\t\tNo bare participle found in any vf.')
+         logging.debug('\t\t\tNo suitable participle found in any vf.')
 
 
 #    for vf in vfs:
@@ -373,10 +383,15 @@ def vvpp_in_vf(s, sent_perfcounter, sent_pluperfcounter):
         V_PP_list = [wwords[i] for i, pos in enumerate(ppos) if (ppos[i] in participletags or mmpos[i] in participletags)]
         #if len(V_PP_list) > 0:
         for participle in V_PP_list:
-            logging.debug(tty_red + '\t\tFound bare participle(s) in this vf: ' + participle + tty_reset)
+          logging.debug(tty_red + '\t\tFound bare participle(s) in this vf: ' + participle + tty_reset)
             # if so, retrieve the dominating simpx: 
-            parent =  get_dominating_X(vxinf)
-            if parent is not None:
+#          parent =  get_dominating_X(vxinf)
+#          if parent is not None:
+          domvf = get_dominating_Y(vxinf, "vf")
+          if domvf is not None:
+              logging.debug(tty_red + '\t\tWords of dominating vf: ' +  words_to_string(domvf) + tty_reset)
+              parent = get_dominating_X(domvf)
+              if parent is not None:
                 # retrieve all lk within the dominating simpx: 
                 lks = parent.findall('.//lk')
                 logging.debug(tty_red + '\t\tFound ' + str(len(lks)) + ' lk element(s).' +tty_reset)
