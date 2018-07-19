@@ -96,7 +96,7 @@ def get_dominating_lk2(vcparent):
             lks = lks + fkonj.findall('lk')
   if lks == []:
     logging.debug('\t\tIs a verb-final clause.')
-    logging.debug('\t\t\t\t' + tty_red + '=> NO PASSIVE' + tty_reset)
+#    logging.debug('\t\t\t\t' + tty_red + '=> NO PASSIVE' + tty_reset)
 #  logging.debug('\tNumber of LK found: ' + str(len(lks)))
 
   return(lks)
@@ -146,7 +146,7 @@ def vvpp_in_vf(s):
     # retrieve all vf elements:
 
     vfs = s.findall('.//vf')
-    logging.debug(tty_red + '\tNumber of vf in this s: ' + str(len(vfs)) +tty_reset)
+    logging.debug('\tNumber of vf in this s: ' + str(len(vfs)))
 
     vxinf_list = []
 
@@ -165,21 +165,21 @@ def vvpp_in_vf(s):
         # check if vf contains a bare participle , for each vf:
         (wwords,ppos,llemmas,mmpos,mmorph) = get_wplpm(vf)
         if len(ppos) == 1 and (ppos[0] in ["VVPP", "VMPP"] or mmpos[0] in ["VVPP", "VMPP"]):
-            logging.debug(tty_red + '\t\tFound bare participle in this vf: ' + wwords[0] + tty_reset)
+            logging.debug('\t\tFound bare participle in this vf: ' + wwords[0])
             # if so, retrieve the domitating simpx: 
             parent =  get_dominating_simpx(vf)
             if parent is not None:
                 # retrieve all lk within the dominating simpx: 
                 lks = parent.findall('.//lk')
-                logging.debug(tty_red + '\t\tFound ' + str(len(lks)) + ' lk element(s).' +tty_reset)
+                logging.debug('\t\tFound ' + str(len(lks)) + ' lk element(s).')
                 for n, lk in enumerate(lks):
-                    logging.debug(tty_red + '\t\tlk #' + str(n+1) + ': ' + words_to_string(lk) +tty_reset)
+                    logging.debug('\t\tlk #' + str(n+1) + ': ' + words_to_string(lk))
                 for lk in lks:
                     # check if lk contains a passive aux: if so keep it, increase passive counter, stop looking at remaining lk:
                     (wwords,ppos,llemmas,mmpos,mmorph) = get_wplpm(lk)
                     if len(llemmas) > 0:
                         if len(llemmas) == 1 and llemmas[0] == "werden" and (ppos[0].startswith('VA') or mmpos.startswith('VA')):
-                            logging.debug(tty_red + '\t\tFound passive aux in left bracket: ' + wwords[0] + tty_reset)
+                            logging.debug('\t\tFound passive aux in left bracket: ' + wwords[0])
                             vvpp_vf_passive_counter += 1
                             logging.debug('\t\t\t' + tty_green + '=> PASSIVE' + tty_reset)
                             # stop looking at remaining lk:
@@ -188,21 +188,21 @@ def vvpp_in_vf(s):
                         else:
                             VM_list = [wwords[i] for i, pos in enumerate(ppos) if (ppos[i].startswith("VM") or mmpos[i].startswith("VM"))]
                             if len(VM_list) > 0:
-                                logging.debug(tty_red + '\t\tFound a modal verb in the left bracket: ' + jjoin(wwords, " ", "NONE") + tty_reset)
-                                logging.debug(tty_red + '\t\tLooking for a passive aux in a verbal complex.' + tty_reset)
+                                logging.debug('\t\tFound a modal verb in the left bracket: ' + jjoin(wwords, " ", "NONE"))
+                                logging.debug('\t\tLooking for a passive aux in a verbal complex.')
                             # if so, retrieve all verbal complexes dominated by the same simpx:
                                 vcs = parent.findall('.//vc')
                                 if len(vcs) == 0:
-                                    logging.debug(tty_red + '\t\tNo verbal complex found.' + tty_reset)
+                                    logging.debug('\t\tNo verbal complex found.')
                                 else:
-                                    logging.debug(tty_red + '\t\tFound ' + str(len(vcs)) + ' lk element(s).' +tty_reset)
+                                    logging.debug('\t\tFound ' + str(len(vcs)) + ' lk element(s).')
                                     for x, vc in enumerate(vcs):
-                                        logging.debug(tty_red + '\t\tvc #' + str(x+1) + ': ' + words_to_string(vc) +tty_reset)
+                                        logging.debug('\t\tvc #' + str(x+1) + ': ' + words_to_string(vc))
                                     for vc in vcs:
                                         # check if the verbal complex contains (only a) passive aux; if so, increase passive counter
                                         (wwords,ppos,llemmas,mmpos,mmorph) = get_wplpm(vc)
                                         if len(llemmas) == 1 and llemmas[0] == "werden" and (ppos[0].startswith('VA') or mmpos[0].startswith('VA')):
-                                            logging.debug(tty_red + '\t\tFound passive aux in verbal complex: ' + wwords[0] + tty_reset)
+                                            logging.debug('\t\tFound passive aux in verbal complex: ' + wwords[0])
                                             vvpp_vf_passive_counter += 1
                                             logging.debug('\t\t\t' + tty_green + '=> PASSIVE' + tty_reset)
                                             break
@@ -293,7 +293,7 @@ def passive(doc):
            logging.debug('\t\tNo passive aux found in verbal complex.')
            if llemmas[-1] == "sein":
                logging.debug("\t\tVerbal complex ends with lemma 'sein'.")
-               logging.debug('\t\t\t' + tty_red + '=> NO PASSIVE' + tty_reset)
+#               logging.debug('\t\t\t' + tty_red + '=> NO PASSIVE' + tty_reset)
 
            else: # avoid treating "er wird bemüht sein" as passive
             participles = [participle for participle in participles if not participle in donelist]
@@ -311,7 +311,7 @@ def passive(doc):
               lks = get_dominating_lk2(vcparent)
               if lks == []:
                 logging.debug('\t\t\tNo left bracket filled with a verb in this clause.')
-                logging.debug('\t\t\t' + tty_red + '=> NO PASSIVE' + tty_reset)
+#                logging.debug('\t\t\t' + tty_red + '=> NO PASSIVE' + tty_reset)
 
               else:
                 for lk in lks:
@@ -328,13 +328,14 @@ def passive(doc):
                     successfully_analysed.append(" ".join([wwords[0], participle]))
                   else:
                     logging.debug('\t\t\tFound no passive aux in left bracket.')
-                    logging.debug('\t\t\t\t' + tty_red + '=> NO PASSIVE' + tty_reset)
+                  #  logging.debug('\t\t\t\t' + tty_red + '=> NO PASSIVE' + tty_reset)
 
       else:
         logging.debug('\t\tFound no past participle in verbal complex.')
-        logging.debug('\t\t\t' + tty_red + '=> NO PASSIVE' + tty_reset)
+#        logging.debug('\t\t\t' + tty_red + '=> NO PASSIVE' + tty_reset)
 
-    
+    # BARE PARTICIPLES IN VF:
+    logging.debug(tty_blue + 'Checking for bare participles in vf' + tty_reset) 
     sent_passcounter += vvpp_in_vf(s)
 
     doc_passcounter = doc_passcounter + sent_passcounter
