@@ -9,6 +9,8 @@ tty_green   = ''
 tty_red     = ''
 tty_cyan    = ''
 tty_yellow  = ''
+tty_magenta = ''
+tty_blue    = ''
 tty_reset   = ''
 
 
@@ -284,7 +286,6 @@ def passive(doc):
                 logging.debug('\t\t\t' + tty_green + '=> PASSIVE' + tty_reset)
                 successfully_analysed.append(" ".join([participle, wwords[i]]))
                 donelist.append(participle)
-                print(successfully_analysed)
                 break
 
  

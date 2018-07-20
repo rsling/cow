@@ -23,6 +23,7 @@ tty_green = ''
 tty_red   = ''
 tty_cyan  = ''
 tty_yellow  = ''
+tty_blue    = ''
 tty_magenta = ''
 tty_reset = ''
 
@@ -361,8 +362,8 @@ def vvpp_in_vf(s, sent_perfcounter, sent_pluperfcounter):
         for participle in V_PP_list:
           logging.debug('\t\tFound suitable participle(s) in this vf: ' + participle)
         # if so, retrieve the simpx that dominates vf: 
-        parent =  get_dominating_X(vf)
-        if parent is not None:
+          parent =  get_dominating_X(vf)
+          if parent is not None:
                 # retrieve all lk within the dominating simpx: 
                 lks = parent.findall('.//lk')
                 logging.debug('\t\tFound ' + str(len(lks)) + ' lk element(s).')
