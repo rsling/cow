@@ -50,8 +50,10 @@ class CORexReader:
 
     def __init__(self, filename, annos = list()):
         self.infilename = filename
-#        self.infile = open(self.infilename)
-        self.infile = gzip.open(self.infilename)
+        if self.infilename.endswith('.gz'):
+            self.infile = gzip.open(self.infilename)
+        else:
+            self.infile = open(self.infilename)
         self.annos = annos
         self.count = 0
         self.docstart = re.compile(r'^<doc .+> *$')

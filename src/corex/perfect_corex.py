@@ -327,46 +327,42 @@ def vvpp_in_vf(s, sent_perfcounter, sent_pluperfcounter):
     vfs = s.findall('.//vf')
     logging.debug('\tNumber of vf in this s: ' + str(len(vfs)))
     
-    vxinf_list = []
+#    vxinf_list = []
 
 #    for vf in vfs:
 #        vxinf_list = vxinf_list + vf.findall('./vxinf')
+
     for num, vf in enumerate(vfs):
-        logging.debug('\tvf #' + str(num+1) + ': ' + words_to_string(vf))
+      vxinf_list = []
+      logging.debug('\tvf #' + str(num+1) + ': ' + words_to_string(vf))
         # check if vf contains a finite verb:
-        vxfin = vf.findall('.//vxfin')
-        if len(vxfin) > 0:
-            logging.debug('\t\tIgnoring this vf (contains finite verb: ' + words_to_string(vxfin[0]) + ')')
-        else:
-            vxinf_list = vxinf_list + vf.findall('./vxinf')
-            simpx_list = vf.findall('./simpx')
-            for simpx in simpx_list:
-                vc_list =  simpx.findall('./vc')
-                for vc in vc_list:
-                    vxinf_list = vxinf_list + vc.findall('./vxinf')
+      vxfin = vf.findall('.//vxfin')
+      if len(vxfin) > 0:
+          logging.debug('\t\tIgnoring this vf (contains finite verb: ' + words_to_string(vxfin[0]) + ')')
+      else:
+          vxinf_list = vxinf_list + vf.findall('./vxinf')
+          simpx_list = vf.findall('./simpx')
+          for simpx in simpx_list:
+              vc_list =  simpx.findall('./vc')
+              for vc in vc_list:
+                  vxinf_list = vxinf_list + vc.findall('./vxinf')
     
         
-    if len(vxinf_list) == 0:
-         logging.debug('\t\t\tNo suitable participle found in any vf.')
-
+      if len(vxinf_list) == 0:
+         logging.debug('\t\t\tNo suitable participle found in this vf.')
 
 #    for vf in vfs:
-    for vxinf in vxinf_list:
+      for vxinf in vxinf_list:
         # check if vf contains a bare participle , for each vf:
         (wwords,ppos,llemmas,mmpos,mmorph) = get_wplpm(vxinf)
         participletags = ["VVPP", "VMPP", "VAPP"]
         V_PP_list = [wwords[i] for i, pos in enumerate(ppos) if (ppos[i] in participletags or mmpos[i] in participletags)]
         #if len(V_PP_list) > 0:
         for participle in V_PP_list:
-          logging.debug('\t\tFound bare participle(s) in this vf: ' + participle + tty_reset)
-            # if so, retrieve the dominating simpx: 
-#          parent =  get_dominating_X(vxinf)
-#          if parent is not None:
-          domvf = get_dominating_Y(vxinf, "vf")
-          if domvf is not None:
-              logging.debug('\t\tWords of dominating vf: ' +  words_to_string(domvf))
-              parent = get_dominating_X(domvf)
-              if parent is not None:
+          logging.debug('\t\tFound suitable participle(s) in this vf: ' + participle)
+        # if so, retrieve the simpx that dominates vf: 
+        parent =  get_dominating_X(vf)
+        if parent is not None:
                 # retrieve all lk within the dominating simpx: 
                 lks = parent.findall('.//lk')
                 logging.debug('\t\tFound ' + str(len(lks)) + ' lk element(s).')

@@ -101,6 +101,7 @@ def annotate_basic(dom):
     # Number of common nouns.
     c_commonnouns = len([p for p in posse if p.text == 'NN'])
     add_per(dom, 'crx_cn', c_commonnouns, c_word, 1000)
+
     
     # Number of prepositions.
     c_prepositions = len([p for p in posse if p.text[:2] == 'AP'])
@@ -331,6 +332,7 @@ def annotate_basic(dom):
     c_loan_n = len([firstlemma(l.text) for l in lemmas if l.findall('../ttpos')[0].text == 'NN' and l.findall('../ne')[0].text == 'O' and re.match(u'.{3,}(or|ent|ant|iat|aph|af|ide|ast|[bcdfghjklmnpqrstvwxyz](it|a|o|u|il|us|on|um|ik|ist|ur|ar|ade|et|ip)|eur|ör|ium|ion|ve|iv|iar|ion|x|enz|ät|ette|enz|ens|ell|ee|ole|äre)$', firstlemma(l.text))])
     add_per(dom, 'crx_cnloan', c_loan_n, c_commonnouns, 1000)
 
+    # TODO: also exclude (an|be|voll)schmieren, (ge|an|be|durch|er|ein)frieren
     c_ieren_v = len([firstlemma(l.text) for l in lemmas if l.findall('../ttpos')[0].text[:2] == 'VV' and firstlemma(l.text) != 'verlieren' and re.match(u'.{2,}[bcdfghjklmnpqrstvwxyz]ieren$', firstlemma(l.text))])
     add_per(dom, 'crx_vvieren', c_ieren_v,  c_verbs, 1000)
 

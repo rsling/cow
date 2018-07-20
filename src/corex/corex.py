@@ -41,6 +41,7 @@ def main():
 
     if args.verbose:
         logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.DEBUG)
+        print("verbose!")
         if args.color:
           perfect_enable_color()
           passive_enable_color()
@@ -73,7 +74,10 @@ def main():
         annos = args.annotations.split(',')
 
     # Open out file.
-    outf = gzip.open(fn_out, 'w')
+    if fn_out.endswith('.gz'):
+        outf = gzip.open(fn_out, 'w')
+    else:
+        outf = open(fn_out, 'w')
 
     # Create corpus iterator. 
     corpus_in = CX(fn_in, annos=annos)

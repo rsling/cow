@@ -159,7 +159,7 @@ def vvpp_in_vf(s):
 #    for num, vf in enumerate(vfs):
     for num, vf in enumerate(vxinf_list):
 
-        logging.debug(tty_red + '\t#' + str(num+1) + ': ' + words_to_string(vf)+ tty_reset)
+        logging.debug('\t#' + str(num+1) + ': ' + words_to_string(vf))
 
     for vf in vxinf_list:
         # check if vf contains a bare participle , for each vf:
