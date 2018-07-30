@@ -68,9 +68,25 @@ def get_dominating_simpx(element):
   while True:
     parent = element.getparent()
     if parent is not None:
-
       # TODO Maybe 'fkonj' also?
       if parent.tag in ['simpx', 'rsimpx', 'psimpx']:
+        break
+      elif parent.tag == '<s>':
+        break
+      else:
+        element = parent
+    else:
+      parent = None
+      break
+  return(parent)
+
+
+def get_dominating_simpx_restr(element):
+  while True:
+    parent = element.getparent()
+    if parent is not None:
+      # TODO Maybe 'fkonj' also?
+      if parent.tag in ['simpx', 'rsimpx', 'psimpx', 'fkonj']:
         break
       elif parent.tag == '<s>':
         break
@@ -316,13 +332,15 @@ def passive(doc):
 
               else:
                 for lk in lks:
-#                  (wwords,ppos,llemmas) = get_wpl(lk)
+                  logging.debug('\t\tJetze hier!')
+
+#                for lk in lks[0:1]:
                   (wwords,ppos,llemmas,mmpos,mmorph) = get_wplpm(lk)
                   logging.debug('\t\tLeft bracket: ' + ' '.join(wwords))
 
 
                   # Check for passive axuiliary.
-                  if llemmas[0] == 'werden' and (ppos[0].startswith('VA') or mmpos.startswith('VA')):
+                  if llemmas[0] == 'werden' and (ppos[0].startswith('VA') or mmpos[0].startswith('VA')):
                     logging.debug('\t\t\tFound passive aux in left bracket: ' + wwords[0])
                     logging.debug('\t\t\t\t' + tty_green + '=> PASSIVE' + tty_reset)
                     sent_passcounter += 1
