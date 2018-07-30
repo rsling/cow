@@ -320,33 +320,39 @@ def passive(doc):
                 logging.debug('\t' + tty_blue + 'Trying to find a passive aux in the left bracket.' + tty_reset)
       
             for participle in participles:
-             vcparent = get_dominating_simpx(vc)
+#             vcparent = get_dominating_simpx(vc)
+             vcparent = get_dominating_simpx_restr(vc)
              logging.debug('\t\tParticiple:\t' + participle)
              logging.debug('\t\tLocating left bracket...')
 
              if vcparent is not None:
               lks = get_dominating_lk2(vcparent)
               if lks == []:
-                logging.debug('\t\t\tNo left bracket filled with a verb in this clause.')
+                vcparent = get_dominating_simpx(vc)
+                if vcparent is not None:
+                  lks = get_dominating_lk2(vcparent)
+              
+              if lks == []:
+                  logging.debug('\t\t\tNo left bracket filled with a verb in this clause.')
 #                logging.debug('\t\t\t' + tty_red + '=> NO PASSIVE' + tty_reset)
 
               else:
-                for lk in lks:
-                  logging.debug('\t\tJetze hier!')
+                    for lk in lks:
+                        logging.debug('\t\tJetze hier!')
 
 #                for lk in lks[0:1]:
-                  (wwords,ppos,llemmas,mmpos,mmorph) = get_wplpm(lk)
-                  logging.debug('\t\tLeft bracket: ' + ' '.join(wwords))
+                        (wwords,ppos,llemmas,mmpos,mmorph) = get_wplpm(lk)
+                        logging.debug('\t\tLeft bracket: ' + ' '.join(wwords))
 
 
                   # Check for passive axuiliary.
-                  if llemmas[0] == 'werden' and (ppos[0].startswith('VA') or mmpos[0].startswith('VA')):
-                    logging.debug('\t\t\tFound passive aux in left bracket: ' + wwords[0])
-                    logging.debug('\t\t\t\t' + tty_green + '=> PASSIVE' + tty_reset)
-                    sent_passcounter += 1
-                    successfully_analysed.append(" ".join([wwords[0], participle]))
-                  else:
-                    logging.debug('\t\t\tFound no passive aux in left bracket.')
+                        if llemmas[0] == 'werden' and (ppos[0].startswith('VA') or mmpos[0].startswith('VA')):
+                            logging.debug('\t\t\tFound passive aux in left bracket: ' + wwords[0])
+                            logging.debug('\t\t\t\t' + tty_green + '=> PASSIVE' + tty_reset)
+                            sent_passcounter += 1
+                            successfully_analysed.append(" ".join([wwords[0], participle]))
+                        else:
+                            logging.debug('\t\t\tFound no passive aux in left bracket.')
                   #  logging.debug('\t\t\t\t' + tty_red + '=> NO PASSIVE' + tty_reset)
 
       else:
