@@ -321,6 +321,7 @@ def passive(doc):
       
             for participle in participles:
 #             vcparent = get_dominating_simpx(vc)
+             logging.debug('\t\tScope restricted to fkonj if there is one...')
              vcparent = get_dominating_simpx_restr(vc)
              logging.debug('\t\tParticiple:\t' + participle)
              logging.debug('\t\tLocating left bracket...')
@@ -328,6 +329,7 @@ def passive(doc):
              if vcparent is not None:
               lks = get_dominating_lk2(vcparent)
               if lks == []:
+                logging.debug('\t\tScope NOT restricted to fkonj...')
                 vcparent = get_dominating_simpx(vc)
                 if vcparent is not None:
                   lks = get_dominating_lk2(vcparent)
@@ -337,12 +339,11 @@ def passive(doc):
 #                logging.debug('\t\t\t' + tty_red + '=> NO PASSIVE' + tty_reset)
 
               else:
+                    logging.debug('\t\t\tFound left bracket.')
                     for lk in lks:
-                        logging.debug('\t\tJetze hier!')
-
 #                for lk in lks[0:1]:
                         (wwords,ppos,llemmas,mmpos,mmorph) = get_wplpm(lk)
-                        logging.debug('\t\tLeft bracket: ' + ' '.join(wwords))
+                        logging.debug('\t\t\tLeft bracket: ' + ' '.join(wwords))
 
 
                   # Check for passive axuiliary.
