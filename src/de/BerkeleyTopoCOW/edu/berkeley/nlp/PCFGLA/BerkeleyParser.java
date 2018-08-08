@@ -247,7 +247,16 @@ public class BerkeleyParser  {
     			if(opts.outputXML)	outputTreesXML(parsedTrees, outputData, parser, opts, sentence);
     			else outputTrees(parsedTrees, outputData, parser, opts, sentence);
     			
-    			if (opts.render) writeTreeToImage(parsedTrees.get(0),line.replaceAll("[^a-zA-Z]", "")+".png");
+    			if (opts.render) {
+    				
+    				String imageFileName;
+    				if (opts.goldPOS) {imageFileName = String.join("", sentence); }
+    				else {imageFileName = line;}
+    				System.err.println("Writing to png-file: " + imageFileName.replaceAll("[^a-zA-Z]", ""));
+    				writeTreeToImage(parsedTrees.get(0),imageFileName.replaceAll("[^a-zA-Z]", "")+".png");
+    				}
+    			
+    			
     		
     	}
 
@@ -332,7 +341,7 @@ public class BerkeleyParser  {
 	       		outputData.write("<s>\n" + parsedTree.getChildren().get(0).otpl() + "\n</s>\n");	       			
 	    } else {
 	    	unparsedCounter += 1;
-	    	outputData.write("<s>\n" + String.join("\n", sentence) + "\n</s>\n");
+	    	outputData.write("<s>\n" + String.join("\n", sentence).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") + "\n</s>\n");
 	    }
 		}
 	}
