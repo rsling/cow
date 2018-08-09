@@ -205,10 +205,10 @@ public class BerkeleyParser  {
 				tooLongCounter += 1;
 				System.err.println("Line " + lcounter + ": Skipping sentence #" + scounter + " with "+sentence.size()+" words since it is too long (limit: " + opts.maxLength + ")");
 			if (opts.outputXML) {
-				outputData.write("<s>\n"+String.join("\n",sentence) + "\n</s>\n");
+				outputData.write("<s>\n"+String.join("\n",sentence).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") + "\n</s>\n");
 				}
 			else {
-				outputData.write(String.join(" ",sentence) + "\n");
+				outputData.write(String.join(" ",sentence).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") + "\n");
 				}
 			   sentence = new ArrayList<String>();
 			   continue;
@@ -312,7 +312,7 @@ public class BerkeleyParser  {
 			if (!parsedTree.getChildren().isEmpty()) { 
 	       			if (true) outputData.write(parsedTree.getChildren().get(0)+"\n");
 	    } else {
-	    	outputData.write(String.join(" ", sentence) + "\n");
+	    	outputData.write(String.join(" ", sentence).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") + "\n");
 	    	unparsedCounter += 1;
 	    }
 		}
