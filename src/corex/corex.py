@@ -5,8 +5,6 @@
 # extraxction "algorithm". Output is an annotated COW XML
 # corpus.
 
-# If test.xml is a DECOW14A (sample) file, try calling:
-# python corex.py test.xml test_out.xml --annotations "word,pos,lemma,ne,morph"
 
 import argparse
 import os.path
@@ -15,11 +13,12 @@ import gzip
 import logging
 
 from lxml import etree as ET
-from corexreader import outify, CORexReader as CX
 from gncat import GNCategorizer as GN
-from corex_basic import annotate_basic#, annotate_lexicon
-from passive_corex import passive, passive_enable_color
-from perfect_corex import perfect, perfect_enable_color
+
+from corex_reader import outify, CORexReader as CX
+from corex_basic import annotate_basic, FloatHandler #, annotate_lexicon
+from corex_passive import passive, passive_enable_color
+from corex_perfect import perfect, perfect_enable_color
 
 
 def main():
@@ -27,13 +26,13 @@ def main():
     parser.add_argument('infile', help='COW-XML input file')
     parser.add_argument('outfile', help='output file name')
     parser.add_argument("--erase", action='store_true', help="erase outout files if present")
+    parser.add_argument('--digits', type=int, default=3, help='round floats to this number of decimal digits')
     parser.add_argument('--annotations', type=str, help='comma-separated names for token annotations')
     parser.add_argument("--minlength", type=int, default=-1, help="minimal token length of documents")
     parser.add_argument("--germanet", type=str, help="directory path to GermaNet XML files")
     parser.add_argument("--nobasic", action="store_true", help="skip basic COReX feature counting")
     parser.add_argument("--nopassive", action="store_true", help="skip passive detection/counting")
     parser.add_argument("--noperfect", action="store_true", help="skip perfect detection/counting")
-    parser.add_argument("--nogermanet", action="store_true", help="skip germanet annotation (cenvenience option)")
     parser.add_argument("--verbose", action="store_true", help="emit debug messages")
     parser.add_argument("--color", action="store_true", help="use TTY colors for verbose mode")
 
@@ -68,6 +67,9 @@ def main():
             else:
                 sys.exit("Output file already exists: " + fn)
 
+    # Create float to string handler.
+    fh = FloatHandler(args.digits)
+
     # Split annos passed on CL.
     annos = list()
     if args.annotations:
@@ -95,18 +97,18 @@ def main():
         
         # All simple counts and more.
         if not args.nobasic:
-          annotate_basic(doc)
+          annotate_basic(doc, fh)
 
         # Count passives.
         if not args.nopassive:
-	    passive(doc)
+            passive(doc, fh)
 
-	# Count perfect and pluperfect.
+        # Count perfect and pluperfect.
         if not args.noperfect:
-	    perfect(doc)
+            perfect(doc, fh)
 
         # Do the GermaNet semantic classes annotation.
-        if args.germanet and not args.nogermanet:
+        if args.germanet:
             Gn.annotate(doc)
 
         # Save the (potentially modified) DOM.

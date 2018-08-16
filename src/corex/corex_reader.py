@@ -113,9 +113,7 @@ class CORexReader:
             lisst.append(line)
         else:
             lline = line.split('\t')
-            if not len(lline) == len(self.annos):
-                print (self.infilename + ": Line with incorrect no. of fields: " + line.encode('utf-8') + "\n")
-            else:
+            if len(lline) == len(self.annos):
                 outl = list()
                 outl.append('<token>')
                 for i in range(0, len(lline), 1):
@@ -124,7 +122,6 @@ class CORexReader:
                     outl.append('</' + self.annos[i] + '>')
                 outl.append('</token>')
                 lisst.append("".join(outl))
-
-
-
+            else:
+                print (self.infilename + ": Line with incorrect no. of fields: " + line.encode('utf-8') + "\n")
 
