@@ -198,7 +198,7 @@ def vvpp_in_vf(s):
                     # check if lk contains a passive aux: if so keep it, increase passive counter, stop looking at remaining lk:
                     (wwords,ppos,llemmas,mmpos,mmorph) = get_wplpm(lk)
                     if len(llemmas) > 0:
-                        if len(llemmas) == 1 and llemmas[0] == "werden" and (ppos[0].startswith('VA') or mmpos.startswith('VA')):
+                        if len(llemmas) == 1 and llemmas[0] == "werden" and (ppos[0].startswith('VA') or mmpos[0].startswith('VA')):
                             logging.debug('\t\tFound passive aux in left bracket: ' + wwords[0])
                             vvpp_vf_passive_counter += 1
                             logging.debug('\t\t\t' + tty_green + '=> PASSIVE' + tty_reset)
