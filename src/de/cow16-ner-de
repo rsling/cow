@@ -9,6 +9,6 @@
 set -e
 set -u
 
-java -cp $JAR -Xmx16g edu.stanford.nlp.ie.crf.CRFClassifier -loadClassifier $MODEL -testFile ${1} | sed 's/^<>	.\+$//' | sed 's/^.\+	\([^	]\+\)$/\1/' | head -n -1 > ${2}
+java -cp $NER_JAR -Xmx16g edu.stanford.nlp.ie.crf.CRFClassifier -loadClassifier $NER_DE -testFile ${1} | sed 's/^<>	.\+$//' | sed 's/^.\+	\([^	]\+\)$/\1/' | head -n -1 > ${2}
 
 

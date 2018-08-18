@@ -1,8 +1,10 @@
-#!/usr/local/bin/bash
+#!/bin/bash
 
-#export LC_ALL="de_DE.utf8"
+# Works as a filter, pipe the COW16 material through this.
 
-TOKCONFIG="/Users/felix/NLP/cow/src/de/tokconfig-de-cow"
+# Set the following or it won't work:
+# export LC_ALL="de_DE.utf8"
+# export TOKCONFIG=<path to Ucto config file>
 
 # remove leading spaces
   sed 's/^ *//g' | \
