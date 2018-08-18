@@ -22,10 +22,73 @@
 set -u
 set -e
 
-echo "=== COW Toolchain: ${1} => ${2} ==="
-echo
+echo -e "\n=== COW Toolchain: ${1} => ${2} ===\n"
 
-echo "Using this environment:"
+# Get a likely unique ID (for tmp files), plus all temp names.
+id=$(echo "${1}${RANDOM}" | md5sum | grep -o '[0-9a-f]\+')
+tmp_tokenised="${COWTEMP}/${id}_tokenized.xml.gz"
+tmp_langfilt="${COWTEMP}/${id}_langfilt.xml.gz"
+tmp_depconll="${COWTEMP}/${id}_depconll.conll"
+tmp_deps="${COWTEMP}/${id}_deps.conll"
+tmp_raw="${COWTEMP}/${id}_raw.vrt.gz"
+tmp_ner="${COWTEMP}/${id}_ner.vrt.gz"
+tmp_marmotraw="${COWTEMP}/${id}_marmotraw.vrt"
+tmp_marmot="${COWTEMP}/${id}_marmot.vrt.gz"
+tmp_hypertag="${COWTEMP}/${id}_hypertags.vrt.gz"
+tmp_compounds="${COWTEMP}/${id}_compounds.vrt.gz"
+tmp_baselemmas="${COWTEMP}/${id}_baselemmas.vrt.gz"
+tmp_tokanno="${COWTEMP}/${id}_tokanno.xml.gz"
+
+# Ucto.
+echo -e "\nTokenising: ${1} => ${tmp_tokenised}\n"
+gunzip -c ${1} | cow16-tokenize-de | gzip -c > ${tmp_tokenised}
+
+# Per-sentence language detection.
+echo -e "\nS-Language filtering: ${tmp_tokenised} => ${tmp_langfilt}\n"
+python ${COWTOOLS}/common/cow16-langfilter.py ${tmp_tokenised} ${tmp_langfilt} de 1 0.9 $DICT_DE 0.66
+
+# Dependency parsing (new 2018).
+echo -e "\nDependencies, getting sentences: ${tmp_langfilt} => ${tmp_depconll}\n"
+python ${COWTOOLS}/de/cow18-get-s.py --nobrackets --conll ${tmp_langfilt} -1 > ${tmp_depconll}
+
+echo -e "\nDependencies, parsing: ${tmp_depconll} => ${tmp_deps}\n"
+java -Xmx3g -classpath ${MATE} is2.transitionS2a.Parser -model ${MATEMODEL} -test ${tmp_depconll} -out ${tmp_deps}
+
+echo -e "\nDependencies, zipping & renaming: ${tmp_deps} => ${tmp_deps}.gz\n"
+gzip ${tmp_deps}
+tmp_deps="${tmp_deps}.gz"
+
+# Create s-only, token-only file.
+echo -e "\nCreating raw file: ${tmp_depconll} => ${tmp_raw}\n"
+cut -f2 ${tmp_depconll} | gzip -c > ${tmp_raw}
+
+# NER.
+echo -e "\nNamed entities: ${tmp_raw} => ${tmp_ner}\n"
+cow16-ner ${tmp_raw} ${tmp_ner} ${NER_DE}
+
+# Marmot.
+echo -e "\nMarmot, annotation: ${tmp_raw} => ${tmp_marmotraw}\n"
+cow16-marmot ${tmp_raw} ${tmp_marmotraw} de.marmot
+
+echo -e "\nMarmot, cleanup: ${tmp_marmotraw} => ${tmp_marmot}\n"
+python ${COWTOOLS}/de/cow16-marmotconv-de.py ${tmp_marmotraw} ${tmp_marmot}
+
+# Hyper-Tagging.
+echo -e "\nHypertagging: ${tmp_raw} => ${tmp_hypertag}\n"
+cow16-tag-de ${tmp_raw} ${tmp_hypertag}
+
+# SMOR compounds.
+echo -e "\nCompound analysis (SMOR): ${tmp_raw} => ${tmp_compounds}\n"
+cow16-smor ${tmp_raw} ${tmp_compounds}
+
+# SMOR baselemma.
+echo -e "\nBase lemmas (SMOR): ${tmp_raw} => ${tmp_baselemmas}\n"
+cow16-baselemma-de ${tmp_raw} ${tmp_baselemmas}
+
+# Join token annotations.
+python ${COWTOOLS}/common/cow16-join-anno.py ${tmp_tokanno} ${tmp_langfilt} '\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_' ${tmp_ner} ${tmp_marmot} --tt ${tmp_hypertag} --smor ${tmp_compounds} --bas ${tmp_baselemmas} --mate ${tmp_deps} --tag 4 --lem 5 --erase
+
+echo -e "\nUsed this environment:\n"
 echo "   COWTOOLS    == ${COWTOOLS}"
 echo "   DICT_DE     == ${DICT_DE}"
 echo "   COWTEMP     == ${COWTEMP}"
@@ -40,77 +103,19 @@ echo "   TT_LEXIC_DE == ${TT_LEXIC_DE}"
 echo "   TT_TMP      == ${TT_TMP}"
 echo "   TT_FILTER   == ${TT_FILTER}"
 echo "   TT_TMP      == ${TT_TMP}"
-echo
-echo
 
-# Get a likely unique ID (for tmp files), plus all temp names.
-id=$(echo "${1}${RANDOM}" | md5sum | grep -o '[0-9a-f]\+')
-tmp_tokenised="${COWTEMP}/tokenized_${id}.xml.gz"
-tmp_langfilt="${COWTEMP}/langfilt_${id}.xml.gz"
-tmp_depconll="${COWTEMP}/depconll_${id}.conll"
-tmp_deps="${COWTEMP}/deps_${id}.conll"
-tmp_raw="${COWTEMP}/raw_${id}.vrt.gz"
-tmp_ner="${COWTEMP}/ner_${id}.vrt.gz"
-tmp_marmotraw="${COWTEMP}/marmotraw_${id}.vrt"
-tmp_marmot="${COWTEMP}/marmot_${id}.vrt.gz"
-tmp_hypertag="${COWTEMP}/hypertags_${id}.vrt.gz"
-tmp_compounds="${COWTEMP}/compounds_${id}.vrt.gz"
-tmp_baselemmas="${COWTEMP}/baselemmas_${id}.vrt.gz"
-
-# Report ID.
-echo
-echo "Setting unique prefix to: $id..."
-
-# Ucto.
-echo
-echo "Tokenising: ${1} => ${tmp_tokenised}"
-gunzip -c ${1} | cow16-tokenize-de | gzip -c > ${tmp_tokenised}
-
-# Per-sentence language detection.
-echo
-echo "S-Language filtering: ${tmp_tokenised} => ${tmp_langfilt}"
-python ${COWTOOLS}/common/cow16-langfilter.py ${tmp_tokenised} ${tmp_langfilt} de 1 0.9 $DICT_DE 0.66
-
-# Dependency parsing (new 2018).
-echo
-echo "Dependencies, getting sentences: ${tmp_langfilt} => ${tmp_depconll}"
-python ${COWTOOLS}/de/cow18-get-s.py --nobrackets --conll ${tmp_langfilt} -1 > ${tmp_depconll}
-
-echo
-echo "Dependencies, parsing: ${tmp_depconll} => ${tmp_deps}"
-java -Xmx3g -classpath ${MATE} is2.transitionS2a.Parser -model ${MATEMODEL} -test ${tmp_depconll} -out ${tmp_deps}
-
-# Create s-only, token-only file.
-echo
-echo "Creating raw file: ${tmp_depconll} => ${tmp_raw}"
-cut -f2 ${tmp_depconll} | gzip -c > ${tmp_raw}
-
-# NER.
-echo
-echo "Named entities: ${tmp_raw} => ${tmp_ner}"
-cow16-ner ${tmp_raw} ${tmp_ner} ${NER_DE}
-
-# Marmot.
-echo
-echo "Marmot, annotation: ${tmp_raw} => ${tmp_marmotraw}"
-cow16-marmot ${tmp_raw} ${tmp_marmotraw} de.marmot
-
-echo
-echo "Marmot, cleanup: ${tmp_marmotraw} => ${tmp_marmot}"
-python ${COWTOOLS}/de/cow16-marmotconv-de.py ${tmp_marmotraw} ${tmp_marmot}
-
-# Hyper-Tagging.
-echo
-echo "Hypertagging: ${tmp_raw} => ${tmp_hypertag}"
-cow16-tag-de ${tmp_raw} ${tmp_hypertag}
-
-# SMOR compounds.
-echo
-echo "Compound analysis (SMOR): ${tmp_raw} => ${tmp_compounds}"
-cow16-smor ${tmp_raw} ${tmp_compounds}
-
-# SMOR baselemma.
-echo
-echo "Base lemmas (SMOR): ${tmp_raw} => ${tmp_baselemmas}"
-cow16-baselemma-de ${tmp_raw} ${tmp_baselemmas}
+echo -e "\nUsed these temporary file names:\n"
+echo "   id             == ${id}"
+echo "   tmp_tokenised  == ${tmp_tokenised}"
+echo "   tmp_langfilt   == ${tmp_langfilt}"
+echo "   tmp_depconll   == ${tmp_depconll}"
+echo "   tmp_deps       == ${tmp_deps}"
+echo "   tmp_raw        == ${tmp_raw}"
+echo "   tmp_ner        == ${tmp_ner}"
+echo "   tmp_marmotraw  == ${tmp_marmotraw}"
+echo "   tmp_marmot     == ${tmp_marmot}"
+echo "   tmp_hypertag   == ${tmp_hypertag}"
+echo "   tmp_compounds  == ${tmp_compounds}"
+echo "   tmp_baselemmas == ${tmp_baselemmas}"
+echo "   tmp_tokanno    == ${tmp_tokanno}"
 

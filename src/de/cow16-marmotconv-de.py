@@ -48,9 +48,7 @@ def main():
     anno = re.sub( r'[^|]+=', r'', re.sub(r'(case|gender|number)=\*', r'u\1', fs[7]) )
     pos = re.sub(r'^.+\|', r'', fs[5])
 
-    if (len(anno) > 0) and (not anno == '_'):
-      anno = '|'+ anno  +'|'
-    else:
+    if not (len(anno) > 0) and (not anno == '_'):
       anno = '|'  
     ofh.write( ("\t".join([ fs[1], pos, anno ])).encode('utf-8') + '\n' )
 
