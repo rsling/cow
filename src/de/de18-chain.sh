@@ -2,6 +2,8 @@
 
 # Full COW18-DE toolchain on input file ${1} to output file ${2}.
 
+# Assumes that the COW toolchain directories are in PATH.
+
 # Redefine these IN ENVIRONMENT to the appropriate paths.
 # DO NOT MESS WITH THESE SETTINGS HERE. We rely on them on SLURM/Soroban.
 [ -z ${COWTOOLS} ]    && export COWTOOLS="/home/rsling/usr/local/cow/src"
@@ -18,6 +20,9 @@
 [ -z ${TT_TMP} ]      && export TT_TMP="${COWTEMP}"
 [ -z ${TT_FILTER} ]   && export TT_FILTER="/home/rsling/usr/local/treetagger/cmd/filter-german-tags"
 [ -z ${TT_TMP} ]      && export TT_TMP="${COWTEMP}"
+[ -z ${PARSERHOME} ]  && export PARSERHOME="/home/rsling/usr/local/cow/src/de/berkeley"
+[ -z ${PARSER_TMP} ]  && export PARSER_TMP="${COWTEMP}"
+[ -z ${XMX} ]         && export XMX="7g"
 
 set -u
 set -e
@@ -38,6 +43,9 @@ tmp_hypertag="${COWTEMP}/${id}_hypertags.vrt.gz"
 tmp_compounds="${COWTEMP}/${id}_compounds.vrt.gz"
 tmp_baselemmas="${COWTEMP}/${id}_baselemmas.vrt.gz"
 tmp_tokanno="${COWTEMP}/${id}_tokanno.xml.gz"
+tmp_topo="${COWTEMP}/${id}_topo.xml.gz"
+
+ANNOTATIONS="word,ne,mpos,morph,ttpos,lemma,comp,hcomp,nhcomp,f,depind,dephd,deprel,imspos,imsmorph"
 
 # Ucto.
 echo -e "\nTokenising: ${1} => ${tmp_tokenised}\n"
@@ -52,7 +60,7 @@ echo -e "\nDependencies, getting sentences: ${tmp_langfilt} => ${tmp_depconll}\n
 python ${COWTOOLS}/de/cow18-get-s.py --nobrackets --conll ${tmp_langfilt} -1 > ${tmp_depconll}
 
 echo -e "\nDependencies, parsing: ${tmp_depconll} => ${tmp_deps}\n"
-java -Xmx3g -classpath ${MATE} is2.transitionS2a.Parser -model ${MATEMODEL} -test ${tmp_depconll} -out ${tmp_deps}
+java -Xmx${XMX} -classpath ${MATE} is2.transitionS2a.Parser -model ${MATEMODEL} -test ${tmp_depconll} -out ${tmp_deps}
 
 echo -e "\nDependencies, zipping & renaming: ${tmp_deps} => ${tmp_deps}.gz\n"
 gzip ${tmp_deps}
@@ -86,7 +94,27 @@ echo -e "\nBase lemmas (SMOR): ${tmp_raw} => ${tmp_baselemmas}\n"
 cow16-baselemma-de ${tmp_raw} ${tmp_baselemmas}
 
 # Join token annotations.
+echo -e "\nJoin all token-level annotations: [many] => ${tmp_tokanno}\n"
 python ${COWTOOLS}/common/cow16-join-anno.py ${tmp_tokanno} ${tmp_langfilt} '\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_' ${tmp_ner} ${tmp_marmot} --tt ${tmp_hypertag} --smor ${tmp_compounds} --bas ${tmp_baselemmas} --mate ${tmp_deps} --tag 4 --lem 5 --erase
+
+# Topological parse.
+echo -e "\nTopological parses, parsing: ${tmp_tokanno} => ${tmp_topo}\n"
+cow18-topoparse-de ${tmp_tokanno} 4 ${tmp_topo}
+
+echo -e "\nTopological parses, checking: ${tmp_topo}\n"
+python ${COWTOOLS}/de/cow18-topocheck.py -i ${tmp_topo} --idattr 'id' --complete
+
+# COReX.
+echo -e "\nCOReX: ${tmp_topo} => ${2}\n"
+python ${COWTOOLS}/corex/corex.py --erase --annotations ${ANNOTATIONS} ${tmp_topo} ${2}
+
+# Final check.
+echo -e "\nChecking XML: ${2}\n"
+leadin='<?xml version="1.0" encoding="utf-8"?>\n<corpus>'
+leadout='</corpus>'
+cat <(echo -e ${leadin}) <(gunzip -c ${2}) <(echo -e ${leadout}) | xmlwf -r
+
+echo -e "\n DONE. \n"
 
 echo -e "\nUsed this environment:\n"
 echo "   COWTOOLS    == ${COWTOOLS}"
@@ -103,8 +131,12 @@ echo "   TT_LEXIC_DE == ${TT_LEXIC_DE}"
 echo "   TT_TMP      == ${TT_TMP}"
 echo "   TT_FILTER   == ${TT_FILTER}"
 echo "   TT_TMP      == ${TT_TMP}"
+echo "   PARSERHOME  == ${PARSERHOME}"
+echo "   PARSER_TMP  == ${PARSER_TMP}"
+echo "   XMX         == ${XMX}"
 
-echo -e "\nUsed these temporary file names:\n"
+echo -e "\nUsed these file names:\n"
+echo "   <IN>           == ${1}"
 echo "   id             == ${id}"
 echo "   tmp_tokenised  == ${tmp_tokenised}"
 echo "   tmp_langfilt   == ${tmp_langfilt}"
@@ -118,4 +150,6 @@ echo "   tmp_hypertag   == ${tmp_hypertag}"
 echo "   tmp_compounds  == ${tmp_compounds}"
 echo "   tmp_baselemmas == ${tmp_baselemmas}"
 echo "   tmp_tokanno    == ${tmp_tokanno}"
+echo "   tmp_topo       == ${tmp_topo}"
+echo "   <OUT>          == ${2}"
 
