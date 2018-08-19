@@ -33,8 +33,7 @@ echo -e "\n=== COW Toolchain: ${1} => ${2} ===\n"
 id=$(echo "${1}${RANDOM}" | md5sum | grep -o '[0-9a-f]\+')
 tmp_tokenised="${COWTEMP}/${id}_tokenized.xml.gz"
 tmp_langfilt="${COWTEMP}/${id}_langfilt.xml.gz"
-tmp_depconll="${COWTEMP}/${id}_depconll.conll"
-tmp_deps="${COWTEMP}/${id}_deps.conll"
+tmp_deps="${COWTEMP}/${id}_deps.conll.gz"
 tmp_raw="${COWTEMP}/${id}_raw.vrt.gz"
 tmp_ner="${COWTEMP}/${id}_ner.vrt.gz"
 tmp_marmotraw="${COWTEMP}/${id}_marmotraw.vrt"
@@ -56,19 +55,12 @@ echo -e "\nS-Language filtering: ${tmp_tokenised} => ${tmp_langfilt}\n"
 python ${COWTOOLS}/common/cow16-langfilter.py ${tmp_tokenised} ${tmp_langfilt} de 1 0.9 $DICT_DE 0.66
 
 # Dependency parsing (new 2018).
-echo -e "\nDependencies, getting sentences: ${tmp_langfilt} => ${tmp_depconll}\n"
-python ${COWTOOLS}/de/cow18-get-s.py --nobrackets --conll ${tmp_langfilt} -1 > ${tmp_depconll}
+echo -e "\nDependencies: ${tmp_langfilt} => ${tmp_deps}\n"
+cow18-mate ${tmp_langfilt} ${tmp_deps}
 
-echo -e "\nDependencies, parsing: ${tmp_depconll} => ${tmp_deps}\n"
-java -Xmx${XMX} -classpath ${MATE} is2.transitionS2a.Parser -model ${MATEMODEL} -test ${tmp_depconll} -out ${tmp_deps}
-
-echo -e "\nDependencies, zipping & renaming: ${tmp_deps} => ${tmp_deps}.gz\n"
-gzip ${tmp_deps}
-tmp_deps="${tmp_deps}.gz"
-
-# Create s-only, token-only file.
-echo -e "\nCreating raw file: ${tmp_depconll} => ${tmp_raw}\n"
-cut -f2 ${tmp_depconll} | gzip -c > ${tmp_raw}
+# Create s-only, token-only file from dependency CoNLL file.
+echo -e "\nCreating raw file: ${tmp_deps} => ${tmp_raw}\n"
+gunzip -c ${tmp_deps} | cut -f2 ${tmp_deps} | gzip -c > ${tmp_raw}
 
 # NER.
 echo -e "\nNamed entities: ${tmp_raw} => ${tmp_ner}\n"
@@ -140,7 +132,6 @@ echo "   <IN>           == ${1}"
 echo "   id             == ${id}"
 echo "   tmp_tokenised  == ${tmp_tokenised}"
 echo "   tmp_langfilt   == ${tmp_langfilt}"
-echo "   tmp_depconll   == ${tmp_depconll}"
 echo "   tmp_deps       == ${tmp_deps}"
 echo "   tmp_raw        == ${tmp_raw}"
 echo "   tmp_ner        == ${tmp_ner}"
