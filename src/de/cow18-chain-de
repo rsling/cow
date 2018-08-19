@@ -22,7 +22,7 @@
 [ -z ${TT_TMP} ]      && export TT_TMP="${COWTEMP}"
 [ -z ${PARSERHOME} ]  && export PARSERHOME="/home/rsling/usr/local/cow/src/de/berkeley"
 [ -z ${PARSER_TMP} ]  && export PARSER_TMP="${COWTEMP}"
-[ -z ${XMX} ]         && export XMX="7g"
+[ -z ${XMX} ]         && export XMX="3g"
 
 set -u
 set -e
@@ -31,6 +31,8 @@ echo -e "\n=== COW Toolchain: ${1} => ${2} ===\n"
 
 # Get a likely unique ID (for tmp files), plus all temp names.
 id=$(echo "${1}${RANDOM}" | md5sum | grep -o '[0-9a-f]\+')
+tmp_hydrated="${COWTEMP}/${id}_hydrated.xml.gz"
+tmp_rofled="${COWTEMP}/${id}_rofled.xml.gz"
 tmp_tokenised="${COWTEMP}/${id}_tokenized.xml.gz"
 tmp_langfilt="${COWTEMP}/${id}_langfilt.xml.gz"
 tmp_deps="${COWTEMP}/${id}_deps.conll.gz"
@@ -46,9 +48,26 @@ tmp_topo="${COWTEMP}/${id}_topo.xml.gz"
 
 ANNOTATIONS="word,ne,mpos,morph,ttpos,lemma,comp,hcomp,nhcomp,f,depind,dephd,deprel,imspos,imsmorph"
 
+
+# Only run hydra and rofl if texrex is configured.
+if [ -n ${TEXREXDATA} ]
+then
+  echo -e "\nHyDRA: ${1} => ${tmp_hydrated}\n"
+  hydra -i ${1} -o ${tmp_hydrated} -u ${TEXREXDATA}/de.unigrams -G -g -I '^<.+$' -n -v 2>/dev/null
+  mv ${tmp_hydrated}* ${tmp_hydrated}
+  
+  echo -e "\nrofl: ${tmp_hydrated} => ${tmp_rofled}\n"
+  rofl -i ${tmp_hydrated} -o ${tmp_rofled} -w ${TEXREXDATA}/de.words -e -I '^<.+$' -p ${TEXREXDATA}/prefixes.ignore -s ${TEXREXDATA}/suffixes.ignore -g -v 2>/dev/null
+  mv ${tmp_rofled}* ${tmp_rofled}
+  startfile=${tmp_rofled}
+else
+  startfile=${1}
+fi
+
+
 # Ucto.
-echo -e "\nTokenising: ${1} => ${tmp_tokenised}\n"
-gunzip -c ${1} | cow16-tokenize-de | gzip -c > ${tmp_tokenised}
+echo -e "\nTokenising: ${startfile} => ${tmp_tokenised}\n"
+gunzip -c ${startfile} | cow16-tokenize-de | gzip -c > ${tmp_tokenised}
 
 # Per-sentence language detection.
 echo -e "\nS-Language filtering: ${tmp_tokenised} => ${tmp_langfilt}\n"
@@ -60,7 +79,7 @@ cow18-mate ${tmp_langfilt} ${tmp_deps}
 
 # Create s-only, token-only file from dependency CoNLL file.
 echo -e "\nCreating raw file: ${tmp_deps} => ${tmp_raw}\n"
-gunzip -c ${tmp_deps} | cut -f2 ${tmp_deps} | gzip -c > ${tmp_raw}
+gunzip -c ${tmp_deps} | cut -f2 | gzip -c > ${tmp_raw}
 
 # NER.
 echo -e "\nNamed entities: ${tmp_raw} => ${tmp_ner}\n"
@@ -106,12 +125,16 @@ leadin='<?xml version="1.0" encoding="utf-8"?>\n<corpus>'
 leadout='</corpus>'
 cat <(echo -e ${leadin}) <(gunzip -c ${2}) <(echo -e ${leadout}) | xmlwf -r
 
-echo -e "\n DONE. \n"
+echo -e "\nDeleting temporary files: ${COWTEMP}/${id}_* => _\n"
+\rm -f ${COWTEMP}/${id}_*
+
+echo -e "\n*** DONE ***\n"
 
 echo -e "\nUsed this environment:\n"
 echo "   COWTOOLS    == ${COWTOOLS}"
-echo "   DICT_DE     == ${DICT_DE}"
 echo "   COWTEMP     == ${COWTEMP}"
+echo "   TEXREXDATA  == ${TEXREXDATA}"
+echo "   DICT_DE     == ${DICT_DE}"
 echo "   TOKCONFIG   == ${TOKCONFIG}"
 echo "   MATE        == ${MATE}"
 echo "   MATEMODEL   == ${MATEMODEL}"
@@ -130,6 +153,9 @@ echo "   XMX         == ${XMX}"
 echo -e "\nUsed these file names:\n"
 echo "   <IN>           == ${1}"
 echo "   id             == ${id}"
+echo "   tmp_hydrated   == ${tmp_hydrated}"
+echo "   tmp_rofled     == ${tmp_rofled}"
+echo "   startfile      == ${startfile}"
 echo "   tmp_tokenised  == ${tmp_tokenised}"
 echo "   tmp_langfilt   == ${tmp_langfilt}"
 echo "   tmp_deps       == ${tmp_deps}"
