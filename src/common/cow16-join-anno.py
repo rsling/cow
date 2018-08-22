@@ -42,6 +42,7 @@ def main():
   parser.add_argument("blank", help="this string will be appended to tokens outside <s></s>; don't forget initial '\t'")
   parser.add_argument("annotations", nargs='+', help="genric VRT annotation file(s) to be merged at token level (gzip)")
   parser.add_argument("--malt", help="use this to pass an UNPROCESSED Malt parser file (CONLL layout) (gzip)")
+  parser.add_argument("--mate", help="use this to pass an UNPROCESSED Mate parser file (CONLL layout) (gzip)")
   parser.add_argument("--tt", help="use this to pass an UNPROCESSED TT tagger file (lemma not well-formed set attribute) (gzip)")
   parser.add_argument("--smor", help="use this to pass a SMOR compound analysis file (gzip)")
   parser.add_argument("--bas", help="use this to pass a SMOR verb base lemma file (gzip)")
@@ -58,6 +59,8 @@ def main():
   infiles = [args.xml] + args.annotations
   if args.malt:
     infiles = infiles + [args.malt]
+  if args.mate:
+    infiles = infiles + [args.mate]
   if args.tt:
     infiles = infiles + [args.tt]
   if args.smor:
@@ -84,6 +87,8 @@ def main():
   fh_out = gzip.open(args.outfile, 'wb')
   if args.malt:
     fh_malt = gzip.open(args.malt, 'r')
+  if args.mate:
+    fh_mate = gzip.open(args.mate, 'r')
   if args.tt:
     fh_tt = gzip.open(args.tt, 'r')
   if args.smor:
@@ -133,7 +138,7 @@ def main():
         if args.tt:
           fsa = advance(fh_tt).split('\t')
           if fsa[0] == fs[0]:
-            fs = fs + [fsa[1]] + [u'|' if fsa[2] == u'|' else u'|'+fsa[2]+u'|']
+            fs = fs + [fsa[1], fsa[2]]
           else:
             prob='[' + str(counter) + '] Inconsistent annotations (TT): ' + ' '.join([fs[0]] + [fsa[0]]).encode('utf-8')
             raise Exception(prob)
@@ -152,7 +157,7 @@ def main():
             if fs[0] == fsa[0]:
               if fs[args.tag] == u"NN" and not fsa[1] == u'_':
                 v_or_n = True
-                fs = fs + [fsa[1]] + [u'|' + fsa[2] + u'|'] + fsa[3:5]
+                fs = fs + [fsa[1], fsa[2]] + fsa[3:5]
             else:
               prob='[' + str(counter) + '] Inconsistent annotations (SMOR): ' + ' '.join([fs[0]] + [fsa[0]]).encode('utf-8')
               raise Exception(prob)
@@ -169,8 +174,8 @@ def main():
                 # Unless we have BOTH from SMOR, use TT verb lemma as base lemma.
                 if baseverbs and prefixes:
                   v_or_n = True
-                  baseverbs = u'|'+baseverbs+u'|' 
-                  prefixes = u'|'+prefixes+u'|' if prefixes else u'|'
+                  baseverbs = baseverbs 
+                  prefixes = prefixes if prefixes else u'_'
                   fs = fs + [u'_', baseverbs, u'_', prefixes]
             else:
               prob='[' + str(counter) + '] Inconsistent annotations (Verb base lemma): ' + ' '.join([fs[0]] + [fsa[0]]).encode('utf-8')
@@ -178,7 +183,7 @@ def main():
 
           # If neither, add lemma as baselemma and make emty elements. 
           if not v_or_n:
-            fs = fs + [u'_', fs[args.lem], u'|', u'|']
+            fs = fs + [u'_', fs[args.lem], u'_', u'_']
   
 
         # Unprocessed Malt files have different layout (CONLL).
@@ -186,6 +191,15 @@ def main():
           fsa = advance(fh_malt).split('\t')
           if fsa[1] == fs[0]:
             fs = fs + [fsa[i] for i in [0,6,7,3]] 
+          else:
+            prob='[' + str(counter) + '] Inconsistent annotations (Malt): ' + ' '.join([fs[0]] + [fsa[1]]).encode('utf-8')
+            raise Exception(prob)
+
+        # Unprocessed Mate files (CONLL).
+        if args.mate:
+          fsa = advance(fh_mate).split('\t')
+          if fsa[1] == fs[0]:
+            fs = fs + [fsa[i] for i in [0,9,11,5,7]] 
           else:
             prob='[' + str(counter) + '] Inconsistent annotations (Malt): ' + ' '.join([fs[0]] + [fsa[1]]).encode('utf-8')
             raise Exception(prob)
@@ -204,6 +218,8 @@ def main():
   fh_out.close()
   if args.malt:
     fh_malt.close()
+  if args.mate:
+    fh_mate.close()
   if args.tt:
     fh_tt.close()
   if args.smor:

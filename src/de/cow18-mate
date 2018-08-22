@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Run Mate parser on German COW-XML.
+# Input must be w- and s-tonkenised already.
+# Joining with COW-XML must be done separately.
+
+# Pass:
+#         ${1}         Input COW-XML, gzipped.
+#         ${2}         Output sentence-only VRT, gzipped.
+
+# Envir.:
+#         ${MATE}      Full path to parser JAR.
+#         ${MATEMODEL} Full path to parser model.
+#         ${XMX}       Parameter string for Java -Xmx option.
+#         ${COWTOOLS}  Path to COWTek src directory.
+#         ${COWTEMP}   Temp directory.
+
+set -e
+set -u
+
+id=$(echo "${1}${RANDOM}" | md5sum | grep -o '[0-9a-f]\+')
+tmp_depconll="${COWTEMP}/${id}_depconll.conll"
+tmp_out="${COWTEMP}/${id}_depout.conll"
+
+echo -e "\nDependencies, getting sentences: ${1} => ${tmp_depconll}\n"
+python ${COWTOOLS}/de/cow18-get-s.py --nobrackets --conll ${1} -1 > ${tmp_depconll}
+
+echo -e "\nDependencies, parsing: ${tmp_depconll} => ${tmp_out}\n"
+java -Xmx${XMX} -classpath ${MATE} is2.transitionS2a.Parser -model ${MATEMODEL} -test ${tmp_depconll} -out ${tmp_out}
+
+echo -e "\nDependencies, zipping & renaming: ${tmp_out} => ${2}\n"
+gzip -c ${tmp_out} > ${2}
+
+echo -e "\nDeleting ${tmp_depconll}\n"
+\rm -f ${tmp_depconll}
+echo -e "\nDeleting ${tmp_out}\n"
+\rm -f ${tmp_out}

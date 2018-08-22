@@ -22,7 +22,7 @@ def rr(regex):
   return rexe[regex]
 
 
-NO_ANNO=['_', '_', '|', '|']
+NO_ANNO=['_', '_', '_', '_']
 
 DEBUG = 4
 
@@ -1201,8 +1201,8 @@ def main():
           elif len(nounalyses) > 0:
             lexies = [e for e in nounalyses[0][0] if rr(u'^[a-zA-ZäöüÄÖÜß]+$').match(e)]
             fugies = [e[1:] for e in nounalyses[0][0] if rr(u'^\+').match(e)]
-            fugiestring = '|'+'|'.join(fugies)+'|' if len(fugies)>0 else '|'
-            annotation = '\t'.join([c_token, '_'.join(nounalyses[0][0]), lexies[-1], '|'+'|'.join(lexies[:-1])+'|', fugiestring])
+            fugiestring = '|'.join(fugies) if len(fugies)>0 else '_'
+            annotation = '\t'.join([c_token, '_'.join(nounalyses[0][0]), lexies[-1], '|'.join(lexies[:-1]), fugiestring])
           elif not c_token == '>':
             annotation = '\t'.join([c_token] + NO_ANNO)
           else:

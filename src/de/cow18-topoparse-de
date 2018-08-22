@@ -25,7 +25,7 @@ echo "Using ${prefix} prefix."
 # Run the topological field parser on one sentence per line file.
 echo "${1} => ${topoxml}"
 python ${RESOURCES}/cow18-get-s.py ${1} ${2} |
-  java -Xmx7g -jar ${PARSERHOME}/BerkeleyTopoCOW.jar -gr ${PARSERHOME}/tuebadz_topf_no_edge.gr -useGoldPOS -outputXML | 
+  java -Xmx${XMX} -jar ${PARSERHOME}/BerkeleyTopoCOW.jar -gr ${PARSERHOME}/tuebadz_topf_no_edge.gr -useGoldPOS -outputXML | 
   gzip -c > ${topoxml}
 
 # Merge xml files.

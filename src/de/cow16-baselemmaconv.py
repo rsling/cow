@@ -116,7 +116,7 @@ def main():
             lemmalyses = [lemmalyze(a) for a in c_analyses]
             lemmalyses = filter(None, [lex_check(a) for a in lemmalyses])
             anastring = "|".join(list(set([",".join(a) for a in lemmalyses]))) + '|' if len(lemmalyses) > 0 else ''
-            ofh.write((c_token + "\t|" + anastring + '\n').encode('utf-8'))
+            ofh.write((c_token + "\t_" + anastring + '\n').encode('utf-8'))
 
       # Fresh start.
       c_analyses = list()
