@@ -615,7 +615,7 @@ def perfect(doc, fh):
     s.set('pluperfects', str(sent_pluperfcounter))
 
     doc_perfcounter = doc_perfcounter + sent_perfcounter
-    pluperfcounter = doc_pluperfcounter + sent_pluperfcounter
+    doc_pluperfcounter = doc_pluperfcounter + sent_pluperfcounter
 
   # Unit of reference is 1 simpx (including subtypes of simpx).
   c_simpx = len(doc.findall('.//simpx'))
