@@ -391,7 +391,7 @@ def haben_past(candidate):
 
 
 def sein_pres(candidate):
-  if candidate.lower() in [u'bin', u'bist', u'ist', u'sind', u'seid', u'sind', u'sei', u'seist', u'seiest', u'seien', u'seiet']:
+  if candidate.lower() in [u'bin', u'bist', u'ist', u'sind', u'seid', u'sind', u'sei', u'seist', u'seiest', u'seien', u'seiet',u'sein']: #add infinitive
     return(True)
   else:
     return(False)
@@ -511,6 +511,15 @@ def perfect(doc, fh):
       ersatzcandidates = ersatzinfinitives_candidates(wwords, ttttpos, llemmas)
       participles_and_ersatzinfs = participles + ersatzcandidates
 
+      # when not dealing with coordinated participles,
+      # use only the last participle/ersatzinfinitiv in verbal complex
+      # (i.e., do not count both 'geschenkt and 'bekommen' as participles in 
+      # "soll es geschenkt bekommen haben")
+      
+      if not u'und' in llemmas and not u'oder' in llemmas and not 'aber' in llemmas:
+          participles_and_ersatzinfs = participles_and_ersatzinfs[-1:]
+
+
       logging.debug('\tAll tokens:\t' + jjoin(wwords, ", ", "NONE"))
       logging.debug('\tAll tags:\t' + jjoin(ttttpos, ", ", "NONE"))
       logging.debug('\tAll lemmas:\t' + jjoin(llemmas, ", ", "NONE"))
@@ -530,9 +539,12 @@ def perfect(doc, fh):
         donelist = []
 
         for n, participle in enumerate(participles_and_ersatzinfs):
+
           logging.debug('\t' + tty_blue + 'Searching for perfect aux in the verbal complex (participle #' + str(n+1) + ": " + participle + ")" + tty_reset)
            # Check if verbal complex ends with a potential perfect aux:
-          if ttttpos[-1] == 'VAFIN':
+           # also include non-finite aux ("Er soll es gelesen haben." "Er wird gekommen sein.")
+          #if  ttttpos[-1] == 'VAFIN':
+          if ttttpos[-1].startswith('VA'): # ttttpos[-1] == 'VAFIN':
             candidate = wwords[-1]
             logging.debug('\t\tLast word in VC: ' + candidate)
             (add_to_perfcounter, add_to_pluperfcounter, add_to_donelist)  = get_tense(candidate, llemmas[-1], participle)
@@ -552,7 +564,9 @@ def perfect(doc, fh):
             logging.debug('\t' + tty_blue + 'Trying to find a perfect aux in the left bracket.' + tty_reset)
       
 
-        for participle in  participles_and_ersatzinfs[-1:]:
+#        for participle in  participles_and_ersatzinfs[-1:]:
+        for participle in  participles_and_ersatzinfs:
+
 
          logging.debug('\t\tParticiple:\t' + participle)
          logging.debug('\t\tLocating left bracket...')
