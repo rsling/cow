@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Full COW18-DE toolchain on input file ${1} to output file ${2}.
+# Version without dependency parses.
 
 # Assumes that the COW toolchain directories are in PATH.
 
@@ -10,8 +11,6 @@
 [ -z ${DICT_DE} ]     && export DICT_DE="${COWTOOLS}/de/data/de.lower.dict.gz"
 [ -z ${COWTEMP} ]     && export COWTEMP="/scratch/rsling/tmp"
 [ -z ${TOKCONFIG} ]   && export TOKCONFIG="${COWTOOLS}/de/ucto/tokconfig-de-cow"
-[ -z ${MATE} ]        && export MATE="/home/rsling/usr/local/mateparser/transition-1.30.jar"
-[ -z ${MATEMODEL} ]   && export MATEMODEL="/home/rsling/usr/local/mateparser/pet-ger-S2a-40-0.25-0.1-2-2-ht4-hm4-kk0"
 [ -z ${NER_JAR} ]     && export NER_JAR="/home/rsling/usr/local/stanford-ner/stanford-ner-3.5.2.jar"
 [ -z ${NER_DE} ]      && export NER_DE="/home/rsling/usr/local/stanford-ner/classifiers/dewac_175m_600.crf.ser.gz"
 [ -z ${MARMOT_PATH} ] && export MARMOT_PATH="/home/rsling/usr/local/marmot/"
@@ -37,7 +36,6 @@ tmp_rofled="${COWTEMP}/${id}_rofled.xml.gz"
 tmp_rofled_ngz="$(dirname ${tmp_rofled})/$(basename ${tmp_rofled} .gz)"
 tmp_tokenised="${COWTEMP}/${id}_tokenized.xml.gz"
 tmp_langfilt="${COWTEMP}/${id}_langfilt.xml.gz"
-tmp_deps="${COWTEMP}/${id}_deps.conll.gz"
 tmp_raw="${COWTEMP}/${id}_raw.vrt.gz"
 tmp_ner="${COWTEMP}/${id}_ner.vrt.gz"
 tmp_marmotraw="${COWTEMP}/${id}_marmotraw.vrt"
@@ -48,7 +46,7 @@ tmp_baselemmas="${COWTEMP}/${id}_baselemmas.vrt.gz"
 tmp_tokanno="${COWTEMP}/${id}_tokanno.xml.gz"
 tmp_topo="${COWTEMP}/${id}_topo.xml.gz"
 
-ANNOTATIONS="word,ne,mpos,morph,ttpos,lemma,comp,hcomp,nhcomp,f,depind,dephd,deprel,imspos,imsmorph"
+ANNOTATIONS="word,ne,mpos,morph,ttpos,lemma,comp,hcomp,nhcomp,f"
 
 
 echo -e "\nUsing this environment:\n"
@@ -80,7 +78,6 @@ echo "   tmp_rofled       == ${tmp_rofled}"
 echo "   tmp_rofled_ngz   == ${tmp_rofled_ngz}"
 echo "   tmp_tokenised    == ${tmp_tokenised}"
 echo "   tmp_langfilt     == ${tmp_langfilt}"
-echo "   tmp_deps         == ${tmp_deps}"
 echo "   tmp_raw          == ${tmp_raw}"
 echo "   tmp_ner          == ${tmp_ner}"
 echo "   tmp_marmotraw    == ${tmp_marmotraw}"
@@ -121,13 +118,9 @@ time gunzip -c ${startfile} | cow16-tokenize-de | gzip -c > ${tmp_tokenised}
 echo -e "\nS-Language filtering: ${tmp_tokenised} => ${tmp_langfilt}\n"
 time python ${COWTOOLS}/common/cow16-langfilter.py ${tmp_tokenised} ${tmp_langfilt} de 1 0.9 $DICT_DE 0.66
 
-# Dependency parsing (new 2018).
-echo -e "\nDependencies: ${tmp_langfilt} => ${tmp_deps}\n"
-time cow18-mate ${tmp_langfilt} ${tmp_deps}
-
-# Create s-only, token-only file from dependency CoNLL file.
-echo -e "\nCreating raw file: ${tmp_deps} => ${tmp_raw}\n"
-time gunzip -c ${tmp_deps} | cut -f2 | gzip -c > ${tmp_raw}
+# Create s-only, token-only file.
+echo -e "\nCreating raw file: ${tmp_langfilt} => ${tmp_raw}\n"
+python ${COWTOOLS}/de/cow18-get-s.py ${tmp_langfilt} -1 --nobrackets | gzip -c > ${tmp_raw}
 
 # NER.
 echo -e "\nNamed entities: ${tmp_raw} => ${tmp_ner}\n"
@@ -154,7 +147,7 @@ time cow16-baselemma-de ${tmp_raw} ${tmp_baselemmas}
 
 # Join token annotations.
 echo -e "\nJoin all token-level annotations: [many] => ${tmp_tokanno}\n"
-time python ${COWTOOLS}/common/cow16-join-anno.py ${tmp_tokanno} ${tmp_langfilt} '\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_' ${tmp_ner} ${tmp_marmot} --tt ${tmp_hypertag} --smor ${tmp_compounds} --bas ${tmp_baselemmas} --mate ${tmp_deps} --tag 4 --lem 5 --erase
+time python ${COWTOOLS}/common/cow16-join-anno.py ${tmp_tokanno} ${tmp_langfilt} '\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_' ${tmp_ner} ${tmp_marmot} --tt ${tmp_hypertag} --smor ${tmp_compounds} --bas ${tmp_baselemmas} --tag 4 --lem 5 --erase
 
 # Topological parse.
 echo -e "\nTopological parses, parsing: ${tmp_tokanno} => ${tmp_topo}\n"
@@ -208,7 +201,6 @@ echo "   tmp_rofled_ngz   == ${tmp_rofled_ngz}"
 echo "   startfile        == ${startfile}"
 echo "   tmp_tokenised    == ${tmp_tokenised}"
 echo "   tmp_langfilt     == ${tmp_langfilt}"
-echo "   tmp_deps         == ${tmp_deps}"
 echo "   tmp_raw          == ${tmp_raw}"
 echo "   tmp_ner          == ${tmp_ner}"
 echo "   tmp_marmotraw    == ${tmp_marmotraw}"
