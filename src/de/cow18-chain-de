@@ -103,7 +103,7 @@ then
   gzip ${tmp_hydrated_ngz}
   
   echo -e "\nrofl: ${tmp_hydrated} => ${tmp_rofled_ngz}\n"
-  time rofl -i ${tmp_hydrated} -o ${tmp_rofled_ngz} -w ${TEXREXDATA}/de.words -e -I '^<.+$' -p ${TEXREXDATA}/prefixes.ignore -s ${TEXREXDATA}/suffixes.ignore -v 2>/dev/null
+  time rofl -i ${tmp_hydrated} -o ${tmp_rofled_ngz} -w ${TEXREXDATA}/de.words -e -I '^<.+$' -p ${TEXREXDATA}/prefixes.ignore -s ${TEXREXDATA}/suffixes.less.de.ignore -v 2>/dev/null
   mv ${tmp_rofled_ngz}* ${tmp_rofled_ngz}
   gzip ${tmp_rofled_ngz}
 
