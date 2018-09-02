@@ -22,7 +22,7 @@
 [ -z ${TT_TMP} ]      && export TT_TMP="${COWTEMP}"
 [ -z ${PARSERHOME} ]  && export PARSERHOME="/home/rsling/usr/local/cow/src/de/berkeley"
 [ -z ${PARSER_TMP} ]  && export PARSER_TMP="${COWTEMP}"
-[ -z ${XMX} ]         && export XMX="2g"
+[ -z ${XMX} ]         && export XMX="3g"
 
 set -u
 set -e
