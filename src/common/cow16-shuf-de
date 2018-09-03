@@ -21,9 +21,8 @@ shufsize=81920000                     # size of split for shuf (bytes must fit i
 cowinterleave -i $infile -s s |
   grep 'bdc="[a-j]"' |
   grep 'bpc="[a-f]"' |
-  sed 's/ \(perfects\|pluperfects\|passives\|urldomain\|tld\|idx\|sourcecharset\|sourcedoctype\|region\|bdc\|ip\|nbc\|nbcprop\|nbd\|nbdprop\|avgbpc\|avgbpd\|date\|region\|city\|    \|crx_[^"]\+\|[scm]_[a-z]\+\|qs\)="[^"]\+"//g' |
-  sed 's/ last-modified="/ last_modified="/' |
-  sed 's/ last_modified="[^"]\+\(199[1-9]\|20[01][0-9]\)[^"]\+"/ last_modified="\1"/' | gzip -c > $sentences
+  sed 's/ \(bpc\|url\|bdv\|last-modified\|country\|forum\|bdc\|bpv\|urldomain\|tld\|idx\|sourcecharset\|sourcedoctype\|region\|bdc\|ip\|nbc\|nbcprop\|nbd\|nbdprop\|avgbpc\|avgbpd\|date\|region\|city\|    \|crx_[^"]\+\|[scm]_[a-z]\+\|qs\)="[^"]\+"//g' |
+  gzip -c > $sentences
 
 echo
 echo Sorting/deduping...
@@ -51,7 +50,7 @@ sort -m $tmpsplit*$tmpshuf  |
   sed 's/	|\([^	]\)/	\1/g' |
   sed 's/\([^	]\)|\(	\|$\)/\1\2/g' |
   sed '/^$/d' |
-  cut -f 1,2,3,4,5,6,7,10,11,12,13,14 |
+  cut -f 1,3-5,6,8,9-10,11,12 |
   gzip -c > $outfile 
 \rm $tmpsplit*$tmpshuf
 
