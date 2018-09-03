@@ -83,7 +83,8 @@ def main():
         if re.match(u'''[a-zA-Z][a-zA-Z0-9]*=(?P<quote>['"])[^"'><]+(?P=quote)''' , args.sentencefilter.strip()):
             args.sentencefilter = '@' + args.sentencefilter.strip()
         else:
-            sys.exit("Invalid sentence filter.")
+            msg = u"Invalid sentence filter: " + args.sentencefilter.strip()
+            sys.exit(msg.encode('utf-8'))
     else:
         args.sentencefilter = ""
 
