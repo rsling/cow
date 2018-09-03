@@ -37,14 +37,23 @@ def parsemorphs(text):
 
 
 def firstlemma(lemmastring):
-    # Selects the first lemma from a string denoting a set of lemmas,
-    # e.g. |x|y|  ==>  x
+    """ Selects the first lemma from a string denoting a set of lemmas,
+     e.g. |x|y|  ==>  x"""
     lemmastring = lemmastring.strip("|")
     lemmalist = lemmastring.split("|")
     return(lemmalist[0])
 
 
-def annotate_basic(dom, fh):
+def feature_within_s(annolayer, list_of_s):
+    """Extracts all <annolayer> from all sentence-elements in list_of_s;
+    returns a flat list of <annolayer>-elements;
+    """
+    list_of_lists_of_feature = [s.findall('.//' + annolayer) for s in list_of_s]
+    list_of_feature = [element for sublist in list_of_lists_of_feature for element in sublist]
+    return(list_of_feature)
+
+
+def annotate_basic(dom, fh, sentencefilter):
 
     # Get word count.
     allwords = dom.findall('.//*word')
@@ -52,9 +61,15 @@ def annotate_basic(dom, fh):
     dom.attrib['crx_alltokc'] = str(c_allword)
 
     # Get sentences:
-    sentences = dom.findall('.//s')
-    wordlists = [s.findall('.//word') for s in sentences]
-    words = [word for sublist in wordlists for word in sublist]
+
+    if len(sentencefilter) > 0:
+        sentences = dom.findall(".//s[" + sentencefilter + "]")
+    else:
+        sentences = dom.findall(".//s")
+   
+    # Get tokens:
+    words = feature_within_s('word', sentences)
+
     c_word = len(words)
     dom.attrib['crx_tokc'] = str(c_word)
 
@@ -88,7 +103,8 @@ def annotate_basic(dom, fh):
     dom.attrib['crx_slen'] = fh.act(float(avg_sentence_length))
 
     # Get POS counts (modal verbs etc.).
-    posse = dom.findall('.//*ttpos')
+    posse = feature_within_s('ttpos', sentences)
+
 
     # Number of modal verbs.
     c_modals = len([p for p in posse if p.text[:2] == 'VM'])
@@ -187,8 +203,10 @@ def annotate_basic(dom, fh):
     add_per(dom, 'crx_indef', c_indef_article, c_word, fh)
    
     # NER-related counts.
-    nerds = dom.findall('.//*ne')
-    
+    # Count only within regular sentences:
+
+    nerds = feature_within_s('ne', sentences)
+
     c_ne_per = len([n for n in nerds if n.text == 'I-PER'])
     add_per(dom, 'crx_neper', c_ne_per, c_word, fh)
     
@@ -198,8 +216,9 @@ def annotate_basic(dom, fh):
     c_ne_org = len([n for n in nerds if n.text == 'I-ORG'])
     add_per(dom, 'crx_neorg', c_ne_org, c_word, fh)
 
-    # Get all lemmas:
-    lemmas = dom.findall('.//*lemma')
+    # Get all lemmas, count only within regular sentences:
+    lemmas = feature_within_s('lemma', sentences)
+
 
     # Emoticons:
     c_emo = len([l for l in lemmas if firstlemma(l.text) == '(smiley)'])
@@ -270,27 +289,28 @@ def annotate_basic(dom, fh):
     # Counts related to topological fields.
    
     # Get clauses:
-    c_simpx = len(dom.findall('.//simpx'))
+    c_simpx = len(feature_within_s('simpx', sentences))
     add_per(dom, 'crx_simpx', c_simpx, c_sentences, fh, 1)
 
     # Get coordinated clauses:
-    c_psimpx = len(dom.findall('.//psimpx'))
+    c_psimpx =  len(feature_within_s('psimpx', sentences))
     add_per(dom, 'crx_psimpx', c_psimpx, c_sentences, fh, 1)
 
     # Get relative clauses:
-    c_rsimpx = len(dom.findall('.//rsimpx'))
+    c_rsimpx = len(feature_within_s('rsimpx', sentences))
     add_per(dom, 'crx_rsimpx', c_rsimpx, c_sentences, fh, 1)
  
 
     # Get prefields: 
-    vfs = dom.findall('.//vf')
+    vfs = feature_within_s('vf', sentences)
 
     # Get verb-second sentences:
     c_vf = len(vfs)
     add_per(dom, 'crx_v2', c_vf, c_sentences, fh, 1)
 
     # Get verb-last sentences:
-    c_c = len(dom.findall('.//c'))
+    c_c = len(feature_within_s('c', sentences))
+
     add_per(dom, 'crx_vlast', c_c, c_sentences, fh, 1)
 
 
@@ -328,8 +348,7 @@ def annotate_basic(dom, fh):
 
     contracted_preps = {'aufer': '', 'aufm': '', 'aufn': '', 'aufs': '', 'auser': '', 'ausm': '', 'drauf ': '', 'drunter': '', 'drüber': '', 'fürn': '', 'fürs': '', 'innem': '', 'inner': '', 'mitem': '', 'miter': '', 'mitm': '', 'nebens': '', 'unterm': '', 'untern': '', 'unters': '', 'überm': '', 'übern': '', 'übers': ''}
 
-    words = dom.findall('.//*word')
-    c_word = len(words)
+    
     tokens = [t.text.lower() for t in words]
 
     c_shortform = len([t for t in tokens if t in contracted_preps or t in contracted_verbs])

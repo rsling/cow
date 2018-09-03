@@ -11,6 +11,7 @@ import os.path
 import sys
 import gzip
 import logging
+import re
 
 from lxml import etree as ET
 from gncat import GNCategorizer as GN
@@ -35,6 +36,8 @@ def main():
     parser.add_argument("--noperfect", action="store_true", help="skip perfect detection/counting")
     parser.add_argument("--verbose", action="store_true", help="emit debug messages")
     parser.add_argument("--color", action="store_true", help="use TTY colors for verbose mode")
+    parser.add_argument("--sentencefilter", help="attr='val' filter for sentences (features in any sentences not satisfying <s ... attr='val' ...> will NOT be counted)")
+
 
     args = parser.parse_args()
 
@@ -75,6 +78,16 @@ def main():
     if args.annotations:
         annos = args.annotations.split(',')
 
+    # Get attr-val filter for sentences:
+    if args.sentencefilter:
+        if re.match(u'''[a-zA-Z][a-zA-Z0-9]*=(?P<quote>['"])[^"'><]+(?P=quote)''' , args.sentencefilter.strip()):
+            args.sentencefilter = '@' + args.sentencefilter.strip()
+        else:
+            sys.exit("Invalid sentence filter.")
+    else:
+        args.sentencefilter = ""
+
+
     # Open out file.
     if fn_out.endswith('.gz'):
         outf = gzip.open(fn_out, 'w')
@@ -97,15 +110,15 @@ def main():
         
         # All simple counts and more.
         if not args.nobasic:
-          annotate_basic(doc, fh)
+          annotate_basic(doc, fh, args.sentencefilter)
 
         # Count passives.
         if not args.nopassive:
-            passive(doc, fh)
+            passive(doc, fh, args.sentencefilter)
 
         # Count perfect and pluperfect.
         if not args.noperfect:
-            perfect(doc, fh)
+            perfect(doc, fh, args.sentencefilter)
 
         # Do the GermaNet semantic classes annotation.
         if args.germanet:

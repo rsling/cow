@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from corex_reader import CORexReader as CX, outify
-from corex_basic import per, add_per, FloatHandler
+from corex_basic import per, add_per, FloatHandler, feature_within_s
 import re
 import logging
 import lxml.etree
@@ -480,11 +480,17 @@ def ersatzinfinitives_candidates(wwords, ttttpos, llemmas):
     return(ersatzcandidatetokens)
 
 
-def perfect(doc, fh):
+def perfect(doc, fh, sentencefilter):
   doc_perfcounter = 0
   doc_pluperfcounter = 0
 
-  for s in doc.iter('s'):
+  if len(sentencefilter) > 0:
+    sentences = doc.findall(".//s[" + sentencefilter + "]")
+  else:
+    sentences = doc.findall(".//s")
+
+  for s in sentences:
+
     logging.debug('')
     logging.debug(tty_cyan + words_to_string(s) + tty_reset)
     sent_perfcounter = 0
@@ -632,9 +638,11 @@ def perfect(doc, fh):
     doc_pluperfcounter = doc_pluperfcounter + sent_pluperfcounter
 
   # Unit of reference is 1 simpx (including subtypes of simpx).
-  c_simpx = len(doc.findall('.//simpx'))
-  c_psimpx = len(doc.findall('.//psimpx'))
-  c_rsimpx = len(doc.findall('.//rsimpx'))
+
+  c_simpx = len(feature_within_s('simpx', sentences))
+  c_psimpx = len(feature_within_s('psimpx', sentences))
+  c_rsimpx = len(feature_within_s('rsimpx', sentences))
+
   add_per(doc, 'crx_perf', doc_perfcounter, c_simpx + c_psimpx + c_rsimpx, fh, 1)
   add_per(doc, 'crx_plu', doc_pluperfcounter, c_simpx + c_psimpx + c_rsimpx, fh, 1)
 

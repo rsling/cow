@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from corex_basic import per, add_per, FloatHandler
+from corex_basic import per, add_per, FloatHandler, feature_within_s
 import logging
 
 
@@ -235,11 +235,16 @@ def vvpp_in_vf(s):
     return(vvpp_vf_passive_counter)
 
 
-def passive(doc, fh):
+def passive(doc, fh, sentencefilter):
   doc_passcounter = 0
   successfully_analysed = []
 
-  for s in doc.iter('s'):
+  if len(sentencefilter) > 0:
+    sentences = doc.findall(".//s[" + sentencefilter + "]")
+  else:
+    sentences = doc.findall(".//s")
+
+  for s in sentences:
     logging.debug('')
     logging.debug(tty_cyan + words_to_string(s) + tty_reset)
     sent_passcounter = 0
@@ -348,8 +353,10 @@ def passive(doc, fh):
     s.set('passives', str(sent_passcounter))
 
   # Unit of reference is 1 simpx (including subtypes of simpx).
-  c_simpx = len(doc.findall('.//simpx'))
-  c_psimpx = len(doc.findall('.//psimpx'))
-  c_rsimpx = len(doc.findall('.//rsimpx'))
+
+  c_simpx = len(feature_within_s('simpx', sentences))
+  c_psimpx = len(feature_within_s('psimpx', sentences))
+  c_rsimpx = len(feature_within_s('rsimpx', sentences))
+
   add_per(doc, 'crx_pass', doc_passcounter, c_simpx + c_psimpx + c_rsimpx, fh, 1)
 
