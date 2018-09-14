@@ -10,9 +10,9 @@ import logging
 
 
 def arguments():
-    parser = ArgumentParser(description="Extracts all meta data from COW-XML doc headers. If '--attributes is specified, performs a check on the (intended) data type'")
-    parser.add_argument('attributes', help="File describing expected attributes and data type of values: one per line, attr and type separated. Valid types are: 'char', 'int', 'float'.")
-    parser.add_argument('infile', help='i5.xml infile: utf-8 encoded, may be gzipped')
+    parser = ArgumentParser(description="Extracts all meta data from COW-XML doc headers. Performs a check on the (intended) data type. Values will appear in the output csv file in the exact same order as listed in the 'attributes' file, irrespective of their order in the document headers. Attributes missing from individual document headers will be inserted with value 'unknown'.")
+    parser.add_argument('attributes', help="A file describing expected attributes and data type of values: one attr-type pair per line, attr and type separated by TAB. Valid types are: 'char', 'int', 'float'.")
+    parser.add_argument('infile', help='COW-XML infile: utf-8 encoded, may be gzipped')
     parser.add_argument('-d', '--debug', action="store_true", default=False, help='print debug messages')
     parser.add_argument('-v', '--verbose', action="store_true", default=False, help='print warning messages')
 
@@ -34,22 +34,23 @@ def mk_attrval_dict(attrval_fh):
         lc += 1
         line = line.decode('utf-8').strip()
         if line:
-            attrval = line.split("\t")
-            if not len(attrval) == 2:
-                msg = "Syntax error in attributes file, line %d: %s\n" %(lc, line)
-                sys.exit(msg.encode('utf-8'))
-            if attrval[0] in attrval_dict:
-                msg = "Warning: attribute %s specified multiple times.\n" %attrval[0]
-                sys.stderr.write(msg.encode('utf-8'))
-            # record sequence of attributes in attributes file:
-            attr_sequence.append(attrval[0])
-            if attrval[1] in ['int', 'char']:
-                attrval_dict[attrval[0]] = [attrval[1], [0], [""]]
-            elif attrval[1] == 'float':
-                attrval_dict[attrval[0]] = [attrval[1], [0,0], ["",""]]
-            else:
-                msg = "Value type '%s' undefined, line %d" %(attrval[1], lc)
-                sys.exit(msg.encode('utf8'))
+            if not line.startswith('#'):
+                attrval = line.split("\t")
+                if not len(attrval) == 2:
+                    msg = "Syntax error in attributes file, line %d: %s\n" %(lc, line)
+                    sys.exit(msg.encode('utf-8'))
+                if attrval[0] in attrval_dict:
+                    logging.critical("Attribute '%s' specified multiple times." %attrval[0])
+                    sys.exit(1)
+                # record sequence of attributes in attributes file:
+                attr_sequence.append(attrval[0])
+                if attrval[1] in ['int', 'char']:
+                    attrval_dict[attrval[0]] = [attrval[1], [0], [""]]
+                elif attrval[1] == 'float':
+                    attrval_dict[attrval[0]] = [attrval[1], [0,0], ["",""]]
+                else:
+                    logging.critical("Value type '%s' undefined, line %d; must be one of 'int', 'float', 'char'" %(attrval[1], lc))
+                    sys.exit(1)
  
     return(attrval_dict, attr_sequence)
 
