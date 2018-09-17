@@ -131,8 +131,11 @@ def main():
             doccount += 1
             this_doc_dict = init_dict(attrval_dict)
 
+            # remove beginning and end of line:
             line = re.sub('^<doc +', '', line)
             line = line.rstrip('">')
+            # remove whitespace in instances such as: date=" 1.1.1997"
+            line = re.sub('=" +', '="' ,line)
             avpairs = re.split(u'"[ >]+', line)
             logging.debug(avpairs)
             attrs = [av.split("=")[0] for av in avpairs]
@@ -146,6 +149,7 @@ def main():
 
             # check data type of every value:
             for pair in avpairs:
+                logging.debug(pair)
                 attr = pair.split("=")[0].strip('"')
                 val = pair.split("=")[1].strip('"')
                 dtype = data_type(val)
