@@ -66,22 +66,27 @@ def data_type(val):
     """Examines a string, determines 'intended' data type and length"""
     # default type is char:
     dtype = (u'char', len(val))
+    logging.debug("Trying data type 'float'...")
     # type is float if string can be converted without errors:
-    try:
-        newval = '{:.5f}'.format(float(val)) # this is for scientific notation in attributes from texrex
-        parts = newval.split(".")
-        seq1 = len(parts[0].lstrip('-'))
+    if re.match('^-?(?:[0-9]+\.?[0-9]*|[1-9]\.[0-9]+[eE]-?[0-9]*)$', val):
         try:
-            seq2 = len(parts[1])
-        except IndexError:
-            seq2 = 0
-        dtype = (u'float', (seq1 + seq2, seq2))
-    except ValueError:
-        pass
+            newval = '{:.5f}'.format(float(val)) # this is for scientific notation in attributes from texrex
+            parts = newval.split(".")
+            seq1 = len(parts[0].lstrip('-'))
+            try:
+                seq2 = len(parts[1])
+            except IndexError:
+                seq2 = 0
+            dtype = (u'float', (seq1 + seq2, seq2))
+            logging.debug("... is a float.")
+        except ValueError:
+            pass
     # type is int if string can be converted without errors:
+    logging.debug("Tryng data type 'int'...")
     try:
         int(val)
         dtype = (u'int', len(val.lstrip('-')))
+        logging.debug("... is an int.")
     except ValueError:
         pass        
     return(dtype)
