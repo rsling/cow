@@ -15,10 +15,16 @@ def arguments():
     parser.add_argument('infile', help='COW-XML infile: utf-8 encoded, may be gzipped')
     parser.add_argument('-d', '--debug', action="store_true", default=False, help='print debug messages')
     parser.add_argument('-v', '--verbose', action="store_true", default=False, help='print warning messages')
+#    parser.add_argument('--extension', help='the file name extension of input files; with this option, both output and log info will be written to appropriately named files rather than to stdout/stderr')
 
 
     args = parser.parse_args()
     return(args)
+
+
+
+def basename(orginal, suffix):
+    return(re.sub(suffix, '', orig))
 
 
 
@@ -92,6 +98,11 @@ def data_type(val):
     return(dtype)
 
 
+def basename(origname):
+    return(re.sub("\.xml(\.gz)?$", "", origname))
+
+
+
 
 def main():
     args = arguments()
@@ -125,6 +136,18 @@ def main():
         sys.exit("Cannot open infile.")
    
 
+ #   if args.extension:
+ #       basen = basename(args.infile, args.extension)
+#
+        outfile = basen + ".meta.csv.gz"
+#        if os.path.exists(outfile):
+#            exit("Outfile %s exists." %outfile)
+#        else:
+#            out_h =  gzip.open(outfile, 'wb')
+
+
+
+
 
     doccount = 0
     linecount = 0
@@ -140,7 +163,7 @@ def main():
             line = re.sub('^<doc +', '', line)
             line = line.rstrip('">')
             # remove whitespace in instances such as: date=" 1.1.1997"
-            line = re.sub('=" +', '="' ,line)
+            line = re.sub('=" +(?![a-z_]+=")', '="' ,line)
             avpairs = re.split(u'"[ >]+', line)
             logging.debug(avpairs)
             attrs = [av.split("=")[0] for av in avpairs]
