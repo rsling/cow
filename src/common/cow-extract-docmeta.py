@@ -178,9 +178,10 @@ def main():
             # check data type of every value:
             for pair in avpairs:
                 logging.debug(pair)
-                attr = pair.split("=")[0].strip('"')
-                val = pair.split("=")[1].strip('"')
+                attr = pair.split("=",1)[0].strip('"')
+                val = pair.split("=",1)[1].strip('"')
                 dtype = data_type(val)
+
                 if not dtype[0] == attrval_dict[attr][0]:
                         # in case of mismatch, be allow for some flexibility:
                         #
