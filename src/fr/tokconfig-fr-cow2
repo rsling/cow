@@ -1,0 +1,289 @@
+[RULE-ORDER]
+XMLTAG HTML-ENTITY WORD-TOKEN PREFIX NUMBER-ORDINAL URL URL-WWW URL-DOMAIN E-MAIL WORD-PARPREFIX WORD-MASCFEMSINGPL WORD-PARSUFFIX MYOPENINGPARENTHESES MYCLOSINGPARENTHESES MYABBREV PUNCTUATION-MULTI ELLIPSIS DATE3 DATE4 DATE5 DATE6 NUMBER-RANGE TIMERANGE TIMERANGE-WITH-MINUTES TIMERANGE-WITH-MINUTES-ALT SUFFIX WORD-COMPOUND ABBREVIATION INITIAL CURRENCY FRACTION TIME NUMBER-YEAR-LONG  NUMBER-YEAR-SHORT PRICETAG NUMBER HASHTAG ATTAG TIMEZONE CONFERENCE WORD-SLASHSUFFIX WORD PUNCTUATION UNKNOWN
+
+
+[RULES]
+
+#WORD-COMPOUND
+
+XMLTAG=^<[^>]+>
+HTML-ENTITY=&[A-Za-z]{2,};
+
+
+##Ex: (dis)information
+#WORD-PARPREFIX=(?:\p{Ps}\p{L}+[\p{Pc}\p{Pd}]?\p{Pe}[\p{Pc}\p{Pd}]?)\p{L}+(?:[\p{Pc}\p{Pd}]\p{L}+)*
+# Require at least two letters within parenthesis (helps normalize typing errors such as "(a)in this chapter...")
+WORD-PARPREFIX=(?:\p{Ps}\p{L}{2,}[\p{Pc}\p{Pd}]?\p{Pe}[\p{Pc}\p{Pd}]?)\p{L}{2,}(?:[\p{Pc}\p{Pd}]\p{L}+)*
+
+##Ex: understand(s)
+WORD-PARSUFFIX=\p{L}+(?:[\p{Pc}\p{Pd}]\p{L}+)*(?:[\p{Pc}\p{Pd}]?\p{Ps}[\p{Pc}\p{Pd}]?\p{L}+\p{Pe})
+#(?:\p{P})?$
+
+## Ex. analysant/e
+
+WORD-SLASHSUFFIX=^(\p{Lu}{2,}/(?:E?S|E)|\p{L}(?:\p{Ll})+/(?:e?s|e))(\p{P})?$
+
+## Ex. étudiant(e)s
+WORD-MASCFEMSINGPL=^(?:(?:\p{Lu}{2,}\p{Ps}E\p{Pe}S)|\p{L}(?:\p{Ll}+\p{Ps}e\p{Pe}s))
+
+##Keep dash/underscore connected parts (even if they are in parenthesis)
+#WORD-COMPOUND=\p{L}+(?:[\p{Pc}\p{Pd}]\p{L}+)+
+
+# Allow numbers in compounds: "mid-1930s"
+WORD-COMPOUND=[\p{L}\p{N}]+(?:[\p{Pc}\p{Pd}][\p{L}\p{N}]+)+
+
+##Abbreviations with multiple periods
+ABBREVIATION=^\p{L}{1,3}(?:\.\p{L}{1,3})+\.
+
+##retain initials
+INITIAL=^(?:\p{Lt}|\p{Lu})\.$
+
+# Homogeneous punctuation (ellipsis etc)
+# "PUNCTUATION-MULTI" seems to be treated in a special way by UCTO
+# (counts automatically as EOS marker); if we want "..." to be an
+# EOS-marker, it has to go under "PUNCTUATION-MULTI" rather than
+# separately under "ELLIPSIS".
+
+PUNCTUATION-MULTI=(\.*)([!?]{2,})(\.*)
+ELLIPSIS=\.\.\.?
+
+
+# Date
+# Don't keep dates intact as one string; split everything;
+# don't apply EmpiriST's 2016 tokenization guidelines for dates:
+# 12.04.2016 --> 12. 04. 2016
+# in anology to this 12/04/2016 -> 12/ 04/ 2016
+# But slashes are separators rather than markers of ordinal numbers:
+# We can have 12/04 but not 12.04
+#
+# 2013-08-06 should be tokenized as "2013 - 08 - 06"
+# To avoid "2013 - 08 -06" (-06 being a negative number),
+# split before NUMBER and NUMBER-RANGE apply:
+#
+DATE3=^(\p{N}+)(-)(\p{N}+)(-)(\p{N}+)$
+# Recursion does not work if it includes captured groups.
+# UCTO behaves bizarre with this: (?:(-)(\p{N}+))+
+# Workaround: state 4, 5 and 6 components separately :(
+# Mainly for telephone numbers (12-345-68-8914-87 etc.)
+#
+DATE4=^(\p{N}+)(-)(\p{N}+)(-)(\p{N}+)(-)(\p{N}+)$
+DATE5=^(\p{N}+)(-)(\p{N}+)(-)(\p{N}+)(-)(\p{N}+)(-)(\p{N}+)$
+DATE6=^(\p{N}+)(-)(\p{N}+)(-)(\p{N}+)(-)(\p{N}+)(-)(\p{N}+)(-)(\p{N}+)$
+
+
+NUMBER-YEAR-SHORT=^'?\p{N}{2}s$
+NUMBER-YEAR-LONG=^\p{N}{4}s$
+
+# restrict fraction to a single digit in the numerator and denominator
+# (not really a clean solution, but this should capture most fractions,
+# and it interferes less with dates):
+
+FRACTION=^[1-9]/[0-9]+
+
+NUMBER-ORDINAL=(?:(?:[2-9]|\p{N}\p{N}+)(?:ème|e)|^1(?:ère|er|re)|^2(?:nde?|e))$
+
+
+
+
+#Times  (?i:   i-flag: case insenitive matching
+TIME=\p{N}{1,2}(?:h|:)\p{N}{1,2}(?::\p{N})?
+TIMERANGE=^(\p{N}{1,2})(h)?(-)(\p{N}{1,2})(h)
+TIMERANGE-WITH-MINUTES=^(\p{N}{1,2}:\p{N}{1,2})(h)?(-)(\p{N}{1,2}:\p{N}{1,2})(h)?
+TIMERANGE-WITH-MINUTES-ALT=^(\p{N}{1,2}h\p{N}{1,2})(-)(\p{N}{1,2}h\p{N}{1,2})$
+#70-200mm --> 70 - 200 mm (don't treat -200 as a negative number)
+NUMBER-RANGE=^(\p{N}*[.,]?\p{N}+)(-)(\p{N}*[.,]?\p{N}+)
+
+#retain digits, including those starting with initial period (.22), and negative numbers
+
+NUMBER=^([<>=])?(-?(?:[\.,]?\p{N}+)+)
+
+PRICETAG=^\p{N}+,-$
+
+HASHTAG=^#\p{L}{2,}
+
+ATTAG=^@\p{L}{2,}
+
+CURRENCY=\p{Sc}
+
+
+# if a WORD can generally have a trailing "+" sign,
+# there are exception: designation of time zones:
+TIMEZONE=^(UTC|GMT|CET|CEST|HNEC|RST)(\+)
+
+#Allow digits in words, but not as the first character
+WORD=^[\p{L}\p{Mn}][\p{L}\p{Mn}\p{N}]*[+]?
+
+# attached pronouns are now listed under SUFFIXES.
+# reason: normal regex requires specifying optional punction marks at the end.
+#ATTACHED-PRONOUN=-(?:moi|je|toi|tu|les|la|t-ils|t-il|t-elles|t-elle|t-on|on|ils|il|elles|elle|lui|nous|vous|le|leur|ce|ci|là|y|en|MOI|JE|TOI|TU|LES|LA|T-ILS|T-IL|T-ELLES|T-ELLE|T-ON|ON|ILS|IL|ELLES|ELLE|LUI|NOUS|VOUS|LE|LEUR|CE|CI|LÀ|Y|EN)
+
+PUNCTUATION=(?:\p{P}|™|®)
+
+#TRADEMARK=(?:™|®)
+
+UNKNOWN=.
+
+# This is to split any parentheses of before checking for abbreviations:
+MYOPENINGPARENTHESES=^\p{Ps}
+MYCLOSINGPARENTHESES=\p{Pe}$
+
+# to be completed...
+MYABBREV=^(M\.Sc\.(?:[A-Z]\.)?|t\.a\.b\.|s\.t\.p\.|S\.T\.P\.|s\.v\.p\.|S\.V\.P\.|app\.|auj\.|Auj\.|av\.|boul\.|cf\.|cfr\.|c\.-à-d\.|É\.-U\.|ch\.|dép\.|dépt\.|éd\.|etc\.|ex\.|fig\.|M\.|Me\.|Mlle\.|Mlles\.|MM\.|ms\.|néerl\.|num\.|R\.U\.|resp\.|S\.A\.|s\.a\.|S\.M\.I\.|S\.M\.|St\.|Ste\.|Tbn\.|tél\.|Tél\.|Tr\.|Trb\.|U\.A\.|u\.a\.|Univ\.|univ\.|V\.T\.T\.|Vl\.|Vn\.|vo\.|V\.O\.|voy\.|art\.|chap\.|col\.|p\.ex\.|par\.|sect\.|vol\.|A\.R\.|max\.|min\.|Ibid\.|Ph\.D\.|Prof\.|prof\.|ibid\.|ph\.d\.|Dr\.|Ex\.|Fig\.|J\.-C\.|ex\.|fig\.|Jan\.|jan\.|Fév\.|fév\.|Mar\.|mar\.|Avr\.|avr\.|Juil\.|juil\.|Aou\.|aou\.|Sep\.|sep\.|Oct\.|oct\.|Nov\.|nov\.|Déc\.|Dec\.|déc\.|dec\.|S\.|t\.|s\.|p?p\.)
+
+# Prefixes listed in the PREFIXES-section do not work when a non-alphnumeric character follows the apostrophe, as in
+# d'«orchestrer" ==> "d ' « orchestrer
+# Workaround: list prefixes as a regex; prefixes listed in the PREFIXES-section must be commented out
+PREFIX=^(?:qu|Qu|QU|l|L|d|D|m|M|n|N|t|T|s|S|c|C|j|J|z|Z|jusqu|Jusqu|JUSQU|puisqu|Puisqu|PUISQU|lorsqu|Lorsqu|LORSQU|quoiqu|Quoiqu|QUOIQU)['`]
+
+CONFERENCE=^\p{Lu}{2,10}'?[0-9]{1,4}$
+
+URL=(?i:https?|ftps?|nfs|sshfs|gopher|smb)://[\p{L}\p{N}]+(?:[[:punct:]]+[\p{L}\p{N}]+)+
+URL-WWW=www\.[\p{L}\p{N}]+(?:[[:punct:]]+[\p{L}\p{N}]+)+
+URL-DOMAIN=^[\p{L}\p{N}]+(?:\.[\p{L}\p{N}]+)*\.(?:com|org|net|edu|mil|eu|nl|be|fr|de|uk|es|it|pt|dk|se|no|fi|ch|at|hr|bg|ro|br|ru|cn|in|id|eu|edu|ly|tk|za|ko|jp|ca)
+
+E-MAIL=^([\p{L}\p{N}\._%+\-]+@[\p{L}\p{N}\.\-]+\.\p{L}{2,4})\P{L}?$
+
+
+
+# Regexes do not not fully work with "Tokens": one-or-none quantifier ("?") and disjunction ("(?:d|D)'après'") works, but sets of characters ("[Dd]'après'") don't:
+
+[TOKENS]
+(?:D|d)'après
+D'APRÈS
+(?:d|D)'ailleurs
+D'AILLEURS
+(?:d|D)'accord
+D'ACCORD
+(?:d|D)'abord
+D'ABORD
+(?:d|D)'autant
+D'AUTANT
+(?:a|A)ujourd'hui
+AUJOURD'HUI
+(?:q|Q)uelqu'un(?:e)?
+QUELQU'UN(?:E)?
+(?:c|C)haqu'un(?:e)?
+CHAQU'UN(?:E)?
+m/s
+km/h
+A/R
+#(?:W|w)eek-ends?
+#WEEK-ENDS?
+^f\p{N}{1,2}(?:\.\p{N})?$
+^[123][Dd]$
+^[CF]
+^BBC$
+(?:P|p)'tits?
+(?:P|p)'tites?
+'s$
+
+#Rolands smileys:
+#
+# smileys, European [usually, only ))) is repeated, not DDD etc.]
+# Note: for the mouth, / is not used because of http:// etc.
+#(?:>?[:;=|])[-o]?(?:[}{|\]\[\\OoKSsDpP>]|[)(]+)
+# require whitespace or beginning/end of line before and after smiley:
+# don't 'cut' smileys from larger strings
+#
+(?: |^)(?:>?[:;=|])[-o='^]?(?:[}{|\]\[\\OoKSsDpP>]|[)(]+)=?(?: |$)
+:[un]\)
+<3
+&lt;3
+</3
+&lt;/3
+# phpBB emoticons
+:[\p{Ll}]{2,}:
+
+[SUFFIXES]
+-moi
+-je
+-toi
+-tu
+-les
+-la
+-t-ils
+-t-il
+-t-elles
+-t-elle
+-t-on
+-on
+-ils
+-il
+-elles
+-elle
+-lui
+-nous
+-vous
+-le
+-leur
+-ce
+-ci
+-là
+-y
+-en
+-MOI
+-JE
+-TOI
+-TU
+-LES
+-LA
+-T-ILS
+-T-IL
+-T-ELLES
+-T-ELLE
+-T-ON
+-ON
+-ILS
+-IL
+-ELLES
+-ELLE
+-LUI
+-NOUS
+-VOUS
+-LE
+-LEUR
+-CE
+-CI
+-LÀ
+-Y
+-EN
+
+
+
+# NB: Sentence splitting after sentence-final known abbreviations
+# does not seem to work at all, despite what is stated in the manual...
+#
+# Plus, UCTO eats opening parenthesis before an abbreviation...
+#
+# Don't use the abbreviation section. Use REGEXes instead.
+# The only benefit of ABBREVIATION-KNOWN would be disambiguation
+# of sentence-final abbreviations, which apparently does not work
+# anyway, see above.
+#
+#[ABBREVIATIONS]
+
+
+[EOSMARKERS]
+# Character: !
+# Name: EXCLAMATION MARK
+# Code: 33 (0x21)
+\u0021
+
+# Character: ?
+# Name: QUESTION MARK
+# Code: 63 (0x3f)
+\u003F
+
+[QUOTES]
+
+# all quotes must be entered as pairs of open en close quotes
+# separated by a ||
+# When more opening quotes match a single closing quote (or visa versa)
+# they must be aggregated in one string!
+« »
+‹ ›
+「 」
+『 』
+〈 〉
+《 》
+【 】
