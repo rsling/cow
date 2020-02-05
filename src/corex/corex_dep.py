@@ -72,7 +72,8 @@ def mk_ngrams(nodelist, n):
 
 def depgrams(dom, fh, sentencefilter):
 
-    docngrams = list()
+    docbigrams = list()
+    doctrigrams = list()
 
     # Get word count.
     allwords = dom.findall('.//*word')
@@ -107,10 +108,11 @@ def depgrams(dom, fh, sentencefilter):
         # for every leaf, get complete path from top node:
         paths = [list(l.ancestors) + [l] for l in leaves]
 
-        # produce ngrams and store in common list:
-        allngrams = list()
+        # produce bigrams and store in common list:
+        allbigrams = list()
+
         for  p in paths:
-            allngrams.extend(mk_ngrams(p,2))
+            allbigrams.extend(mk_ngrams(p,2))
 
         # Make sure every sub-path occurs only once,
         # i.e., ignore shared path prefixes:
@@ -118,29 +120,60 @@ def depgrams(dom, fh, sentencefilter):
         # but we only want [a/b, b/c, b/d].
         # (Must convert lists to tuples first because lists are
         # not hashable; then convert back to list.)
-        allngramsuniq  = [list(x) for x in set(tuple(x) for x in allngrams)]
+        allbigramsuniq  = [list(x) for x in set(tuple(x) for x in allbigrams)]
 
         # add depgrams from this sentence to document depgrams:
-        for ngram in allngramsuniq:
-            docngrams.append((" ".join([n.deprel for n in ngram])))
+        for ngram in allbigramsuniq:
+            docbigrams.append((" ".join([n.deprel for n in ngram])))
+
+        # do the same for trigrams:
+        alltrigrams = list()
+
+        for  p in paths:
+            alltrigrams.extend(mk_ngrams(p,3))
+
+        alltrigramsuniq  = [list(x) for x in set(tuple(x) for x in alltrigrams)]
+
+        # add depgrams from this sentence to document depgrams:
+        for ngram in alltrigramsuniq:
+            doctrigrams.append((" ".join([n.deprel for n in ngram])))
+
 
 
     # count depgrams at the document level:
-    d = dict()
-    for n in docngrams:
-        if not n in d:
-            d[n] = 1
-        else:
-            d[n] += 1
+#    bid = dict()
+#    for n in docbigrams:
+#        if not n in bid:
+#            bid[n] = 1
+#        else:
+#            bid[n] += 1
+#
+    for n in docbigrams:
+        print("\t".join(["2gram", n]))
+
+
+
+
+    # count depgrams at the document level:
+#    trid = dict()
+#    for n in doctrigrams:
+#        if not n in bid:
+#            trid[n] = 1
+#        else:
+#            trid[n] += 1
+#
+
+    for n in doctrigrams:
+        print("\t".join(["3gram", n]))
 
 
     # for debugging: reverse-sort and print doc-level depgram freauencies:
-    sorted_d = sorted(d.items(), key=operator.itemgetter(1), reverse=True)
-
-    for i in sorted_d:
-        print(i[0]),
-        print(i[1])
-    print("\n\n")
+#    sorted_trid = sorted(trid.items(), key=operator.itemgetter(1), reverse=True)
+#
+#    for i in sorted_trid:
+#        print(i[0]),
+#        print(i[1])
+#    print("\n\n")
 
 
 

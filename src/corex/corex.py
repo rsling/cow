@@ -20,6 +20,7 @@ from corex_reader import outify, CORexReader as CX
 from corex_basic import annotate_basic, FloatHandler #, annotate_lexicon
 from corex_passive import passive, passive_enable_color
 from corex_perfect import perfect, perfect_enable_color
+from corex_dep import depgrams
 
 
 def main():
@@ -34,6 +35,7 @@ def main():
     parser.add_argument("--nobasic", action="store_true", help="skip basic COReX feature counting")
     parser.add_argument("--nopassive", action="store_true", help="skip passive detection/counting")
     parser.add_argument("--noperfect", action="store_true", help="skip perfect detection/counting")
+    parser.add_argument("--nodep", action="store_true", help="skip depgram counting")
     parser.add_argument("--verbose", action="store_true", help="emit debug messages")
     parser.add_argument("--color", action="store_true", help="use TTY colors for verbose mode")
     parser.add_argument("--sentencefilter", help="attr='val' filter for sentences (features in any sentences not satisfying <s ... attr='val' ...> will NOT be counted)")
@@ -95,7 +97,7 @@ def main():
     else:
         outf = open(fn_out, 'w')
 
-    # Create corpus iterator. 
+    # Create corpus iterator.
     corpus_in = CX(fn_in, annos=annos)
 
     # Create the annotator classes.
@@ -108,7 +110,7 @@ def main():
         # Minimal length filter.
         if len(doc.findall('.//*token')) < args.minlength:
             continue
-        
+
         # All simple counts and more.
         if not args.nobasic:
           annotate_basic(doc, fh, args.sentencefilter)
@@ -121,6 +123,11 @@ def main():
         if not args.noperfect:
             perfect(doc, fh, args.sentencefilter)
 
+        # Count depgrams:
+        if not args.nodep:
+            depgrams(doc, fh, args.sentencefilter)
+
+
         # Do the GermaNet semantic classes annotation.
         if args.germanet:
             Gn.annotate(doc)
@@ -128,7 +135,7 @@ def main():
         # Save the (potentially modified) DOM.
         flat = outify(doc)
         outf.write(flat + '\n' )
-      
+
 
 if __name__ == "__main__":
     main()
