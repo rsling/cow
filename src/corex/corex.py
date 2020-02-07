@@ -21,6 +21,8 @@ from corex_basic import annotate_basic, FloatHandler #, annotate_lexicon
 from corex_passive import passive, passive_enable_color
 from corex_perfect import perfect, perfect_enable_color
 from corex_dep import depgrams
+from corex_additional import annotate_additional
+
 
 
 def main():
@@ -36,6 +38,7 @@ def main():
     parser.add_argument("--nopassive", action="store_true", help="skip passive detection/counting")
     parser.add_argument("--noperfect", action="store_true", help="skip perfect detection/counting")
     parser.add_argument("--nodep", action="store_true", help="skip depgram counting")
+    parser.add_argument("--noadditional", action="store_true", help="skip counting additional features")
     parser.add_argument("--verbose", action="store_true", help="emit debug messages")
     parser.add_argument("--color", action="store_true", help="use TTY colors for verbose mode")
     parser.add_argument("--sentencefilter", help="attr='val' filter for sentences (features in any sentences not satisfying <s ... attr='val' ...> will NOT be counted)")
@@ -126,6 +129,10 @@ def main():
         # Count depgrams:
         if not args.nodep:
             depgrams(doc, fh, args.sentencefilter)
+
+        # Additional counts:
+        if not args.noadditional:
+            annotate_additional(doc, fh, args.sentencefilter)
 
 
         # Do the GermaNet semantic classes annotation.
