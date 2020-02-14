@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Get elemenatry features from COW-DOM.
+# Get N-grams of dependency relations from COW-DOM.
 
 import os.path
 import sys
@@ -137,18 +137,18 @@ def depgrams(dom, fh, sentencefilter):
         for ngram in allbigramsuniq:
             docbigrams.append(("~".join([n.deprel for n in ngram])))
 
-        # do the same for trigrams:
-        alltrigrams = list()
-
-        for  p in paths:
-            alltrigrams.extend(mk_ngrams(p,3))
-
-        alltrigramsuniq  = [list(x) for x in set(tuple(x) for x in alltrigrams)]
-
-        # add depgrams from this sentence to document depgrams:
-        for ngram in alltrigramsuniq:
-            doctrigrams.append(("~".join([n.deprel for n in ngram])))
-
+#        # do the same for trigrams:
+#        alltrigrams = list()
+#
+#        for  p in paths:
+#            alltrigrams.extend(mk_ngrams(p,3))
+#
+#        alltrigramsuniq  = [list(x) for x in set(tuple(x) for x in alltrigrams)]
+#
+#        # add depgrams from this sentence to document depgrams:
+#        for ngram in alltrigramsuniq:
+#            doctrigrams.append(("~".join([n.deprel for n in ngram])))
+#
 
 
     # count depgrams at the document level:
@@ -162,25 +162,37 @@ def depgrams(dom, fh, sentencefilter):
 
 
     # count depgrams at the document level:
-    trid = dict()
-    for n in doctrigrams:
-        if not n in bid:
-            trid[n] = 1
-        else:
-            trid[n] += 1
+#    trid = dict()
+#   for n in doctrigrams:
+#        if not n in bid:
+#            trid[n] = 1
+#        else:
+#            trid[n] += 1
 
 
 
 
     print('<doc id="' + dom.get("id") + '" tokc="' + str(tokc) + '">')
 
-    for n in docbigrams:
-        print("\t".join(["d2\t" + n, str(round((bid[n]/float(tokc))*1000, 3)), str(bid[n])]))
+    sorted_bid = sorted(bid.items(), key=operator.itemgetter(1), reverse=True)
+
+    for depgram, freq in sorted_bid:
+         print("\t".join(["d2\t" + depgram, str(round((freq/float(tokc))*1000, 3)), str(freq)]))
+
+
+   # for n in bid:
+   #     print("\t".join(["d2\t" + n, str(round((bid[n]/float(tokc))*1000, 3)), str(bid[n])]))
 
 
 
-    for n in doctrigrams:
-         print("\t".join(["d3\t" + n, str(round((trid[n]/float(tokc))*1000, 3)), str(trid[n])]))
+#    sorted_trid = sorted(trid.items(), key=operator.itemgetter(1), reverse=True)
+
+#    for depgram, freq in sorted_trid:
+#         print("\t".join(["d3\t" + depgram, str(round((freq/float(tokc))*1000, 3)), str(freq)]))
+
+
+    #for n in trid:
+    #     print("\t".join(["d3\t" + n, str(round((trid[n]/float(tokc))*1000, 3)), str(trid[n])]))
 
 
 

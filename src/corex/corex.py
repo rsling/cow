@@ -22,6 +22,7 @@ from corex_passive import passive, passive_enable_color
 from corex_perfect import perfect, perfect_enable_color
 from corex_dep import depgrams
 from corex_additional import annotate_additional
+#from corex_csv import write_csv
 
 
 
@@ -142,6 +143,11 @@ def main():
         # Save the (potentially modified) DOM.
         flat = outify(doc)
         outf.write(flat + '\n' )
+
+#        if args.csv:
+#            if not ATTRLIST:
+#                ATTRLIST = get_attrlist(doc)
+#            write_csv(doc, ATTRLIST, csv_h)
 
 
 if __name__ == "__main__":
