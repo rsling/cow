@@ -48,7 +48,6 @@ def main():
 
     args = parser.parse_args()
 
-    print(args)
 
     if args.verbose:
         logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.DEBUG)
