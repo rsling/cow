@@ -66,14 +66,14 @@ def annotate_basic(dom, fh, sentencefilter):
         sentences = dom.findall(".//s[" + sentencefilter + "]")
     else:
         sentences = dom.findall(".//s")
-   
+
     # Get tokens:
     words = feature_within_s('word', sentences)
 
     c_word = len(words)
     dom.attrib['crx_tokc'] = str(c_word)
 
- 
+
     # Get type/token ratio based on lowercased tokens.
     tokens = [t.text.lower() for t in words]
 
@@ -127,7 +127,7 @@ def annotate_basic(dom, fh, sentencefilter):
     c_commonnouns = len([p for p in posse if p.text == 'NN'])
     add_per(dom, 'crx_cn', c_commonnouns, c_word, fh)
 
-    
+
     # Number of prepositions.
     c_prepositions = len([p for p in posse if p.text[:2] == 'AP'])
     add_per(dom, 'crx_prep', c_prepositions, c_word, fh)
@@ -143,11 +143,11 @@ def annotate_basic(dom, fh, sentencefilter):
     # Number of adverbs.
     c_adverbs = len([p for p in posse if p.text == 'ADV'])
     add_per(dom, 'crx_adv', c_adverbs, c_word, fh)
-    
+
     # Number of adjectives.
     c_adjectives = len([p for p in posse if p.text[:3] == 'ADJ'])
     add_per(dom, 'crx_adj', c_adjectives, c_word, fh)
- 
+
     # Number of subordinators.
     c_subjunctions_w_sentence = len([p for p in posse if p.text == 'KOUS'])
     add_per(dom, 'crx_subjs', c_subjunctions_w_sentence, c_word, fh)
@@ -192,16 +192,16 @@ def annotate_basic(dom, fh, sentencefilter):
 
     c_nonwrd = len([p for p in posse if p.text == 'XY'])
     add_per(dom, 'crx_nonwrd', c_nonwrd, c_word, fh)
-    
+
     # We need parents -> lemmas for article counting.
     posse_lemmas = [firstlemma(p.find('../lemma').text) for p in posse if p.text == 'ART']
-    
+
     c_def_article = len([a for a in posse_lemmas if a == 'die'])
     add_per(dom, 'crx_def', c_def_article, c_word, fh)
-    
+
     c_indef_article = len([a for a in posse_lemmas if a in ['n', 'eine']])
     add_per(dom, 'crx_indef', c_indef_article, c_word, fh)
-   
+
     # NER-related counts.
     # Count only within regular sentences:
 
@@ -209,10 +209,10 @@ def annotate_basic(dom, fh, sentencefilter):
 
     c_ne_per = len([n for n in nerds if n.text == 'I-PER'])
     add_per(dom, 'crx_neper', c_ne_per, c_word, fh)
-    
+
     c_ne_loc = len([n for n in nerds if n.text == 'I-LOC'])
     add_per(dom, 'crx_neloc', c_ne_loc, c_word, fh)
-    
+
     c_ne_org = len([n for n in nerds if n.text == 'I-ORG'])
     add_per(dom, 'crx_neorg', c_ne_org, c_word, fh)
 
@@ -230,15 +230,15 @@ def annotate_basic(dom, fh, sentencefilter):
 
     # Cliticized indefinite articles:
     c_clit_indef_article = len([a for a in posse_lemmas if a == 'n'])
-    add_per(dom, 'crx_clitindef', c_clit_indef_article, (c_indef_article + c_clit_indef_article), fh)
+    add_per(dom, 'crx_clitindef', c_clit_indef_article, c_indef_article, fh)
 
     # Counts using morphological information.
- 
-    # Get Marmot's morphological annotation 
+
+    # Get Marmot's morphological annotation
     morphs = dom.findall('.//morph')
     morphtexts = [morph.text for morph in morphs]
     morphsets = [m.strip('|').split('|') for m in morphtexts if len(m) > 1]
-   
+
     # Get past tense verbs:
     c_vpast = len([m for m in morphsets if 'past' in m])
     add_per(dom, 'crx_vpast', c_vpast, c_word, fh)
@@ -254,12 +254,12 @@ def annotate_basic(dom, fh, sentencefilter):
     # Get count for all verbs, subjunctive & past tense:
     past_subj = [m for m in morphs if 'past' in parsemorphs(m.text) and 'subj' in parsemorphs(m.text)]
     c_past_subj = len(past_subj)
-  
+
     # Get count for 'werden', subjunctive & past tense:
     wpast_subj =  [m for m in past_subj if firstlemma(m.findall('../lemma')[0].text) == 'werden']
     c_wpast_subj = len(wpast_subj)
     add_per(dom, 'crx_wpastsubj', c_wpast_subj, c_word, fh)
-    
+
     # The difference is the count for non-'werden' subjunctive & past tense:
     add_per(dom, 'crx_vvpastsubj', (c_past_subj - c_wpast_subj), c_word, fh)
 
@@ -287,7 +287,7 @@ def annotate_basic(dom, fh, sentencefilter):
 
 
     # Counts related to topological fields.
-   
+
     # Get clauses:
     c_simpx = len(feature_within_s('simpx', sentences))
     add_per(dom, 'crx_simpx', c_simpx, c_sentences, fh, 1)
@@ -299,9 +299,9 @@ def annotate_basic(dom, fh, sentencefilter):
     # Get relative clauses:
     c_rsimpx = len(feature_within_s('rsimpx', sentences))
     add_per(dom, 'crx_rsimpx', c_rsimpx, c_sentences, fh, 1)
- 
 
-    # Get prefields: 
+
+    # Get prefields:
     vfs = feature_within_s('vf', sentences)
 
     # Get verb-second sentences:
@@ -342,14 +342,14 @@ def annotate_basic(dom, fh, sentencefilter):
     c_unknowns = len([t.text for t in words if firstlemma(t.findall('../lemma')[0].text) == '(unknown)' and t.findall('../ne')[0].text == 'O' and len(t.findall('../comp')[0].text) == 1])
     add_per(dom, 'crx_unkn', c_unknowns, c_word, fh)
 
-   
+
     # dictionaries of some shortened or contracted forms (mostly from decow16 lexicon additions):
     # "musste"?
     contracted_verbs = {'find': '', 'findeste': '', 'finds': '', 'fänd': '', 'gabs': '', 'geh': '', 'gehn': '', 'gehts': '', 'gibbet': '', 'gibs': '', 'gibts': '', 'hab': '', 'habs': '', 'ham': '', 'hamm': '', 'hamma': '', 'haste': '', 'hats': '', 'hatt': '', 'hätt': '', 'is': '', 'isser': '', 'isses': '', 'ists': '', 'kamste': '', 'kanns': '', 'kannste': '', 'klappts': '', 'kommste': '', 'kommts': '', 'konnt': '', 'konnteste': '', 'lern': '', 'lernste': '', 'läufste': '', 'läufts': '', 'mach': '', 'machs': '', 'machts': '', 'musste': '', 'möcht': '', 'möchts': '', 'nehm': '', 'nimms': '', 'nimmste': '', 'sach': '', 'sacht': '', 'schaus': '', 'schauts': '', 'schomma': '', 'seh': '', 'siehts': '', 'sinds': '', 'sollste': '', 'tu': '', 'tuen': '', 'tuste': '', 'tuts': '', 'wars': '', 'wat': '', 'werd': '', 'werds': '', 'willste': '', 'wirds': '', 'wirste': '', 'wär': '', 'wärs': '', 'würd': '', 'würds': ''}
 
     contracted_preps = {'aufer': '', 'aufm': '', 'aufn': '', 'aufs': '', 'auser': '', 'ausm': '', 'drauf ': '', 'drunter': '', 'drüber': '', 'fürn': '', 'fürs': '', 'innem': '', 'inner': '', 'mitem': '', 'miter': '', 'mitm': '', 'nebens': '', 'unterm': '', 'untern': '', 'unters': '', 'überm': '', 'übern': '', 'übers': ''}
 
-    
+
     tokens = [t.text.lower() for t in words]
 
     c_shortform = len([t for t in tokens if t in contracted_preps or t in contracted_verbs])

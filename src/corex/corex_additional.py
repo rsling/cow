@@ -127,6 +127,27 @@ def annotate_additional(dom, fh, sentencefilter):
     else:
         sentences = dom.findall(".//s")
 
+    # repair (redo) clitindef counts:
+
+    # Get POS counts (modal verbs etc.).
+    posse = feature_within_s('ttpos', sentences)
+
+    # Get Number of full verbs (for normalizing):
+    c_verbs = len([p for p in posse if p.text[:2] == 'VV'])
+
+    # We need parents -> lemmas for article counting.
+    posse_lemmas = [firstlemma(p.find('../lemma').text) for p in posse if p.text == 'ART']
+
+    c_indef_article = len([a for a in posse_lemmas if a in ['n', 'eine']])
+    add_per(dom, 'crx_indef', c_indef_article, c_word, fh)
+    dom.attrib['crx_indefraw'] = str(c_indef_article)
+
+
+    c_clit_indef_article = len([a for a in posse_lemmas if a == 'n'])
+    add_per(dom, 'crx_clitindef', c_clit_indef_article, c_indef_article, fh)
+    dom.attrib['crx_clitindefraw'] = str(c_clit_indef_article)
+
+
     # Get tokens, count only within regular sentences:
 
     words_str = [t.text.lower() for t in feature_within_s('word', sentences)]
@@ -150,33 +171,32 @@ def annotate_additional(dom, fh, sentencefilter):
 
     # count "cognition" verbs:
     c_cogverbs = len([l for l in lemmas_str if l in COGNITION_VERBS])
-    add_per(dom, 'crx_cogverb', c_cogverbs, c_word, fh)
-
+    add_per(dom, 'crx_cogverb', c_cogverbs, c_verbs, fh)
 
     # Count verbs typical of different kinds of speech acts:
 
     # count "communication verbs":
     c_dicverbs = len([l for l in lemmas_str if l in VERBA_DICENDI])
-    add_per(dom, 'crx_dicverb', c_dicverbs, c_word, fh)
+    add_per(dom, 'crx_dicverb', c_dicverbs, c_verbs, fh)
 
     # count "representative verbs":
     c_reprverbs = len([l for l in lemmas_str if l in REPRESENTATIVES])
-    add_per(dom, 'crx_reprverb', c_reprverbs, c_word, fh)
+    add_per(dom, 'crx_reprverb', c_reprverbs, c_verbs, fh)
 
     # count "directive verbs":
     c_dirverbs = len([l for l in lemmas_str if l in DIRECTIVES])
-    add_per(dom, 'crx_dirverb', c_dirverbs, c_word, fh)
+    add_per(dom, 'crx_dirverb', c_dirverbs, c_verbs, fh)
 
     # count "commissive verbs":
     c_commissverbs = len([l for l in lemmas_str if l in COMMISSIVES])
-    add_per(dom, 'crx_commissverb', c_commissverbs, c_word, fh)
+    add_per(dom, 'crx_commissverb', c_commissverbs, c_verbs, fh)
 
     # count "expressive verbs":
     c_exprverbs = len([l for l in lemmas_str if l in EXPRESSIVES])
-    add_per(dom, 'crx_exprverb', c_exprverbs, c_word, fh)
+    add_per(dom, 'crx_exprverb', c_exprverbs, c_verbs, fh)
 
     # count "declarative verbs":
     c_declverbs = len([l for l in lemmas_str if l in DECLARATIVES])
-    add_per(dom, 'crx_declverb', c_declverbs, c_word, fh)
+    add_per(dom, 'crx_declverb', c_declverbs, c_verbs, fh)
 
 

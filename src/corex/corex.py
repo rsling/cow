@@ -22,7 +22,7 @@ from corex_passive import passive, passive_enable_color
 from corex_perfect import perfect, perfect_enable_color
 from corex_dep import depgrams
 from corex_additional import annotate_additional
-#from corex_csv import write_csv
+from corex_csv import write_csv
 
 
 
@@ -39,6 +39,7 @@ def main():
     parser.add_argument("--nopassive", action="store_true", help="skip passive detection/counting")
     parser.add_argument("--noperfect", action="store_true", help="skip perfect detection/counting")
     parser.add_argument("--nodep", action="store_true", help="skip depgram counting")
+    parser.add_argument("--csv", help="write raw counts to csv file")
     parser.add_argument("--noadditional", action="store_true", help="skip counting additional features")
     parser.add_argument("--verbose", action="store_true", help="emit debug messages")
     parser.add_argument("--color", action="store_true", help="use TTY colors for verbose mode")
@@ -46,6 +47,8 @@ def main():
 
 
     args = parser.parse_args()
+
+    print(args)
 
     if args.verbose:
         logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.DEBUG)
@@ -57,6 +60,8 @@ def main():
 
     fn_out = args.outfile
     fn_in = args.infile
+    if args.csv:
+        fn_csv = args.csv
 
     # Check input files.
     infiles = [fn_in]
@@ -66,6 +71,9 @@ def main():
 
     # Check (potentially erase) output files.
     outfiles = [fn_out]
+    if args.csv:
+        outfiles.append(fn_csv)
+
     for fn in outfiles:
         if fn is not None and os.path.exists(fn):
             if args.erase:
@@ -100,6 +108,15 @@ def main():
         outf = gzip.open(fn_out, 'w')
     else:
         outf = open(fn_out, 'w')
+
+    # Open csv file:
+    if args.csv:
+        if fn_csv.endswith('.gz'):
+            csv_h = gzip.open(fn_csv, 'w')
+        else:
+            csv_h = open(fn_csv, 'w')
+
+
 
     # Create corpus iterator.
     corpus_in = CX(fn_in, annos=annos)
@@ -144,10 +161,16 @@ def main():
         flat = outify(doc)
         outf.write(flat + '\n' )
 
-#        if args.csv:
-#            if not ATTRLIST:
-#                ATTRLIST = get_attrlist(doc)
-#            write_csv(doc, ATTRLIST, csv_h)
+        # write raw counts to csv-file
+        # (raw counts converted back from normalized counts)
+        if args.csv:
+            write_csv(doc, csv_h)
+
+
+    outf.close()
+    if args.csv:
+        csv_h.close()
+
 
 
 if __name__ == "__main__":
